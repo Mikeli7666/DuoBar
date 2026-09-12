@@ -28,6 +28,7 @@ final class WiFiService: NSObject, @preconcurrency CLLocationManagerDelegate {
     }
 
     func requestSSIDAccess() {
+        locationManager.delegate = self
         guard locationManager.authorizationStatus == .notDetermined else { return }
         locationManager.requestWhenInUseAuthorization()
     }
@@ -53,9 +54,21 @@ final class WiFiService: NSObject, @preconcurrency CLLocationManagerDelegate {
                 isPoweredOn: isPoweredOn,
                 isConnected: isConnected,
                 ssid: ssid?.isEmpty == false ? ssid : nil,
-                rssi: rssi
+                rssi: rssi,
+                nameAccess: nameAccess
             )
         )
+    }
+
+    private var nameAccess: WiFiNameAccess {
+        guard CLLocationManager.locationServicesEnabled() else { return .servicesDisabled }
+        switch locationManager.authorizationStatus {
+        case .notDetermined: return .notDetermined
+        case .denied: return .denied
+        case .restricted: return .restricted
+        case .authorizedAlways, .authorizedWhenInUse: return .authorized
+        @unknown default: return .unknown
+        }
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {

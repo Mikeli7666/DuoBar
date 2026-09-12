@@ -281,8 +281,9 @@
 				INFOPLIST_KEY_CFBundleDisplayName = DuoBar;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "DuoBar reads whether Bluetooth is available and powered on to display its status in the menu bar.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "DuoBar uses location access only to display the name of the Wi-Fi network you are connected to.";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "DuoBar displays paired Bluetooth devices and lets you connect or disconnect them.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "DuoBar uses location access to display Wi-Fi network names so you can view and select networks.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "DuoBar uses location access to display Wi-Fi network names so you can view and select networks.";
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mikeli.duobar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -305,8 +306,9 @@
 				INFOPLIST_KEY_CFBundleDisplayName = DuoBar;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "DuoBar reads whether Bluetooth is available and powered on to display its status in the menu bar.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "DuoBar uses location access only to display the name of the Wi-Fi network you are connected to.";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "DuoBar displays paired Bluetooth devices and lets you connect or disconnect them.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "DuoBar uses location access to display Wi-Fi network names so you can view and select networks.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "DuoBar uses location access to display Wi-Fi network names so you can view and select networks.";
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mikeli.duobar;
 				PRODUCT_NAME = "$(TARGET_NAME)";

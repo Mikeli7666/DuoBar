@@ -6,6 +6,7 @@ struct StatusRow: View {
     let detail: String
     let stateText: String
     let tint: Color
+    var isExpanded = false
 
     var body: some View {
         HStack(spacing: 11) {
@@ -30,9 +31,14 @@ struct StatusRow: View {
                 .font(.system(size: 10.5, weight: .medium, design: .rounded))
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
+
+            Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+                .font(.system(size: 9, weight: .semibold))
+                .foregroundStyle(.tertiary)
         }
         .padding(.horizontal, 10)
         .frame(height: 48)
+        .contentShape(Rectangle())
         .background(.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
     }
 }

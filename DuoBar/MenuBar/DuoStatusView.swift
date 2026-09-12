@@ -1,8 +1,12 @@
+import AppKit
 import SwiftUI
 
 struct DuoStatusView: View {
     @ObservedObject private var statusStore: SystemStatusStore
     @AppStorage(PreferenceKeys.animationsEnabled) private var animationsEnabled = true
+
+    @AppStorage(PreferenceKeys.showMenuBarBatteryPercentage) private var showMenuBarBatteryPercentage = false
+    private var dotPreferences = BluetoothDotPreferences()
 
     #if DEBUG
     @AppStorage(DuoGlyphTuningKeys.overallSize) private var overallSize = Double(DuoGlyphMetrics.standard.overallSize)
@@ -25,21 +29,35 @@ struct DuoStatusView: View {
 
     private var targetWidth: CGFloat {
         metrics.statusItemWidth
+        + (DuoGlyphState(status: statusStore.status).isCharging ? metrics.chargingIndicatorWidth : 0)
+        + (percentageText.map { text in
+            ceil((text as NSString).size(withAttributes: [.font: NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .regular)]).width) + 5
+        } ?? 0)
     }
 
-    private var animation: Animation? {
-        animationsEnabled ? AnimationConstants.statusMorph : nil
+    private var percentageText: String? {
+        guard showMenuBarBatteryPercentage, statusStore.status.battery.isAvailable,
+              let percentage = statusStore.status.battery.percentage else { return nil }
+        return "\(percentage)%"
     }
 
     var body: some View {
-        DuoGlyphView(
-            status: statusStore.status,
-            metrics: metrics,
-            animationsEnabled: animationsEnabled
-        )
-        .frame(width: targetWidth, height: 22)
+        HStack(spacing: 5) {
+            DuoGlyphView(
+                status: statusStore.status,
+                metrics: metrics,
+                animationsEnabled: animationsEnabled,
+                dotConfiguration: dotPreferences.configuration
+            )
+            if let percentageText {
+                Text(percentageText)
+                    .font(.system(size: 12))
+                    .monospacedDigit()
+                    .fixedSize()
+            }
+        }
+        .frame(width: targetWidth, height: NSStatusBar.system.thickness)
         .contentShape(Rectangle())
-        .animation(animation, value: targetWidth)
         .onAppear { onWidthChange(targetWidth) }
         .onChange(of: targetWidth) { _, newValue in onWidthChange(newValue) }
         .accessibilityElement(children: .ignore)
@@ -50,7 +68,8 @@ struct DuoStatusView: View {
         let wifi = statusStore.status.wifi.isConnected ? "Wi-Fi connected" : "Wi-Fi disconnected"
         let bluetooth = statusStore.status.bluetooth.isPoweredOn ? "Bluetooth on" : "Bluetooth off"
         let battery = statusStore.status.battery.percentage.map { "battery \($0) percent" } ?? "battery unavailable"
-        return "\(wifi), \(bluetooth), \(battery)"
+        let dots = BluetoothDotPresentation(bluetooth: statusStore.status.bluetooth, configuration: dotPreferences.configuration).summary
+        return "\(wifi), \(bluetooth), \(battery). Dots: \(dots)"
     }
 
     private var metrics: DuoGlyphMetrics {

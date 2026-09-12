@@ -16,12 +16,17 @@ struct BatteryStatus: Equatable, Sendable {
     )
 }
 
+enum WiFiNameAccess: Equatable, Sendable {
+    case unknown, notDetermined, denied, restricted, authorized, servicesDisabled
+}
+
 struct WiFiStatus: Equatable, Sendable {
     var isAvailable: Bool
     var isPoweredOn: Bool
     var isConnected: Bool
     var ssid: String?
     var rssi: Int?
+    var nameAccess: WiFiNameAccess = .unknown
 
     static let unavailable = WiFiStatus(
         isAvailable: false,
@@ -74,6 +79,7 @@ enum WiFiSignalLevel: Equatable, Sendable {
 struct BluetoothStatus: Equatable, Sendable {
     var isAvailable: Bool
     var isPoweredOn: Bool
+    var devices: [PairedBluetoothDevice] = []
 
     static let unavailable = BluetoothStatus(isAvailable: false, isPoweredOn: false)
 }
