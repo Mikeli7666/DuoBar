@@ -2,11 +2,11 @@ import CoreGraphics
 
 struct DuoGlyphMetrics: Equatable {
     static let standard = DuoGlyphMetrics(
-        overallSize: 22,
-        ringDiameter: 26,
+        overallSize: 25,
+        ringDiameter: 26.5,
         ringLineWidth: 2.7,
         arcGap: 110,
-        wifiSymbolSize: 11,
+        wifiSymbolSize: 15,
         wifiYOffset: -1.1,
         dotDiameter: 2.55,
         dotSpacing: 1.9,
@@ -30,6 +30,7 @@ struct DuoGlyphMetrics: Equatable {
     var arcStartDegrees: Double { 90 + arcGap / 2 }
     var arcEndDegrees: Double { 450 - arcGap / 2 }
     var statusItemWidth: CGFloat { overallSize + 3 }
+    var chargingIndicatorWidth: CGFloat { overallSize * 0.30 + 2 }
 
     func sized(_ size: CGFloat) -> DuoGlyphMetrics {
         var copy = self

@@ -14,7 +14,7 @@ struct DebugDuoGlyphTuningView: View {
 
     var body: some View {
         Section("Duo Glyph Tuning · Debug") {
-            DebugMetricSlider(title: "Overall size", value: $overallSize, range: 18...24, step: 0.25)
+            DebugMetricSlider(title: "Overall size", value: $overallSize, range: 18...26, step: 0.25)
             DebugMetricSlider(title: "Ring diameter", value: $ringDiameter, range: 22...30, step: 0.25)
             DebugMetricSlider(title: "Ring thickness", value: $ringLineWidth, range: 1.5...4, step: 0.1)
             DebugMetricSlider(title: "Arc gap", value: $arcGap, range: 70...140, step: 1)

@@ -7,7 +7,6 @@ final class MenuBarController: NSObject {
     private let popover = NSPopover()
     private let statusStore: SystemStatusStore
     private var hostingView: PassthroughHostingView<DuoStatusView>?
-    private var lengthAnimationTimer: Timer?
     private var isInvalidated = false
 
     init(statusStore: SystemStatusStore) {
@@ -32,6 +31,9 @@ final class MenuBarController: NSObject {
             self?.setStatusItemLength(width)
         }
         let hostingView = PassthroughHostingView(rootView: rootView)
+        // The status item owns the width; intrinsic hosting constraints would
+        // compete with the button while the percentage is inserted or removed.
+        hostingView.sizingOptions = []
         hostingView.translatesAutoresizingMaskIntoConstraints = false
         button.addSubview(hostingView)
         NSLayoutConstraint.activate([
@@ -46,12 +48,13 @@ final class MenuBarController: NSObject {
     private func configurePopover() {
         popover.behavior = .transient
         popover.animates = true
-        popover.contentSize = NSSize(width: 296, height: 278)
-        popover.contentViewController = NSHostingController(
+        let controller = NSHostingController(
             rootView: StatusPopoverView(statusStore: statusStore) { [weak self] in
                 self?.popover.performClose(nil)
             }
         )
+        controller.sizingOptions = [.preferredContentSize]
+        popover.contentViewController = controller
     }
 
     @objc private func togglePopover() {
@@ -60,53 +63,29 @@ final class MenuBarController: NSObject {
         if popover.isShown {
             popover.performClose(nil)
         } else {
-            popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+            popover.show(relativeTo: .zero, of: button, preferredEdge: .minY)
             popover.contentViewController?.view.window?.makeKey()
         }
     }
 
     private func setStatusItemLength(_ targetLength: CGFloat) {
         guard !isInvalidated else { return }
-        lengthAnimationTimer?.invalidate()
-
-        guard UserDefaults.standard.bool(forKey: PreferenceKeys.animationsEnabled) else {
-            statusItem.length = targetLength
-            return
+        // Resize once, in step with SwiftUI, instead of animating the native
+        // button separately from its content and the attached popover.
+        let wasAnimating = popover.animates
+        popover.animates = false
+        defer { popover.animates = wasAnimating }
+        statusItem.length = targetLength
+        statusItem.button?.window?.contentView?.layoutSubtreeIfNeeded()
+        if popover.isShown {
+            // An empty rect tracks the whole button, including its new width.
+            popover.positioningRect = .zero
         }
-
-        let startLength = statusItem.length
-        guard abs(startLength - targetLength) > 0.5 else { return }
-        let startDate = Date()
-        let duration: TimeInterval = 0.34
-
-        let timer = Timer(timeInterval: 1.0 / 60.0, repeats: true) { [weak self] timer in
-            Task { @MainActor in
-                guard let self else {
-                    timer.invalidate()
-                    return
-                }
-
-                let elapsed = Date().timeIntervalSince(startDate)
-                let progress = min(max(elapsed / duration, 0), 1)
-                let eased = 1 - pow(1 - progress, 3)
-                self.statusItem.length = startLength + (targetLength - startLength) * eased
-
-                if progress >= 1 {
-                    self.statusItem.length = targetLength
-                    timer.invalidate()
-                    self.lengthAnimationTimer = nil
-                }
-            }
-        }
-        lengthAnimationTimer = timer
-        RunLoop.main.add(timer, forMode: .common)
     }
 
     func invalidate() {
         guard !isInvalidated else { return }
         isInvalidated = true
-        lengthAnimationTimer?.invalidate()
-        lengthAnimationTimer = nil
         popover.performClose(nil)
         hostingView?.removeFromSuperview()
         hostingView = nil
@@ -114,7 +93,6 @@ final class MenuBarController: NSObject {
     }
 
     deinit {
-        lengthAnimationTimer?.invalidate()
         if !isInvalidated {
             NSStatusBar.system.removeStatusItem(statusItem)
         }

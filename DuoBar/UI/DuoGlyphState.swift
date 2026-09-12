@@ -20,13 +20,6 @@ struct DuoGlyphState: Equatable {
         isCharging = battery.isAvailable && battery.isCharging
         wifiLevel = status.wifi.signalLevel
 
-        let bluetooth = status.bluetooth
-        if !bluetooth.isAvailable {
-            bluetoothDotOpacity = 0.14
-        } else if bluetooth.isPoweredOn {
-            bluetoothDotOpacity = 1
-        } else {
-            bluetoothDotOpacity = 0.25
-        }
+        bluetoothDotOpacity = BluetoothDotPresentation(bluetooth: status.bluetooth, configuration: .standard).dots[0].opacity
     }
 }

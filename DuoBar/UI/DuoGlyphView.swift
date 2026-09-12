@@ -4,12 +4,28 @@ struct DuoGlyphView: View {
     let status: SystemStatus
     var metrics: DuoGlyphMetrics = .standard
     var animationsEnabled = true
+    var dotConfiguration: BluetoothDotConfiguration = .standard
 
     private var glyphState: DuoGlyphState {
         DuoGlyphState(status: status)
     }
 
     var body: some View {
+        HStack(spacing: 2) {
+            mainGlyph
+            if glyphState.isCharging {
+                Image(systemName: "bolt.fill")
+                    .font(.system(size: metrics.overallSize * 0.44, weight: .bold))
+                    .frame(width: metrics.chargingIndicatorWidth - 2)
+                    .transition(.opacity)
+            }
+        }
+        .foregroundStyle(.primary)
+        .animation(layerAnimation, value: glyphState.isCharging)
+        .accessibilityHidden(true)
+    }
+
+    private var mainGlyph: some View {
         ZStack {
             DuoArcShape(
                 startDegrees: metrics.arcStartDegrees,
@@ -29,13 +45,6 @@ struct DuoGlyphView: View {
             .animation(arcAnimation, value: glyphState.batteryProgress)
             .animation(layerAnimation, value: glyphState.batteryArcOpacity)
 
-            DuoChargingBolt(
-                isVisible: glyphState.isCharging,
-                size: max(metrics.ringLineWidth * 2.15, 5.2),
-                offset: chargingBoltOffset,
-                animationsEnabled: animationsEnabled
-            )
-
             DuoCenterGlyph(
                 signalLevel: glyphState.wifiLevel,
                 size: metrics.wifiSymbolSize,
@@ -44,7 +53,7 @@ struct DuoGlyphView: View {
             .offset(y: metrics.wifiYOffset)
 
             DuoDotRow(
-                opacity: glyphState.bluetoothDotOpacity,
+                dots: BluetoothDotPresentation(bluetooth: status.bluetooth, configuration: dotConfiguration).dots,
                 diameter: metrics.dotDiameter,
                 spacing: metrics.dotSpacing,
                 animationsEnabled: animationsEnabled
@@ -66,17 +75,6 @@ struct DuoGlyphView: View {
         animationsEnabled ? AnimationConstants.content : nil
     }
 
-    private var chargingBoltOffset: CGSize {
-        let progress = min(max(glyphState.batteryProgress, 0.04), 0.72)
-        let sweep = metrics.arcEndDegrees - metrics.arcStartDegrees
-        let degrees = metrics.arcStartDegrees + sweep * progress
-        let radians = degrees * .pi / 180
-        let radius = metrics.ringDiameter / 2
-        return CGSize(
-            width: CGFloat(cos(radians)) * radius,
-            height: CGFloat(sin(radians)) * radius + metrics.ringYOffset
-        )
-    }
 }
 
 struct DuoArcShape: Shape {
@@ -153,36 +151,25 @@ struct DuoCenterGlyph: View {
 }
 
 struct DuoDotRow: View {
-    let opacity: Double
+    let dots: [BluetoothDotPresentation.Dot]
     let diameter: CGFloat
     let spacing: CGFloat
     let animationsEnabled: Bool
 
     var body: some View {
         HStack(spacing: spacing) {
-            ForEach(0..<4, id: \.self) { _ in
-                Circle()
+            ForEach(dots.indices, id: \.self) { index in
+                Group {
+                    if dots[index].isHollow {
+                        Circle().strokeBorder(lineWidth: max(0.6, diameter * 0.25))
+                    } else {
+                        Circle()
+                    }
+                }
                     .frame(width: diameter, height: diameter)
+                    .opacity(dots[index].opacity)
             }
         }
-        .opacity(opacity)
-        .animation(animationsEnabled ? AnimationConstants.content : nil, value: opacity)
-    }
-}
-
-private struct DuoChargingBolt: View {
-    let isVisible: Bool
-    let size: CGFloat
-    let offset: CGSize
-    let animationsEnabled: Bool
-
-    var body: some View {
-        Image(systemName: "bolt.fill")
-            .font(.system(size: size, weight: .bold))
-            .symbolRenderingMode(.monochrome)
-            .offset(offset)
-            .opacity(isVisible ? 1 : 0)
-            .scaleEffect(isVisible ? 1 : 0.72)
-            .animation(animationsEnabled ? AnimationConstants.content : nil, value: isVisible)
+        .animation(animationsEnabled ? AnimationConstants.content : nil, value: dots)
     }
 }
