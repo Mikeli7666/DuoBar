@@ -124,7 +124,7 @@ final class DuoGlyphStateTests: XCTestCase {
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(.white)
                 }
-                .frame(width: 106)
+                .frame(width: 134)
             }
         }
         .padding(20)
@@ -140,6 +140,44 @@ final class DuoGlyphStateTests: XCTestCase {
         try png.write(to: outputURL, options: .atomic)
 
         XCTAssertGreaterThan(png.count, 1_000)
+    }
+
+    @MainActor
+    func testChargingIndicatorFitsBesideGlyphAtMenuBarSize() throws {
+        let metrics = DuoGlyphMetrics.standard
+        let normal = ImageRenderer(content: DuoGlyphView(
+            status: makeStatus(), animationsEnabled: false
+        ))
+        let charging = ImageRenderer(content: DuoGlyphView(
+            status: makeStatus(batteryPercentage: 25, charging: true), animationsEnabled: false
+        ))
+        let normalImage = try XCTUnwrap(normal.nsImage)
+        let chargingImage = try XCTUnwrap(charging.nsImage)
+        XCTAssertEqual(chargingImage.size.width - normalImage.size.width, metrics.chargingIndicatorWidth, accuracy: 0.5)
+        XCTAssertEqual(chargingImage.size.height, normalImage.size.height, accuracy: 0.5)
+
+        let gallery = VStack(spacing: 0) {
+            ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+                HStack(spacing: 20) {
+                    ForEach([10, 25, 75, 100], id: \.self) { level in
+                        VStack(spacing: 8) {
+                            DuoGlyphView(status: self.makeStatus(batteryPercentage: level), animationsEnabled: false)
+                            DuoGlyphView(status: self.makeStatus(batteryPercentage: level, charging: true), animationsEnabled: false)
+                        }
+                        .frame(width: 50)
+                    }
+                }
+                .padding(20)
+                .background(scheme == .dark ? Color.black : Color.white)
+                .environment(\.colorScheme, scheme)
+            }
+        }
+        let renderer = ImageRenderer(content: gallery)
+        renderer.scale = 3
+        let image = try XCTUnwrap(renderer.nsImage)
+        let bitmap = try XCTUnwrap(image.tiffRepresentation.flatMap(NSBitmapImageRep.init(data:)))
+        let png = try XCTUnwrap(bitmap.representation(using: .png, properties: [:]))
+        try png.write(to: FileManager.default.temporaryDirectory.appendingPathComponent("DuoBar-ChargingGallery.png"))
     }
 
     private func makeStatus(
