@@ -18,8 +18,8 @@ DuoBar recreates the iPhone Duo three-in-one status concept on macOS, mapping re
 
 - **Outer arc** → live battery level
 - **Center Wi-Fi glyph** → live Wi-Fi connection and signal
-- **Four lower dots** → Bluetooth state
-- **Lightning indicator** → charging
+- **Four lower dots** → Bluetooth state, connected-device count, pinned devices, or an accessory battery gauge
+- **Separate lightning indicator beside the ring** → charging
 
 ## DuoBar on macOS
 
@@ -45,13 +45,17 @@ The screenshot above is captured from the running app. The compact glyph is one 
 
 ## Features
 
-- Live battery level
+- Live battery level and optional menu bar percentage
 - Charging state
 - Live Wi-Fi status
 - Bluetooth status
 - Single compact menu-bar glyph
 - Light and Dark Mode
 - Launch at Login
+- Expand Wi-Fi to switch its radio on/off, scan networks, and join open or personal-password networks
+- Expand Bluetooth to connect or disconnect supported paired devices
+- Choose the dots' function in the Bluetooth dropdown or DuoBar Settings → Bluetooth Dots; assign devices in Settings
+- Expand Battery to change percentage display preferences
 - Native SwiftUI + AppKit
 - No Dock icon
 
@@ -74,9 +78,9 @@ Do not disable Gatekeeper, System Integrity Protection, or other macOS security 
 ## Permissions
 
 - **Location:** macOS may require authorization before CoreWLAN can expose the current Wi-Fi network name. If access is denied, Wi-Fi connection and signal information remain available where public APIs permit, while the network name may be unavailable.
-- **Bluetooth:** used to read whether the Mac's Bluetooth controller is available and powered on. If the state cannot be read, DuoBar reports Bluetooth as unavailable and continues running.
+- **Bluetooth:** used to display controller and paired-device status and to connect or disconnect supported devices. If macOS does not expose a device, manage it in Bluetooth Settings.
 
-DuoBar requests Wi-Fi network-name access only when its popover is opened and does not repeatedly request permission after the user has made a choice.
+When macOS withholds the network name, the popover explains why and offers an explicit permission button or a shortcut to Location Services settings. DuoBar does not repeatedly request permission after the user has made a choice.
 
 ## Privacy
 
@@ -91,7 +95,19 @@ DuoBar requests Wi-Fi network-name access only when its popover is opened and do
 - DuoBar 0.1 is Beta software and is not Developer ID signed or notarized.
 - The current Beta supports Apple Silicon Macs only.
 - The Wi-Fi network name may be unavailable without Location permission or when macOS withholds it.
-- Bluetooth support is limited to controller availability and power state; device management and accessory battery levels are not included.
+- Wi-Fi network selection needs Location access. Enterprise, hidden, and other networks requiring advanced setup use Wi-Fi Settings. DuoBar does not store entered network passwords.
+- Bluetooth controls use devices exposed by IOBluetooth; some accessories and Bluetooth LE devices require Bluetooth Settings. Pairing new devices and turning the Bluetooth radio on/off use System Settings.
+- Power modes and battery health settings remain in System Settings.
+- Accessory battery mode uses optional battery readings published by macOS input-device drivers. Some mice, keyboards, and trackpads report a level; headphones and other accessories may not. Missing readings or disconnected devices show hollow dots, not an empty battery. No private Bluetooth APIs are used.
+
+## Bluetooth dot modes
+
+- **Bluetooth on/off** (default): all four dots brighten when Bluetooth is on.
+- **Connected-device count:** one bright dot per connected device exposed by macOS; four means four or more.
+- **Pinned devices:** fixed left-to-right assignments. Bright means connected, dim means disconnected, hollow means unassigned or unavailable.
+- **Accessory battery:** choose one paired device. The four dots show 1–25%, 26–50%, 51–75%, and 76–100%; a reported 0% shows four dim dots. Hollow dots mean no current reading.
+
+Modes and assignments persist across restarts. Count and pinned modes cover devices exposed by IOBluetooth, which may omit some Bluetooth LE accessories.
 
 ## How to quit
 
