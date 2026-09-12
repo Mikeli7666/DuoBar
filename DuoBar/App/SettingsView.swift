@@ -4,13 +4,20 @@ import SwiftUI
 struct SettingsView: View {
     @AppStorage(PreferenceKeys.showBatteryPercentage) private var showBatteryPercentage = true
     @AppStorage(PreferenceKeys.animationsEnabled) private var animationsEnabled = true
+    @AppStorage(PreferenceKeys.showMenuBarBatteryPercentage) private var showMenuBarBatteryPercentage = false
     @StateObject private var launchAtLogin = LaunchAtLoginService()
+    @StateObject private var bluetoothMonitor = BluetoothSettingsMonitor()
 
     var body: some View {
         Form {
             Section("Menu Bar") {
+                Toggle("Show battery percentage in menu bar", isOn: $showMenuBarBatteryPercentage)
                 Toggle("Show battery percentage in popover", isOn: $showBatteryPercentage)
                 Toggle("Enable animations", isOn: $animationsEnabled)
+            }
+
+            Section("Bluetooth Dots") {
+                BluetoothDotSettingsView(bluetooth: bluetoothMonitor.status)
             }
 
             Section("General") {
@@ -47,14 +54,16 @@ struct SettingsView: View {
         .onAppear {
             NSApp.activate(ignoringOtherApps: true)
             launchAtLogin.refresh()
+            bluetoothMonitor.start()
         }
+        .onDisappear { bluetoothMonitor.stop() }
     }
 
     private var settingsHeight: CGFloat {
         #if DEBUG
         540
         #else
-        300
+        480
         #endif
     }
 }
