@@ -6,7 +6,9 @@ struct DuoBarApp: App {
 
     var body: some Scene {
         Settings {
-            SettingsView()
+            if let statusStore = appDelegate.statusStore {
+                SettingsView(statusStore: statusStore)
+            }
         }
     }
 }

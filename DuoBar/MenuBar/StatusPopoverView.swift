@@ -162,6 +162,8 @@ struct StatusPopoverView: View {
         .padding(12)
         .frame(width: 296)
         .fixedSize(horizontal: false, vertical: true)
+        // Opaque semantic color prevents wallpaper/content from washing out text.
+        .background(Color(nsColor: .windowBackgroundColor))
         .onAppear {
             NSApp.activate(ignoringOtherApps: true)
             statusStore.refresh()

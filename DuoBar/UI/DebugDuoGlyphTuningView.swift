@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct DebugDuoGlyphTuningView: View {
-    @AppStorage(DuoGlyphTuningKeys.overallSize) private var overallSize = Double(DuoGlyphMetrics.standard.overallSize)
+    @AppStorage(PreferenceKeys.glyphSize) private var overallSize = Double(DuoGlyphMetrics.standard.overallSize)
     @AppStorage(DuoGlyphTuningKeys.ringDiameter) private var ringDiameter = Double(DuoGlyphMetrics.standard.ringDiameter)
     @AppStorage(DuoGlyphTuningKeys.ringLineWidth) private var ringLineWidth = Double(DuoGlyphMetrics.standard.ringLineWidth)
     @AppStorage(DuoGlyphTuningKeys.arcGap) private var arcGap = DuoGlyphMetrics.standard.arcGap
@@ -14,7 +14,7 @@ struct DebugDuoGlyphTuningView: View {
 
     var body: some View {
         Section("Duo Glyph Tuning · Debug") {
-            DebugMetricSlider(title: "Overall size", value: $overallSize, range: 18...26, step: 0.25)
+            DebugMetricSlider(title: "Overall size", value: $overallSize, range: 22...30, step: 0.25)
             DebugMetricSlider(title: "Ring diameter", value: $ringDiameter, range: 22...30, step: 0.25)
             DebugMetricSlider(title: "Ring thickness", value: $ringLineWidth, range: 1.5...4, step: 0.1)
             DebugMetricSlider(title: "Arc gap", value: $arcGap, range: 70...140, step: 1)

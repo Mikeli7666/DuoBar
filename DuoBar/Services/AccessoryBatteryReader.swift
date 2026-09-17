@@ -1,9 +1,63 @@
 import Foundation
 import IOKit
+import IOBluetooth
 
 enum AccessoryBatteryReader {
-    // Driver-published properties are optional. Do not use private Bluetooth
-    // selectors, infer a reading from a device name, or retain old readings.
+    // Match readings only by address, never by display name. Each refresh replaces
+    // the previous snapshot; disconnected records are never used for batteries.
+    struct DeviceReport: Equatable, Sendable {
+        var name: String
+        var batteryPercentage: Int?
+    }
+
+    static func connectedDeviceReports() -> [String: DeviceReport] {
+        let process = Process()
+        let output = Pipe()
+        process.executableURL = URL(fileURLWithPath: "/usr/sbin/system_profiler")
+        process.arguments = ["SPBluetoothDataType", "-json", "-timeout", "8"]
+        process.standardOutput = output
+        process.standardError = FileHandle.nullDevice
+        do { try process.run() } catch { return [:] }
+        // Also bound the process lifetime if a system reporter stalls.
+        let timeout = DispatchWorkItem { if process.isRunning { process.terminate() } }
+        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 12, execute: timeout)
+        defer { timeout.cancel() }
+        let data = output.fileHandleForReading.readDataToEndOfFile()
+        process.waitUntilExit()
+        guard process.terminationStatus == 0 else { return [:] }
+        return parseConnectedDeviceReports(data)
+    }
+
+    static func parseConnectedDeviceReports(_ data: Data) -> [String: DeviceReport] {
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let controllers = json["SPBluetoothDataType"] as? [[String: Any]] else { return [:] }
+        var result: [String: DeviceReport] = [:]
+        for controller in controllers {
+            guard let devices = controller["device_connected"] as? [[String: Any]] else { continue }
+            for device in devices {
+                for (name, rawDetails) in device {
+                    guard let details = rawDetails as? [String: Any],
+                          let address = normalizedAddress(details["device_address"] as? String) else { continue }
+                    // Use the lower earbud reading. A case-only reading must not
+                    // masquerade as the headphones' remaining charge.
+                    let earbuds = ["device_batteryLevelLeft", "device_batteryLevelRight"]
+                        .compactMap { reportPercentage(details[$0]) }
+                    let level = earbuds.min() ?? reportPercentage(details["device_batteryLevelMain"])
+                    result[address] = DeviceReport(name: name, batteryPercentage: level)
+                }
+            }
+        }
+        return result
+    }
+
+    private static func reportPercentage(_ value: Any?) -> Int? {
+        if let value = value as? String {
+            let digits = value.replacingOccurrences(of: "%", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+            guard let number = Int(digits), (0...100).contains(number) else { return nil }
+            return number
+        }
+        return percentage(value)
+    }
     static func batteryLevels() -> [String: Int] {
         var levels: [String: Int] = [:]
         for className in ["IOHIDDevice", "IOHIDEventService"] {
@@ -25,6 +79,21 @@ enum AccessoryBatteryReader {
             }
         }
         return levels
+    }
+
+    // System Information omits the battery for some AirPods Max models.
+    // This undocumented getter is optional and must be checked before use.
+    static func headphoneBatteryLevel(_ device: IOBluetoothDevice) -> Int? {
+        guard device.isConnected(),
+              device.responds(to: NSSelectorFromString("batteryPercentSingle")) else { return nil }
+        return singleBatteryPercentage(device.value(forKey: "batteryPercentSingle"))
+    }
+
+    static func singleBatteryPercentage(_ value: Any?) -> Int? {
+        // This getter also returns zero when no single-battery report exists.
+        // Keep that ambiguous value unavailable; public sources still accept 0%.
+        guard let level = percentage(value), level > 0 else { return nil }
+        return level
     }
 
     static func normalizedAddress(_ address: String?) -> String? {

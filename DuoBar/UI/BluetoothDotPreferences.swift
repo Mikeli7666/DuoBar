@@ -52,7 +52,7 @@ struct BluetoothDotSettingsView: View {
             }
         } else if preferences.mode == .accessoryBattery {
             devicePicker("Accessory", selection: preferences.$batteryDeviceID)
-            Text("Battery readings are available for some mice, keyboards, and trackpads. Other accessories may not report a level.")
+            Text("Battery readings include supported headphones and input devices. AirPods use the lower reported earbud level; the case is excluded. macOS may not provide every reading.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)

@@ -4,6 +4,155 @@ import XCTest
 @testable import DuoBar
 
 final class DuoGlyphStateTests: XCTestCase {
+    func testPercentageThresholdIsStrictAndRequiresAvailableBattery() {
+        for (level, expected) in [(0, true), (19, true), (20, false), (21, false), (100, false)] {
+            let battery = makeStatus(batteryPercentage: level).battery
+            XCTAssertEqual(BatteryPercentageVisibility.shouldShow(battery, enabled: true, onlyBelow: true, threshold: 20), expected)
+            XCTAssertTrue(BatteryPercentageVisibility.shouldShow(battery, enabled: true, onlyBelow: false, threshold: 20))
+            XCTAssertFalse(BatteryPercentageVisibility.shouldShow(battery, enabled: false, onlyBelow: true, threshold: 20))
+        }
+        XCTAssertFalse(BatteryPercentageVisibility.shouldShow(.unavailable, enabled: true, onlyBelow: false, threshold: 20))
+    }
+
+    func testAirplaneIndicatorRequiresBothKnownRadiosOff() {
+        var status = makeStatus()
+        XCTAssertFalse(status.areWirelessRadiosOff)
+        status.wifi.isPoweredOn = false
+        XCTAssertFalse(status.areWirelessRadiosOff)
+        status.bluetooth.isPoweredOn = false
+        XCTAssertTrue(status.areWirelessRadiosOff)
+        status.bluetooth.isAvailable = false
+        XCTAssertFalse(status.areWirelessRadiosOff)
+        XCTAssertFalse(SystemStatus.unavailable.areWirelessRadiosOff)
+    }
+
+    @MainActor
+    func testRenderSplitRingGallery() throws {
+        let gallery = VStack(spacing: 0) {
+            ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+                HStack(spacing: 22) {
+                    ForEach([50, 16, 0, 100], id: \.self) { level in
+                        DuoGlyphView(status: self.makeStatus(batteryPercentage: level), metrics: .standard.sized(88),
+                                     animationsEnabled: false, style: .splitRing)
+                    }
+                }
+                .padding(24)
+                .background(scheme == .dark ? Color.black : Color.white)
+                .environment(\.colorScheme, scheme)
+            }
+        }
+        let renderer = ImageRenderer(content: gallery)
+        renderer.scale = 2
+        let image = try XCTUnwrap(renderer.nsImage)
+        let bitmap = try XCTUnwrap(image.tiffRepresentation.flatMap(NSBitmapImageRep.init(data:)))
+        let png = try XCTUnwrap(bitmap.representation(using: .png, properties: [:]))
+        try png.write(to: FileManager.default.temporaryDirectory.appendingPathComponent("DuoBar-SplitRing.png"))
+    }
+
+    @MainActor
+    func testRenderSplitRingThresholdTransition() throws {
+        let gallery = HStack(spacing: 20) {
+            ForEach([19, 20, 50, 100], id: \.self) { level in
+                let status = self.makeStatus(batteryPercentage: level)
+                VStack {
+                    DuoGlyphView(status: status, metrics: .standard.sized(88), animationsEnabled: false,
+                                 style: .splitRing,
+                                 showPercentage: BatteryPercentageVisibility.shouldShow(status.battery, enabled: true,
+                                                                                      onlyBelow: true, threshold: 20))
+                    Text("\(level)% battery").font(.system(size: 12))
+                }
+            }
+        }
+        .padding(24).background(Color.white).environment(\.colorScheme, .light)
+        let renderer = ImageRenderer(content: gallery)
+        renderer.scale = 2
+        let image = try XCTUnwrap(renderer.nsImage)
+        let bitmap = try XCTUnwrap(image.tiffRepresentation.flatMap(NSBitmapImageRep.init(data:)))
+        let png = try XCTUnwrap(bitmap.representation(using: .png, properties: [:]))
+        try png.write(to: FileManager.default.temporaryDirectory.appendingPathComponent("DuoBar-ThresholdTransition.png"))
+    }
+
+    func testDotsFollowRingAndRemainSymmetric() {
+        let metrics = DuoGlyphMetrics.standard
+        for index in 0..<4 {
+            let point = metrics.dotPosition(at: index)
+            let mirrored = metrics.dotPosition(at: 3 - index)
+            XCTAssertEqual(point.x, -mirrored.x, accuracy: 0.0001)
+            XCTAssertEqual(point.y, mirrored.y, accuracy: 0.0001)
+            XCTAssertEqual(hypot(point.x, point.y - metrics.ringYOffset), metrics.ringDiameter / 2, accuracy: 0.0001)
+        }
+        XCTAssertLessThan(metrics.dotPosition(at: 0).y, metrics.dotPosition(at: 1).y)
+    }
+
+    func testVisibleIconIsCenteredAcrossTheFullSizeRange() {
+        for style in DuoGlyphStyle.allCases {
+            for size: CGFloat in [22, 24, 27, 30] {
+                let metrics = DuoGlyphMetrics.standard.sized(size)
+                let bounds = metrics.verticalBounds(style: style)
+                let offset = metrics.verticalCenteringOffset(style: style)
+                let scale = metrics.overallSize / DuoGlyphMetrics.canvasSize
+                let top = (bounds.lowerBound + offset) * scale
+                let bottom = (bounds.upperBound + offset) * scale
+                XCTAssertEqual(top, -bottom, accuracy: 0.0001)
+                XCTAssertEqual(metrics.overallSize, size)
+            }
+        }
+    }
+
+    @MainActor
+    func testMenuBarSliderKeepsEverySizeStep() throws {
+        let suite = "DuoBarTests.Size.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let store = SystemStatusStore(startServices: false)
+        defaults.set(false, forKey: PreferenceKeys.showMenuBarBatteryPercentage)
+        for style in DuoGlyphStyle.allCases {
+            defaults.set(style.rawValue, forKey: PreferenceKeys.glyphStyle)
+            for size in stride(from: 22.0, through: 30.0, by: 0.5) {
+                defaults.set(size, forKey: PreferenceKeys.glyphSize)
+                let renderer = ImageRenderer(content: DuoStatusView(statusStore: store).defaultAppStorage(defaults))
+                let image = try XCTUnwrap(renderer.nsImage)
+                XCTAssertEqual(image.size.width, size + 3, accuracy: 0.01)
+            }
+        }
+    }
+
+    @MainActor
+    func testRenderSizeAlignmentGallery() throws {
+        let gallery = VStack(spacing: 16) {
+            ForEach(DuoGlyphStyle.allCases) { style in
+                ForEach([CGFloat(24), 37], id: \.self) { height in
+                    HStack(spacing: 20) {
+                        ForEach([CGFloat(22), 24, 27, 30], id: \.self) { size in
+                            VStack(spacing: 8) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "speaker.wave.2.fill").font(.system(size: 14))
+                                    DuoGlyphView(status: self.makeStatus(batteryPercentage: 50),
+                                                 metrics: .standard.sized(size),
+                                                 animationsEnabled: false, style: style)
+                                    Text("9:41").font(.system(size: 12))
+                                }
+                                .frame(width: 120, height: height)
+                                .background(Color.gray.opacity(0.1))
+                                .overlay(alignment: .center) { Rectangle().fill(Color.red.opacity(0.25)).frame(height: 0.5) }
+                                Text("\(Int(size)) · \(Int(height))pt bar").font(.system(size: 10))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .padding(20)
+        .background(Color.white)
+        .environment(\.colorScheme, .light)
+        let renderer = ImageRenderer(content: gallery)
+        renderer.scale = 3
+        let image = try XCTUnwrap(renderer.nsImage)
+        let bitmap = try XCTUnwrap(image.tiffRepresentation.flatMap(NSBitmapImageRep.init(data:)))
+        let png = try XCTUnwrap(bitmap.representation(using: .png, properties: [:]))
+        try png.write(to: FileManager.default.temporaryDirectory.appendingPathComponent("DuoBar-SizeAlignment.png"))
+    }
+
     func testBatteryLevelsMapLinearlyToArcProgress() {
         for percentage in [100, 75, 50, 25, 10, 0] {
             let state = DuoGlyphState(status: makeStatus(batteryPercentage: percentage))

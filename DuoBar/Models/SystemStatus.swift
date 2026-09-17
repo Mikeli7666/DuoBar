@@ -89,6 +89,11 @@ struct SystemStatus: Equatable, Sendable {
     var wifi: WiFiStatus
     var bluetooth: BluetoothStatus
 
+    // A radio-state indicator, not a separate macOS airplane-mode setting.
+    var areWirelessRadiosOff: Bool {
+        wifi.isAvailable && bluetooth.isAvailable && !wifi.isPoweredOn && !bluetooth.isPoweredOn
+    }
+
     static let unavailable = SystemStatus(
         battery: .unavailable,
         wifi: .unavailable,

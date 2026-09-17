@@ -56,6 +56,10 @@ final class SystemStatusStore: ObservableObject {
         bluetoothService.refresh()
     }
 
+    func refreshBluetooth() {
+        bluetoothService.refresh()
+    }
+
     func requestWiFiSSIDAccess() {
         wifiService.requestSSIDAccess()
     }

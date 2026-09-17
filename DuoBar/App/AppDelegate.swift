@@ -2,10 +2,10 @@ import AppKit
 import Combine
 
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private let isRunningTests: Bool
     private var instanceLock: ApplicationInstanceLock?
-    private var statusStore: SystemStatusStore?
+    @Published private(set) var statusStore: SystemStatusStore?
     private var menuBarController: MenuBarController?
     private var wakeObserver: NSObjectProtocol?
 

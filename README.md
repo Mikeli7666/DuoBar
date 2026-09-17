@@ -45,7 +45,10 @@ The screenshot above is captured from the running app. The compact glyph is one 
 
 ## Features
 
-- Live battery level and optional menu bar percentage
+- Live battery level and optional menu bar percentage, with a configurable “below” threshold (20% by default)
+- Classic or split-ring icon style, with a larger default and adjustable size in Release builds
+- Airplane indicator when both Wi-Fi and Bluetooth radios are off
+- Opaque, appearance-aware dropdown background for readable text over dark content
 - Charging state
 - Live Wi-Fi status
 - Bluetooth status
@@ -98,7 +101,7 @@ When macOS withholds the network name, the popover explains why and offers an ex
 - Wi-Fi network selection needs Location access. Enterprise, hidden, and other networks requiring advanced setup use Wi-Fi Settings. DuoBar does not store entered network passwords.
 - Bluetooth controls use devices exposed by IOBluetooth; some accessories and Bluetooth LE devices require Bluetooth Settings. Pairing new devices and turning the Bluetooth radio on/off use System Settings.
 - Power modes and battery health settings remain in System Settings.
-- Accessory battery mode uses optional battery readings published by macOS input-device drivers. Some mice, keyboards, and trackpads report a level; headphones and other accessories may not. Missing readings or disconnected devices show hollow dots, not an empty battery. No private Bluetooth APIs are used.
+- Accessory battery mode uses macOS input-device drivers and a background System Information Bluetooth report. Connected-device names and headphone readings are matched by Bluetooth address. AirPods use the lower reported earbud percentage, excluding the case. Availability depends on what macOS reports; AirPods Pro 3 hardware validation is still needed. Missing readings or disconnected devices show hollow dots, not an empty battery. For headphones such as AirPods Max, a guarded, undocumented IOBluetooth single-battery getter supplies a fallback when System Information omits the reading. Its ambiguous zero is treated as unavailable. This fallback may stop working after macOS updates.
 
 ## Bluetooth dot modes
 
@@ -115,7 +118,7 @@ Click the DuoBar glyph, then choose **Quit DuoBar** from the popover. Settings a
 
 ## Build from source
 
-Open `DuoBar.xcodeproj` in Xcode, select the **DuoBar** scheme, and run. Debug builds include status simulation and glyph-tuning tools; those tools are excluded from Release builds.
+Open `DuoBar.xcodeproj` in Xcode, select the **DuoBar** scheme, and run. Icon style, overall size, and percentage threshold controls are included in Release builds. Debug builds additionally include status simulation and detailed glyph geometry tuning.
 
 ## Disclaimer
 

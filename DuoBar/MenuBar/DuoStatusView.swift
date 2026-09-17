@@ -8,8 +8,13 @@ struct DuoStatusView: View {
     @AppStorage(PreferenceKeys.showMenuBarBatteryPercentage) private var showMenuBarBatteryPercentage = false
     private var dotPreferences = BluetoothDotPreferences()
 
+    @AppStorage(PreferenceKeys.glyphSize) private var overallSize = Double(DuoGlyphMetrics.standard.overallSize)
+    @AppStorage(PreferenceKeys.glyphStyle) private var glyphStyle: DuoGlyphStyle = .classic
+    @AppStorage(PreferenceKeys.percentageOnlyBelow) private var percentageOnlyBelow = false
+    @AppStorage(PreferenceKeys.percentageThreshold) private var percentageThreshold = 20
+    @AppStorage(PreferenceKeys.showAirplaneIndicator) private var showAirplaneIndicator = true
+
     #if DEBUG
-    @AppStorage(DuoGlyphTuningKeys.overallSize) private var overallSize = Double(DuoGlyphMetrics.standard.overallSize)
     @AppStorage(DuoGlyphTuningKeys.ringDiameter) private var ringDiameter = Double(DuoGlyphMetrics.standard.ringDiameter)
     @AppStorage(DuoGlyphTuningKeys.ringLineWidth) private var ringLineWidth = Double(DuoGlyphMetrics.standard.ringLineWidth)
     @AppStorage(DuoGlyphTuningKeys.arcGap) private var arcGap = DuoGlyphMetrics.standard.arcGap
@@ -36,9 +41,14 @@ struct DuoStatusView: View {
     }
 
     private var percentageText: String? {
-        guard showMenuBarBatteryPercentage, statusStore.status.battery.isAvailable,
+        guard glyphStyle == .classic, percentageVisible,
               let percentage = statusStore.status.battery.percentage else { return nil }
         return "\(percentage)%"
+    }
+
+    private var percentageVisible: Bool {
+        BatteryPercentageVisibility.shouldShow(statusStore.status.battery, enabled: showMenuBarBatteryPercentage,
+                                              onlyBelow: percentageOnlyBelow, threshold: percentageThreshold)
     }
 
     var body: some View {
@@ -47,7 +57,10 @@ struct DuoStatusView: View {
                 status: statusStore.status,
                 metrics: metrics,
                 animationsEnabled: animationsEnabled,
-                dotConfiguration: dotPreferences.configuration
+                dotConfiguration: dotPreferences.configuration,
+                style: glyphStyle,
+                showPercentage: percentageVisible,
+                showAirplaneIndicator: showAirplaneIndicator
             )
             if let percentageText {
                 Text(percentageText)
@@ -69,13 +82,13 @@ struct DuoStatusView: View {
         let bluetooth = statusStore.status.bluetooth.isPoweredOn ? "Bluetooth on" : "Bluetooth off"
         let battery = statusStore.status.battery.percentage.map { "battery \($0) percent" } ?? "battery unavailable"
         let dots = BluetoothDotPresentation(bluetooth: statusStore.status.bluetooth, configuration: dotPreferences.configuration).summary
-        return "\(wifi), \(bluetooth), \(battery). Dots: \(dots)"
+        return "\(statusStore.status.areWirelessRadiosOff && showAirplaneIndicator ? "Wireless radios off, " : "")\(wifi), \(bluetooth), \(battery). Dots: \(dots)"
     }
 
     private var metrics: DuoGlyphMetrics {
         #if DEBUG
-        DuoGlyphMetrics(
-            overallSize: CGFloat(overallSize),
+        let requested = DuoGlyphMetrics(
+            overallSize: CGFloat(min(max(overallSize, 22), 30)),
             ringDiameter: CGFloat(ringDiameter),
             ringLineWidth: CGFloat(ringLineWidth),
             arcGap: arcGap,
@@ -86,7 +99,9 @@ struct DuoStatusView: View {
             dotYOffset: CGFloat(dotYOffset)
         )
         #else
-        .standard
+        let requested = DuoGlyphMetrics.standard.sized(CGFloat(min(max(overallSize, 22), 30)))
         #endif
+        // Centering must not cap the size selected by the user.
+        return requested
     }
 }

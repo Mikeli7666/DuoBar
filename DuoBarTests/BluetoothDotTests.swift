@@ -60,6 +60,15 @@ final class BluetoothDotTests: XCTestCase {
         XCTAssertEqual(result.summary, "Bluetooth off")
     }
 
+    func testSingleHeadphoneBatteryRejectsUnknownAndSentinelValues() {
+        XCTAssertEqual(AccessoryBatteryReader.singleBatteryPercentage(58), 58)
+        XCTAssertEqual(AccessoryBatteryReader.singleBatteryPercentage(100), 100)
+        for value: Any in [0, 255, -1, true, 12.5, "58"] {
+            XCTAssertNil(AccessoryBatteryReader.singleBatteryPercentage(value))
+        }
+        XCTAssertNil(AccessoryBatteryReader.singleBatteryPercentage(nil))
+    }
+
     func testBatteryReaderRejectsNonPercentagesAndNormalizesDeviceAddresses() {
         XCTAssertEqual(AccessoryBatteryReader.normalizedAddress("AA-BB-CC-DD-EE-FF"), "aabbccddeeff")
         XCTAssertEqual(AccessoryBatteryReader.normalizedAddress("aa:bb:cc:dd:ee:ff"), "aabbccddeeff")
@@ -70,6 +79,27 @@ final class BluetoothDotTests: XCTestCase {
         }
         XCTAssertEqual(AccessoryBatteryReader.percentage(0), 0)
         XCTAssertEqual(AccessoryBatteryReader.percentage(100), 100)
+    }
+
+    func testHeadphoneReportMatchesAddressesAndIgnoresCaseAndDisconnectedDevices() throws {
+        let data = Data("""
+        {"SPBluetoothDataType":[{"device_connected":[
+          {"Renamed AirPods":{"device_address":"AA:BB:CC:DD:EE:FF",
+            "device_batteryLevelLeft":"70 %","device_batteryLevelRight":"42%","device_batteryLevelCase":"5 %"}},
+          {"Same name":{"device_address":"11-22-33-44-55-66","device_batteryLevelMain":"0 %"}},
+          {"Case only":{"device_address":"22:33:44:55:66:77","device_batteryLevelCase":"90 %"}},
+          {"Invalid":{"device_address":"not an address","device_batteryLevelMain":"90 %"}}
+        ],"device_not_connected":[
+          {"Old name":{"device_address":"AA:BB:CC:DD:EE:FF","device_batteryLevelMain":"100 %"}}
+        ]}]}
+        """.utf8)
+        let reports = AccessoryBatteryReader.parseConnectedDeviceReports(data)
+        XCTAssertEqual(reports.count, 3)
+        XCTAssertEqual(reports["aabbccddeeff"], .init(name: "Renamed AirPods", batteryPercentage: 42))
+        XCTAssertEqual(reports["112233445566"]?.batteryPercentage, 0)
+        XCTAssertNil(reports["223344556677"]?.batteryPercentage)
+        XCTAssertTrue(AccessoryBatteryReader.parseConnectedDeviceReports(Data("{}".utf8)).isEmpty)
+        XCTAssertTrue(AccessoryBatteryReader.parseConnectedDeviceReports(Data("broken".utf8)).isEmpty)
     }
 
     @MainActor

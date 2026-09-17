@@ -5,6 +5,9 @@ struct DuoGlyphView: View {
     var metrics: DuoGlyphMetrics = .standard
     var animationsEnabled = true
     var dotConfiguration: BluetoothDotConfiguration = .standard
+    var style: DuoGlyphStyle = .classic
+    var showPercentage = true
+    var showAirplaneIndicator = true
 
     private var glyphState: DuoGlyphState {
         DuoGlyphState(status: status)
@@ -27,44 +30,106 @@ struct DuoGlyphView: View {
 
     private var mainGlyph: some View {
         ZStack {
-            DuoArcShape(
-                startDegrees: metrics.arcStartDegrees,
-                endDegrees: metrics.arcEndDegrees,
-                progress: CGFloat(glyphState.batteryProgress)
-            )
-            .stroke(
-                style: StrokeStyle(
-                    lineWidth: metrics.ringLineWidth,
-                    lineCap: .round,
-                    lineJoin: .round
+            if style == .splitRing {
+                splitRing
+            } else {
+                DuoArcShape(
+                    startDegrees: metrics.arcStartDegrees,
+                    endDegrees: metrics.arcEndDegrees,
+                    progress: CGFloat(glyphState.batteryProgress)
                 )
-            )
-            .frame(width: metrics.ringDiameter, height: metrics.ringDiameter)
-            .offset(y: metrics.ringYOffset)
-            .opacity(glyphState.batteryArcOpacity)
-            .animation(arcAnimation, value: glyphState.batteryProgress)
-            .animation(layerAnimation, value: glyphState.batteryArcOpacity)
+                .stroke(
+                    style: StrokeStyle(
+                        lineWidth: metrics.ringLineWidth,
+                        lineCap: .round,
+                        lineJoin: .round
+                    )
+                )
+                .frame(width: metrics.ringDiameter, height: metrics.ringDiameter)
+                .offset(y: metrics.ringYOffset)
+                .opacity(glyphState.batteryArcOpacity)
+                .animation(arcAnimation, value: glyphState.batteryProgress)
+                .animation(layerAnimation, value: glyphState.batteryArcOpacity)
 
-            DuoCenterGlyph(
-                signalLevel: glyphState.wifiLevel,
-                size: metrics.wifiSymbolSize,
-                animationsEnabled: animationsEnabled
-            )
-            .offset(y: metrics.wifiYOffset)
+                centerGlyph
+                .offset(y: metrics.wifiYOffset)
 
-            DuoDotRow(
-                dots: BluetoothDotPresentation(bluetooth: status.bluetooth, configuration: dotConfiguration).dots,
-                diameter: metrics.dotDiameter,
-                spacing: metrics.dotSpacing,
-                animationsEnabled: animationsEnabled
-            )
-            .offset(y: metrics.dotYOffset)
+                curvedDots
+            }
         }
         .frame(width: DuoGlyphMetrics.canvasSize, height: DuoGlyphMetrics.canvasSize)
+        .offset(y: metrics.verticalCenteringOffset(style: style))
         .scaleEffect(metrics.overallSize / DuoGlyphMetrics.canvasSize)
         .frame(width: metrics.overallSize, height: metrics.overallSize)
         .foregroundStyle(.primary)
         .accessibilityHidden(true)
+    }
+
+    @ViewBuilder
+    private var centerGlyph: some View {
+        if showAirplaneIndicator && status.areWirelessRadiosOff {
+            Image(systemName: "airplane")
+                .font(.system(size: metrics.wifiSymbolSize, weight: .semibold))
+        } else {
+            DuoCenterGlyph(signalLevel: glyphState.wifiLevel, size: metrics.wifiSymbolSize,
+                           animationsEnabled: animationsEnabled)
+        }
+    }
+
+    private var splitRing: some View {
+        ZStack {
+            if let percentage = splitRingPercentage {
+                ForEach(0..<2) { side in
+                    let start = side == 0 ? 145.0 : -45.0
+                    let progress = min(max(glyphState.batteryProgress * 2 - Double(side), 0), 1)
+                    batteryTrack(start: start, end: start + 80, progress: progress)
+                }
+                Text("\(percentage)")
+                    .font(.system(size: percentage == 100 ? 7.5 : 8.5, weight: .bold, design: .rounded))
+                    .monospacedDigit()
+                    .frame(height: 10)
+                    .offset(y: -11.5)
+            } else {
+                // With no label, join the two sides across the top. Keep the
+                // dim track so an unfilled battery is distinct from a gap.
+                batteryTrack(start: 145, end: 395, progress: glyphState.batteryProgress)
+            }
+            centerGlyph.offset(y: splitRingPercentage == nil ? metrics.wifiYOffset : 1)
+            curvedDots
+        }
+    }
+
+    private var splitRingPercentage: Int? {
+        guard showPercentage, status.battery.isAvailable,
+              let percentage = status.battery.percentage, (0...100).contains(percentage) else { return nil }
+        return percentage
+    }
+
+    private func batteryTrack(start: Double, end: Double, progress: Double) -> some View {
+        ZStack {
+            DuoArcShape(startDegrees: start, endDegrees: end, progress: 1)
+                .stroke(style: StrokeStyle(lineWidth: metrics.ringLineWidth, lineCap: .round))
+                .opacity(0.18)
+            DuoArcShape(startDegrees: start, endDegrees: end, progress: progress)
+                .stroke(style: StrokeStyle(lineWidth: metrics.ringLineWidth, lineCap: .round))
+                .foregroundStyle((status.battery.percentage ?? 100) < 20 ? Color.red : Color.primary)
+                .opacity(glyphState.batteryArcOpacity)
+                .animation(arcAnimation, value: progress)
+        }
+        .frame(width: metrics.ringDiameter, height: metrics.ringDiameter)
+        .offset(y: metrics.ringYOffset)
+    }
+
+    private var curvedDots: some View {
+        let dots = BluetoothDotPresentation(bluetooth: status.bluetooth, configuration: dotConfiguration).dots
+        return ZStack {
+            ForEach(dots.indices, id: \.self) { index in
+                let position = metrics.dotPosition(at: index)
+                DuoDotRow(dots: [dots[index]], diameter: metrics.dotDiameter,
+                          spacing: 0, animationsEnabled: animationsEnabled)
+                    .offset(x: position.x, y: position.y)
+            }
+        }
     }
 
     private var arcAnimation: Animation? {
