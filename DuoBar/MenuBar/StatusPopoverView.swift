@@ -176,6 +176,7 @@ struct StatusPopoverView: View {
             ))
             .labelsHidden()
             .toggleStyle(.switch)
+            .controlSize(.mini)
             .accessibilityLabel(localized("Wi-Fi power"))
         )
     }
