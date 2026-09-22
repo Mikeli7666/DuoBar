@@ -84,3 +84,6 @@
 "volume unavailable" = "volume unavailable";
 "battery unavailable" = "battery unavailable";
 "%@, %@, %@" = "%@, %@, %@";
+"Sound Settings…" = "Sound Settings…";
+"Select audio output" = "Select audio output";
+"No output devices" = "No output devices";

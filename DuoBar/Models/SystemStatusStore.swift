@@ -153,6 +153,23 @@ final class SystemStatusStore: ObservableObject {
         return audioOutputService.setMuted(muted)
     }
 
+    @discardableResult
+    func setDefaultOutput(uid: String) -> Bool {
+        #if DEBUG
+        if var audio = debugAudioOverride {
+            guard let device = audio.selectableOutputs.first(where: { $0.uid == uid }) else {
+                return false
+            }
+            audio.defaultOutput = device
+            audio.connectedBluetoothOutputs = audio.selectableOutputs.filter(\.transport.isBluetooth)
+            debugAudioOverride = audio
+            mutate { $0.audio = audio }
+            return true
+        }
+        #endif
+        return audioOutputService.setDefaultOutput(uid: uid)
+    }
+
     private func mutate(_ update: (inout SystemStatus) -> Void) {
         let previous = status
         var next = status
@@ -288,7 +305,8 @@ final class SystemStatusStore: ObservableObject {
             isAvailable: true,
             defaultOutput: outputDevice,
             volume: OutputVolumeStatus(level: 0.75, isMuted: false, isSettable: true, isMuteSettable: true),
-            connectedBluetoothOutputs: []
+            connectedBluetoothOutputs: [],
+            availableOutputs: [outputDevice]
         )
         var bluetooth = BluetoothStatus(isAvailable: true, isPoweredOn: true)
 

@@ -109,21 +109,41 @@ enum DebugAudioDeviceState: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 
     var status: AudioStatus {
-        let transport: AudioDeviceTransport = self == .builtIn ? .builtIn : .bluetooth
-        let device = AudioDeviceStatus(
-            uid: "debug-\(rawValue)",
-            name: rawValue,
-            transport: transport,
+        let builtIn = AudioDeviceStatus(
+            uid: "debug-MacBook Speakers",
+            name: "MacBook Speakers",
+            transport: .builtIn,
             isAlive: true,
-            modelUID: self == .airPods ? "2027 4c" : nil,
-            manufacturer: self == .airPods ? "Apple Inc." : nil,
-            terminalType: self == .builtIn ? .other(0) : .headphones
+            terminalType: .other(0)
         )
+        let airPods = AudioDeviceStatus(
+            uid: "debug-AirPods Pro",
+            name: "AirPods Pro",
+            transport: .bluetooth,
+            isAlive: true,
+            modelUID: "2027 4c",
+            manufacturer: "Apple Inc.",
+            terminalType: .headphones
+        )
+        let headphones = AudioDeviceStatus(
+            uid: "debug-Bluetooth Headphones",
+            name: "Bluetooth Headphones",
+            transport: .bluetooth,
+            isAlive: true,
+            terminalType: .headphones
+        )
+        let selected: AudioDeviceStatus
+        switch self {
+        case .builtIn: selected = builtIn
+        case .airPods: selected = airPods
+        case .headphones: selected = headphones
+        }
         return AudioStatus(
             isAvailable: true,
-            defaultOutput: device,
+            defaultOutput: selected,
             volume: OutputVolumeStatus(level: 0.75, isMuted: false, isSettable: true, isMuteSettable: true),
-            connectedBluetoothOutputs: transport.isBluetooth ? [device] : []
+            connectedBluetoothOutputs: [airPods, headphones],
+            availableOutputs: [builtIn, airPods, headphones]
         )
     }
 }

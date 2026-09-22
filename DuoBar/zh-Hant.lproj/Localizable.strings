@@ -84,3 +84,6 @@
 "volume unavailable" = "音量無法使用";
 "battery unavailable" = "電池無法使用";
 "%@, %@, %@" = "%@、%@、%@";
+"Sound Settings…" = "聲音設定…";
+"Select audio output" = "選擇音訊輸出";
+"No output devices" = "沒有輸出裝置";

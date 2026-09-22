@@ -30,7 +30,10 @@ final class LocalizationTests: XCTestCase {
         "Prefer Thermal",
         "%d%%",
         "volume %d percent",
-        "battery %d percent"
+        "battery %d percent",
+        "Sound Settings…",
+        "Select audio output",
+        "No output devices"
     ]
 
     func testAllSupportedLocalizationResourcesExist() {

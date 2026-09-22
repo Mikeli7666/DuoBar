@@ -98,6 +98,37 @@ final class AudioOutputService {
         return result == noErr
     }
 
+    @discardableResult
+    func setDefaultOutput(uid: String) -> Bool {
+        guard let deviceID = deviceID(forUID: uid), deviceID != kAudioObjectUnknown else {
+            return false
+        }
+        if deviceID == currentDefaultDeviceID {
+            return true
+        }
+
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyDefaultOutputDevice,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        guard isSettable(objectID: Self.systemObject, address: address) else {
+            return false
+        }
+
+        var value = deviceID
+        let result = AudioObjectSetPropertyData(
+            Self.systemObject,
+            &address,
+            0,
+            nil,
+            UInt32(MemoryLayout<AudioDeviceID>.size),
+            &value
+        )
+        refresh(rebindDeviceListeners: true)
+        return result == noErr && currentDefaultDeviceID == deviceID
+    }
+
     private func refresh(rebindDeviceListeners: Bool) {
         let defaultDeviceID = readDefaultOutputDeviceID()
         if rebindDeviceListeners || defaultDeviceID != currentDefaultDeviceID {
@@ -105,9 +136,7 @@ final class AudioOutputService {
             bindDefaultDeviceListeners()
         }
 
-        let outputDevices = readAudioDeviceIDs()
-            .filter(isOutputDevice)
-            .compactMap(makeDeviceStatus)
+        let outputDevices = selectableOutputDevices()
         let defaultOutput = outputDevices.first { $0.uid == makeDeviceStatus(defaultDeviceID)?.uid }
             ?? makeDeviceStatus(defaultDeviceID)
         let bluetoothOutputs = outputDevices
@@ -120,7 +149,8 @@ final class AudioOutputService {
                 isAvailable: defaultOutput != nil || !outputDevices.isEmpty,
                 defaultOutput: defaultOutput,
                 volume: volume,
-                connectedBluetoothOutputs: bluetoothOutputs
+                connectedBluetoothOutputs: bluetoothOutputs,
+                availableOutputs: outputDevices
             )
         )
     }
@@ -199,6 +229,59 @@ final class AudioOutputService {
             AudioObjectGetPropertyData(Self.systemObject, &address, 0, nil, &dataSize, bytes.baseAddress!)
         }
         return result == noErr ? devices : []
+    }
+
+    private func selectableOutputDevices() -> [AudioDeviceStatus] {
+        var seen = Set<String>()
+        return readAudioDeviceIDs()
+            .filter(isOutputDevice)
+            .filter { !isHidden($0) }
+            .filter(canBeDefaultOutput)
+            .compactMap(makeDeviceStatus)
+            .filter(\.isAlive)
+            .filter { seen.insert($0.uid).inserted }
+            .sorted(by: Self.compareForPicker)
+    }
+
+    private func deviceID(forUID uid: String) -> AudioDeviceID? {
+        readAudioDeviceIDs().first { makeDeviceStatus($0)?.uid == uid }
+    }
+
+    private func isHidden(_ deviceID: AudioDeviceID) -> Bool {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyIsHidden,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        return readUInt32(objectID: deviceID, address: &address).map { $0 != 0 } ?? false
+    }
+
+    private func canBeDefaultOutput(_ deviceID: AudioDeviceID) -> Bool {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyDeviceCanBeDefaultDevice,
+            mScope: kAudioDevicePropertyScopeOutput,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        return readUInt32(objectID: deviceID, address: &address).map { $0 != 0 } ?? true
+    }
+
+    private static func compareForPicker(_ lhs: AudioDeviceStatus, _ rhs: AudioDeviceStatus) -> Bool {
+        let leftRank = sortRank(lhs.transport)
+        let rightRank = sortRank(rhs.transport)
+        if leftRank != rightRank { return leftRank < rightRank }
+        return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
+    }
+
+    private static func sortRank(_ transport: AudioDeviceTransport) -> Int {
+        switch transport {
+        case .builtIn: 0
+        case .bluetooth, .bluetoothLE: 1
+        case .usb: 2
+        case .hdmi, .displayPort: 3
+        case .airPlay: 4
+        case .virtual: 5
+        case .other: 6
+        }
     }
 
     private func isOutputDevice(_ deviceID: AudioDeviceID) -> Bool {

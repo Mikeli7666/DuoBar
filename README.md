@@ -54,11 +54,11 @@ The original 1.0 release established DuoBar's Battery, Network, and Volume found
 - Wi-Fi network name display and public Wi-Fi power control
 - Optional Open on Hover popover behavior
 - Four-dot live volume indicator
-- Compact volume slider and public Core Audio mute control where supported
+- Compact volume slider, public Core Audio mute, and output-device switching where supported
 - Temporary AirPods/headphones connection presentation
 - Adjustable menu-bar Icon Size
 - English, Simplified Chinese, and Traditional Chinese localization
-- Compact custom popover: Network, Volume, Battery, Audio Output, Settings, and Quit
+- Compact custom popover: Wi-Fi power, Volume, Audio Output selection, Battery, Settings, and Quit
 - Light and Dark Mode
 - Launch at Login
 - Universal 2: Apple Silicon and Intel support on macOS 13+
@@ -104,6 +104,7 @@ AirPods and Bluetooth audio classification is best-effort using public system me
 - The Wi-Fi network name may be unavailable without Location permission or when macOS withholds it.
 - Wi-Fi strength uses documented RSSI data and broad signal ranges; it does not reproduce Apple's private icon algorithm.
 - Some audio devices expose fixed or externally controlled volume.
+- DuoBar does not join Wi-Fi networks or pair Bluetooth devices.
 - Bluetooth audio and AirPods family detection is best-effort through public APIs.
 
 ## Build from source

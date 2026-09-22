@@ -147,6 +147,29 @@ final class HardwareIntegrationTests: XCTestCase {
         XCTAssertEqual(DuoGlyphState(status: current).centerState, normalGlyph.centerState)
     }
 
+    @MainActor
+    func testDefaultOutputRoundTrip() throws {
+        try requireHardwareValidation()
+
+        let service = AudioOutputService()
+        var latest: AudioStatus?
+        service.onStatusChange = { latest = $0 }
+        service.start()
+
+        let initial = try XCTUnwrap(latest)
+        let originalUID = try XCTUnwrap(initial.defaultOutput?.uid)
+        print("HARDWARE selectableOutputs=\(initial.selectableOutputs.map { "\($0.name)[\($0.uid)/\($0.transport)]" })")
+        guard let other = initial.selectableOutputs.first(where: { $0.uid != originalUID }) else {
+            throw XCTSkip("Need at least two output devices that can be the system default")
+        }
+        defer { _ = service.setDefaultOutput(uid: originalUID) }
+
+        XCTAssertTrue(service.setDefaultOutput(uid: other.uid))
+        XCTAssertEqual(latest?.defaultOutput?.uid, other.uid)
+        XCTAssertTrue(service.setDefaultOutput(uid: originalUID))
+        XCTAssertEqual(latest?.defaultOutput?.uid, originalUID)
+    }
+
     private func requireHardwareValidation() throws {
         guard ProcessInfo.processInfo.environment["DUOBAR_HARDWARE_VALIDATION"] == "1" else {
             throw XCTSkip("Enable explicit real-hardware validation with DUOBAR_HARDWARE_VALIDATION=1")
