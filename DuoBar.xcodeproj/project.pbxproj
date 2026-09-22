@@ -177,6 +177,8 @@
 				en,
 				"zh-Hans",
 				"zh-Hant",
+				ru,
+				uk,
 				Base,
 			);
 			mainGroup = A10000000000000000000002;

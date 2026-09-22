@@ -57,7 +57,7 @@ The original 1.0 release established DuoBar's Battery, Network, and Volume found
 - Compact volume slider and public Core Audio mute control where supported
 - Temporary AirPods/headphones connection presentation
 - Adjustable menu-bar Icon Size
-- English, Simplified Chinese, and Traditional Chinese localization
+- English, Russian, Ukrainian, Simplified Chinese, and Traditional Chinese
 - Compact custom popover: Network, Volume, Battery, Audio Output, Settings, and Quit
 - Light and Dark Mode
 - Launch at Login
