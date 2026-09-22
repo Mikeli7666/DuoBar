@@ -58,7 +58,7 @@ The original 1.0 release established DuoBar's Battery, Network, and Volume found
 - Temporary AirPods/headphones connection presentation
 - Adjustable menu-bar Icon Size
 - English, Russian, Ukrainian, Simplified Chinese, and Traditional Chinese
-- Compact custom popover: Wi-Fi power, Volume, Audio Output selection, Battery, Settings, and Quit
+- Compact custom popover: Network and Battery open System Settings, Wi-Fi power, Volume, Audio Output selection, Settings, and Quit
 - Light and Dark Mode
 - Launch at Login
 - Universal 2: Apple Silicon and Intel support on macOS 13+

@@ -86,4 +86,7 @@
 "%@, %@, %@" = "%@，%@，%@";
 "Sound Settings…" = "声音设置…";
 "Select audio output" = "选择音频输出";
+"Open Wi-Fi Settings" = "打开无线局域网设置";
+"Open Network Settings" = "打开网络设置";
+"Open Battery Settings" = "打开电池设置";
 "No output devices" = "没有输出设备";

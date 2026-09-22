@@ -33,6 +33,9 @@ final class LocalizationTests: XCTestCase {
         "battery %d percent",
         "Sound Settings…",
         "Select audio output",
+        "Open Wi-Fi Settings",
+        "Open Network Settings",
+        "Open Battery Settings",
         "No output devices"
     ]
 
