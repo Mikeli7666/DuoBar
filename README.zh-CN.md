@@ -1,6 +1,6 @@
 # DuoBar
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+[English](README.md) | [Русский](README.ru.md) | [简体中文](README.zh-CN.md)
 
 把 iPhone Duo 风格的三合一状态指示器带到 Mac 菜单栏。
 
