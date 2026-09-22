@@ -1,0 +1,2 @@
+"NSBluetoothAlwaysUsageDescription" = "DuoBar використовує доступність Bluetooth і відкриті метадані аудіо, щоб розпізнавати підключення бездротових навушників.";
+"NSLocationWhenInUseUsageDescription" = "DuoBar запитує геолокацію лише щоб показати ім’я мережі Wi‑Fi, до якої ви підключені.";

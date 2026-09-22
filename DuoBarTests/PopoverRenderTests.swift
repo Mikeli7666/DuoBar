@@ -9,15 +9,15 @@ final class PopoverRenderTests: XCTestCase {
             battery: BatteryStatus(percentage: 96, isCharging: false, isPluggedIn: true, isFullyCharged: false, isAvailable: true),
             showPercentage: true
         )
-        XCTAssertEqual(plugged.trailingValue, "96%")
-        XCTAssertEqual(plugged.detail, "Power adapter connected")
+        XCTAssertEqual(plugged.trailingValue, localized("%d%%", 96))
+        XCTAssertEqual(plugged.detail, localized("Power adapter connected"))
 
         let unplugged = BatteryStatusRow(
             battery: BatteryStatus(percentage: 96, isCharging: false, isPluggedIn: false, isFullyCharged: false, isAvailable: true),
             showPercentage: true
         )
-        XCTAssertEqual(unplugged.trailingValue, "96%")
-        XCTAssertEqual(unplugged.detail, "Using battery power")
+        XCTAssertEqual(unplugged.trailingValue, localized("%d%%", 96))
+        XCTAssertEqual(unplugged.detail, localized("Using battery power"))
 
         let hidden = BatteryStatusRow(
             battery: BatteryStatus(percentage: 96, isCharging: false, isPluggedIn: true, isFullyCharged: false, isAvailable: true),
