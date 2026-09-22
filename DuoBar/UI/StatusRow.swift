@@ -14,6 +14,8 @@ struct StatusRow: View {
     let tint: Color
     var accessory: Accessory = .none
     let trailing: AnyView?
+    var onActivate: (() -> Void)?
+    var activationHint: String?
 
     init(
         symbol: String,
@@ -22,7 +24,9 @@ struct StatusRow: View {
         stateText: String,
         tint: Color,
         accessory: Accessory = .none,
-        trailing: AnyView? = nil
+        trailing: AnyView? = nil,
+        onActivate: (() -> Void)? = nil,
+        activationHint: String? = nil
     ) {
         self.symbol = symbol
         self.title = title
@@ -31,9 +35,46 @@ struct StatusRow: View {
         self.tint = tint
         self.accessory = accessory
         self.trailing = trailing
+        self.onActivate = onActivate
+        self.activationHint = activationHint
     }
 
     var body: some View {
+        HStack(spacing: 8) {
+            activationContent
+            if let trailing {
+                trailing
+            }
+        }
+        .padding(.horizontal, 10)
+        .frame(height: 48)
+        .background(.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+    }
+
+    @ViewBuilder
+    private var activationContent: some View {
+        if let onActivate {
+            Group {
+                if let activationHint {
+                    Button(action: onActivate) {
+                        labelContent
+                    }
+                    .accessibilityHint(activationHint)
+                } else {
+                    Button(action: onActivate) {
+                        labelContent
+                    }
+                }
+            }
+            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        } else {
+            labelContent
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private var labelContent: some View {
         HStack(spacing: 11) {
             Image(systemName: symbol)
                 .font(.system(size: 13, weight: .semibold))
@@ -58,9 +99,7 @@ struct StatusRow: View {
 
             Spacer(minLength: 8)
 
-            if let trailing {
-                trailing
-            } else {
+            if trailing == nil {
                 Text(stateText)
                     .font(.system(size: 10.5, weight: .medium, design: .rounded))
                     .foregroundStyle(.secondary)
@@ -68,18 +107,15 @@ struct StatusRow: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.72)
                     .layoutPriority(0)
+            }
 
-                if let accessorySymbol {
-                    Image(systemName: accessorySymbol)
-                        .font(.system(size: 9, weight: .semibold))
-                        .foregroundStyle(.tertiary)
-                }
+            if let accessorySymbol {
+                Image(systemName: accessorySymbol)
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(.tertiary)
             }
         }
-        .padding(.horizontal, 10)
-        .frame(height: 48)
-        .background(.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
-        .contentShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .contentShape(Rectangle())
     }
 
     private var accessorySymbol: String? {

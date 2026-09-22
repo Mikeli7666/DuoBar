@@ -33,7 +33,10 @@ struct StatusPopoverView: View {
                 detail: networkDetail,
                 stateText: networkState,
                 tint: .primary,
-                trailing: wifiPowerToggle
+                accessory: .disclosure,
+                trailing: wifiPowerToggle,
+                onActivate: openNetworkSettings,
+                activationHint: networkSettingsHint
             )
 
             VolumeStatusRow(
@@ -44,10 +47,16 @@ struct StatusPopoverView: View {
                 onSetMuted: statusStore.setMuted
             )
 
-            BatteryStatusRow(
-                battery: statusStore.status.battery,
-                showPercentage: showBatteryPercentage
-            )
+            Button(action: openBatterySettings) {
+                BatteryStatusRow(
+                    battery: statusStore.status.battery,
+                    showPercentage: showBatteryPercentage,
+                    showsDisclosure: true
+                )
+            }
+            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity)
+            .accessibilityHint(localized("Open Battery Settings"))
 
             AudioOutputRow(
                 symbol: audioOutputSymbol,
@@ -57,10 +66,7 @@ struct StatusPopoverView: View {
                 outputs: statusStore.status.audio.selectableOutputs,
                 selectedUID: statusStore.status.audio.defaultOutput?.uid,
                 onSelect: { statusStore.setDefaultOutput(uid: $0) },
-                onOpenSoundSettings: {
-                    _ = SystemSettingsOpener.openSoundSettings()
-                    onClose()
-                }
+                onOpenSoundSettings: openSoundSettings
             )
 
             // Development diagnostics belong in the dedicated DEBUG diagnostics
@@ -130,6 +136,27 @@ struct StatusPopoverView: View {
             }
         }
         return nil
+    }
+
+    private var networkSettingsHint: String {
+        SystemSettingsOpener.pane(for: statusStore.status.network) == .network
+            ? localized("Open Network Settings")
+            : localized("Open Wi-Fi Settings")
+    }
+
+    private func openNetworkSettings() {
+        _ = SystemSettingsOpener.open(SystemSettingsOpener.pane(for: statusStore.status.network))
+        onClose()
+    }
+
+    private func openBatterySettings() {
+        _ = SystemSettingsOpener.open(.battery)
+        onClose()
+    }
+
+    private func openSoundSettings() {
+        _ = SystemSettingsOpener.open(.sound)
+        onClose()
     }
 
     private var networkSymbol: String {
@@ -218,6 +245,7 @@ struct StatusPopoverView: View {
 struct BatteryStatusRow: View {
     let battery: BatteryStatus
     let showPercentage: Bool
+    var showsDisclosure = false
 
     var body: some View {
         HStack(spacing: 11) {
@@ -244,6 +272,12 @@ struct BatteryStatusRow: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.72)
+            }
+
+            if showsDisclosure {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(.tertiary)
             }
         }
         .padding(.horizontal, 10)
