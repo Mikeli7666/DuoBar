@@ -1,11 +1,18 @@
 import SwiftUI
 
 struct StatusRow: View {
+    enum Accessory {
+        case none
+        case disclosure
+        case menu
+    }
+
     let symbol: String
     let title: String
     let detail: String
     let stateText: String
     let tint: Color
+    var accessory: Accessory = .none
     let trailing: AnyView?
 
     init(
@@ -14,6 +21,7 @@ struct StatusRow: View {
         detail: String,
         stateText: String,
         tint: Color,
+        accessory: Accessory = .none,
         trailing: AnyView? = nil
     ) {
         self.symbol = symbol
@@ -21,6 +29,7 @@ struct StatusRow: View {
         self.detail = detail
         self.stateText = stateText
         self.tint = tint
+        self.accessory = accessory
         self.trailing = trailing
     }
 
@@ -59,10 +68,25 @@ struct StatusRow: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.72)
                     .layoutPriority(0)
+
+                if let accessorySymbol {
+                    Image(systemName: accessorySymbol)
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(.tertiary)
+                }
             }
         }
         .padding(.horizontal, 10)
         .frame(height: 48)
         .background(.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+    }
+
+    private var accessorySymbol: String? {
+        switch accessory {
+        case .none: nil
+        case .disclosure: "chevron.right"
+        case .menu: "chevron.up.chevron.down"
+        }
     }
 }

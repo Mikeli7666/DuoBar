@@ -212,6 +212,7 @@ struct AudioStatus: Equatable, Sendable {
     var defaultOutput: AudioDeviceStatus?
     var volume: OutputVolumeStatus
     var connectedBluetoothOutputs: [AudioDeviceStatus]
+    var availableOutputs: [AudioDeviceStatus] = []
 
     static let unavailable = AudioStatus(
         isAvailable: false,
@@ -225,6 +226,27 @@ struct AudioStatus: Equatable, Sendable {
             return defaultOutput
         }
         return connectedBluetoothOutputs.first ?? defaultOutput
+    }
+
+    var selectableOutputs: [AudioDeviceStatus] {
+        var seen = Set<String>()
+        var ordered: [AudioDeviceStatus] = []
+
+        let source = availableOutputs.isEmpty
+            ? [defaultOutput].compactMap { $0 } + connectedBluetoothOutputs
+            : availableOutputs
+
+        for device in source where device.isAlive {
+            if seen.insert(device.uid).inserted {
+                ordered.append(device)
+            }
+        }
+
+        if let defaultOutput, defaultOutput.isAlive, seen.insert(defaultOutput.uid).inserted {
+            ordered.insert(defaultOutput, at: 0)
+        }
+
+        return ordered
     }
 }
 
