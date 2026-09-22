@@ -86,4 +86,7 @@
 "%@, %@, %@" = "%@, %@, %@";
 "Sound Settings…" = "Настройки звука…";
 "Select audio output" = "Выбрать аудиовыход";
+"Open Wi-Fi Settings" = "Открыть настройки Wi‑Fi";
+"Open Network Settings" = "Открыть настройки сети";
+"Open Battery Settings" = "Открыть настройки аккумулятора";
 "No output devices" = "Нет устройств вывода";
