@@ -8,7 +8,7 @@
 
 [English](README.md) | [Русский](README.ru.md) | [简体中文](README.zh-CN.md)
 
-[**Download DuoBar 1.2.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.0/DuoBar-1.2.0.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
+[**Download DuoBar 1.2.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.1/DuoBar-1.2.1.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
 
 macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
 
@@ -34,7 +34,7 @@ On MacBooks, the outer Battery Ring shows live battery level, a dynamic charging
 
 ## DuoBar on macOS
 
-The original 1.0 release established DuoBar's Battery, Network, and Volume foundation. The current 1.2 release builds on it with broader connectivity controls, refined visuals, and localization.
+The original 1.0 release established DuoBar's Battery, Network, and Volume foundation. The current 1.2.1 release builds on it with broader connectivity controls, refined visuals, localization, and compatibility fixes.
 
 <p align="center">
   <img src="marketing/1.0/DuoBar-1.0-Feature-Overview.png" alt="DuoBar 1.0 feature states: Default, Battery Low, Ethernet, AirPods Connected, and No Connection" width="100%">
@@ -72,13 +72,13 @@ The original 1.0 release established DuoBar's Battery, Network, and Volume found
 
 ## Installation
 
-1. Download [DuoBar-1.2.0.dmg](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.0/DuoBar-1.2.0.dmg).
+1. Download [DuoBar-1.2.1.dmg](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.1/DuoBar-1.2.1.dmg).
 2. Open the DMG and move DuoBar to Applications.
 3. Launch DuoBar.
 
-DuoBar 1.2.0 uses Developer ID signing, Hardened Runtime, and Apple notarization. Never disable Gatekeeper or System Integrity Protection to install DuoBar.
+DuoBar 1.2.1 uses Developer ID signing, Hardened Runtime, and Apple notarization. Never disable Gatekeeper or System Integrity Protection to install DuoBar.
 
-SHA-256: `186f68d4af1eb8f096cc854b8dadb113875c01ebdebfeca44ca248c50d92ad37`
+SHA-256: `ac4c3acbe4569c2ccc984ff52c007c208a557abb96b32764a8ec6eeab79f0235`
 
 ## Permissions
 
