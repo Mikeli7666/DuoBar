@@ -6,11 +6,11 @@
 
 **Three live states. One glyph. Less menu bar clutter.**
 
-[English](README.md) | [Русский](README.ru.md) | [简体中文](README.zh-CN.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md)
 
 [**Download DuoBar 1.2.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.1/DuoBar-1.2.1.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
 
-macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
+DuoBar 1.2.1 (Build 5) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
 
 <br>
 
@@ -72,13 +72,16 @@ The original 1.0 release established DuoBar's Battery, Network, and Volume found
 
 ## Installation
 
-1. Download [DuoBar-1.2.1.dmg](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.1/DuoBar-1.2.1.dmg).
-2. Open the DMG and move DuoBar to Applications.
-3. Launch DuoBar.
+1. Open the [DuoBar 1.2.1 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.2.1) and find **Assets**.
+2. Download **DuoBar-1.2.1.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
+3. Double-click the DMG and drag **DuoBar.app** to **Applications**.
+4. Open Applications and launch DuoBar. It is a menu-bar utility and normally does not appear in the Dock.
 
-DuoBar 1.2.1 uses Developer ID signing, Hardened Runtime, and Apple notarization. Never disable Gatekeeper or System Integrity Protection to install DuoBar.
+DuoBar 1.2.1 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
 
 SHA-256: `ac4c3acbe4569c2ccc984ff52c007c208a557abb96b32764a8ec6eeab79f0235`
+
+Build and compatibility/reliability work was checked using Xcode 27 and the macOS 27 SDK while continuing to support macOS 13+. This does not claim macOS 27 hardware validation.
 
 ## Permissions
 

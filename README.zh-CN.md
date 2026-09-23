@@ -1,6 +1,6 @@
 # DuoBar
 
-[English](README.md) | [Русский](README.ru.md) | [简体中文](README.zh-CN.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md)
 
 把 iPhone Duo 风格的三合一状态指示器带到 Mac 菜单栏。
 
@@ -10,17 +10,17 @@
 - 网络
 - 音量
 
-[**下载 DuoBar 1.2.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.0/DuoBar-1.2.0.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**下载 DuoBar 1.2.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.1/DuoBar-1.2.1.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
-macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
+DuoBar 1.2.1（Build 5）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
 
 ## 📥 下载与安装教程
 
 ### 第一步：下载 DuoBar
 
-点击页面上方的“下载 DuoBar 1.2.0”。浏览器会下载：
+点击页面上方的“下载 DuoBar 1.2.1”。浏览器会下载：
 
-`DuoBar-1.2.0.dmg`
+`DuoBar-1.2.1.dmg`
 
 普通用户只需要这个 DMG 文件。不要下载：
 
@@ -31,13 +31,13 @@ macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
 
 如果你是从 GitHub Releases 页面开始：
 
-1. 找到最新版本 **DuoBar 1.2.0**。
+1. 找到最新版本 **DuoBar 1.2.1**。
 2. 找到页面下方的 **Assets** 文件列表。
-3. 点击 **DuoBar-1.2.0.dmg**。
+3. 点击 **DuoBar-1.2.1.dmg**。
 
 ### 第二步：安装
 
-1. 双击 `DuoBar-1.2.0.dmg`。
+1. 双击 `DuoBar-1.2.1.dmg`。
 2. Finder 会打开一个磁盘映像窗口。
 3. 将 `DuoBar.app` 拖到 **Applications / 应用程序** 文件夹；窗口中提供了应用程序文件夹入口。
 4. 等待复制完成。
@@ -46,11 +46,10 @@ macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
 
 ### 第三步：第一次打开
 
-DuoBar 1.2.0 已使用 Apple Developer ID 签名，并通过 Apple 公证（Notarization）。正常情况下可以直接打开。
+DuoBar 1.2.1 使用 Developer ID 签名并通过 Apple 公证。正常安装不需要关闭 Gatekeeper 或 SIP，也不需要 Terminal、`sudo` 或 `xattr`。
 
 DuoBar 是菜单栏应用，不会出现在 Dock 中。打开后，请查看屏幕最上方的 macOS 菜单栏，DuoBar 图标会在那里出现。
 
-正常安装不需要关闭 Gatekeeper 或 SIP，也不需要使用 Terminal、`sudo` 或 `xattr` 命令。
 
 ## 为什么会请求“位置”权限？
 
@@ -89,7 +88,7 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 
 - Battery Ring：显示电池电量、充电状态、动态充电闪电和可选的电池颜色编码
 - Adaptive Ring：在桌面 Mac 上显示亮度，并在需要时自动显示 CPU、内存或温度压力
-- 圆润的 Wi-Fi 指示器和 refined Duo 视觉语言
+- 圆润的 Wi-Fi 指示器和精致的 Duo 视觉风格
 - 显示当前 Wi-Fi 网络名称（SSID）
 - 直接在 DuoBar 中打开或关闭 Wi-Fi
 - Wi-Fi、Ethernet 和离线网络状态
@@ -108,9 +107,11 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 - 支持 Intel Mac
 - Universal 2
 
+使用 Xcode 27 和 macOS 27 SDK 完成构建及兼容性/可靠性工作，同时继续支持 macOS 13+；这不代表已完成 macOS 27 实机验证。
+
 ## 安全与隐私
 
-DuoBar 1.2.0 已使用 Apple Developer ID 签名，并通过 Apple 公证。DuoBar 不通过 Mac App Store 分发。
+DuoBar 1.2.1 使用 Apple Developer ID 签名并通过 Apple 公证。DuoBar 不通过 Mac App Store 分发。
 
 系统状态在本机处理：
 
@@ -137,9 +138,9 @@ DuoBar 是独立项目，与 Apple Inc. 没有隶属、赞助或认可关系。
 
 ## 下载完整性
 
-官方 DuoBar 1.2.0 DMG 的 SHA-256：
+官方 DuoBar 1.2.1 DMG 的 SHA-256：
 
-`186f68d4af1eb8f096cc854b8dadb113875c01ebdebfeca44ca248c50d92ad37`
+`ac4c3acbe4569c2ccc984ff52c007c208a557abb96b32764a8ec6eeab79f0235`
 
 普通用户不需要验证这一项。它主要用于希望确认下载文件完整性的用户。
 

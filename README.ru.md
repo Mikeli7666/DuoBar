@@ -1,20 +1,20 @@
 # DuoBar
 
-[English](README.md) | [Русский](README.ru.md) | [简体中文](README.zh-CN.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md)
 
 Индикатор в стиле iPhone Duo для строки меню macOS: батарея, сеть и громкость в одном значке.
 
-[**Скачать DuoBar 1.2.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.0/DuoBar-1.2.0.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**Скачать DuoBar 1.2.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.1/DuoBar-1.2.1.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
-macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
+DuoBar 1.2.1 (сборка 5) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
 
 ## Скачивание и установка
 
 ### Шаг 1. Скачать DuoBar
 
-Нажмите «Скачать DuoBar 1.2.0» выше. Браузер загрузит файл:
+Нажмите «Скачать DuoBar 1.2.1» выше. Браузер загрузит файл:
 
-`DuoBar-1.2.0.dmg`
+`DuoBar-1.2.1.dmg`
 
 Обычному пользователю нужен только этот DMG. Не скачивайте:
 
@@ -25,13 +25,13 @@ macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
 
 Если вы открыли страницу [Releases](https://github.com/Mikeli7666/DuoBar/releases):
 
-1. Найдите последнюю версию **DuoBar 1.2.0**.
+1. Найдите последнюю версию **DuoBar 1.2.1**.
 2. Внизу страницы откройте список **Assets**.
-3. Скачайте **DuoBar-1.2.0.dmg**.
+3. Скачайте **DuoBar-1.2.1.dmg**.
 
 ### Шаг 2. Установить
 
-1. Дважды щёлкните `DuoBar-1.2.0.dmg`.
+1. Дважды щёлкните `DuoBar-1.2.1.dmg`.
 2. Finder откроет окно образа диска.
 3. Перетащите `DuoBar.app` в папку **Программы / Applications**.
 4. Дождитесь окончания копирования.
@@ -40,11 +40,10 @@ macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
 
 ### Шаг 3. Первый запуск
 
-DuoBar 1.2.0 подписан Apple Developer ID и проходит нотаризацию Apple. В обычной ситуации приложение открывается сразу.
+DuoBar 1.2.1 подписан Developer ID и прошёл нотариальную проверку Apple. Для обычной установки не нужно отключать Gatekeeper или SIP, использовать Terminal, `sudo` или `xattr`.
 
 DuoBar живёт в строке меню и **не появляется в Dock**. После запуска смотрите на верхний край экрана — значок DuoBar будет там.
 
-Для установки не нужно отключать Gatekeeper или SIP и не нужны Terminal, `sudo` или `xattr`.
 
 ## Зачем доступ к геолокации?
 
@@ -80,7 +79,7 @@ DuoBar постоянно в строке меню. Три части значк
 ## Возможности
 
 - Battery Ring: заряд, состояние зарядки, динамическая молния и опциональная цветовая индикация
-- Adaptive Ring: на настольных Mac — яркость, а при необходимости автоматически CPU, память или температура
+- Adaptive Ring: на настольных Mac — яркость, а при необходимости автоматически нагрузку на CPU, память или тепловое состояние
 - Скруглённый индикатор Wi‑Fi и визуальный язык Duo
 - Имя текущей сети Wi‑Fi (SSID)
 - Включение и выключение Wi‑Fi прямо в DuoBar
@@ -101,7 +100,7 @@ DuoBar постоянно в строке меню. Три части значк
 
 ## Безопасность и приватность
 
-DuoBar 1.2.0 подписан Apple Developer ID и нотаризован Apple. Приложение не распространяется через Mac App Store.
+DuoBar 1.2.1 подписан Apple Developer ID и прошёл нотариальную проверку Apple. Приложение не распространяется через Mac App Store.
 
 Состояние системы обрабатывается локально:
 
@@ -128,11 +127,19 @@ DuoBar — независимый проект и не связан с Apple Inc
 
 ## Целостность загрузки
 
-SHA-256 официального DMG DuoBar 1.2.0:
+SHA-256 официального DMG DuoBar 1.2.1:
 
-`186f68d4af1eb8f096cc854b8dadb113875c01ebdebfeca44ca248c50d92ad37`
+`ac4c3acbe4569c2ccc984ff52c007c208a557abb96b32764a8ec6eeab79f0235`
 
 Обычному пользователю это проверять не нужно. Строка для тех, кто хочет убедиться, что файл не подменили.
+
+## Совместимость
+
+- macOS 13.0 или новее
+- Apple Silicon или Intel, Universal 2
+- Сборка и работы по совместимости/надёжности выполнены с Xcode 27 и SDK macOS 27 при сохранении поддержки macOS 13+. Это не заявление о завершённом тестировании macOS 27 на реальном оборудовании.
+
+В панели DuoBar доступны переключение аудиовыхода и быстрые переходы к настройкам Network, Battery и Sound.
 
 ## Лицензия
 
