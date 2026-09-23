@@ -14,7 +14,7 @@ DuoBar 1.2.1 (Build 5) · macOS 13+ · Apple Silicon or Intel · Universal 2 · 
 
 <br>
 
-<img src="marketing/1.0/launch-film/final/DuoBar-1.0-Launch-Poster.png" alt="DuoBar 1.0" width="820">
+<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.2.1 in the macOS menu bar" width="1340">
 
 </div>
 
@@ -28,6 +28,10 @@ DuoBar adapts the iPhone Duo-style three-in-one status concept for the Mac menu 
 
 Persistent status stays monochrome and native-looking. When AirPods or another supported Bluetooth audio output becomes active, the center briefly transitions from Network → AirPods/headphones → Network. Disconnecting does not trigger an animation.
 
+<p align="center">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.2.1 popover" width="480">
+</p>
+
 ## Adaptive Ring and Battery Ring
 
 On MacBooks, the outer Battery Ring shows live battery level, a dynamic charging bolt, and optional battery color coding for charging, Low Power Mode, and low-battery states. On desktop Macs, Adaptive Ring shows display brightness when publicly available and automatically surfaces sustained CPU, memory, or thermal pressure when it needs attention. It remains automatic: there is no manual metric selector.
@@ -37,12 +41,8 @@ On MacBooks, the outer Battery Ring shows live battery level, a dynamic charging
 The original 1.0 release established DuoBar's Battery, Network, and Volume foundation. The current 1.2.1 release builds on it with broader connectivity controls, refined visuals, localization, and compatibility fixes.
 
 <p align="center">
-  <img src="marketing/1.0/DuoBar-1.0-Feature-Overview.png" alt="DuoBar 1.0 feature states: Default, Battery Low, Ethernet, AirPods Connected, and No Connection" width="100%">
-</p>
-
-<p align="center">
   <a href="https://github.com/Mikeli7666/DuoBar/releases/download/v1.0.0/DuoBar-1.0-Official-Launch-Film.mp4">
-    Watch the DuoBar 1.0 Official Launch Film →
+    Historical: DuoBar 1.0 Official Launch Film →
   </a>
 </p>
 ## Features

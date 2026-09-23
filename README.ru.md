@@ -8,6 +8,10 @@
 
 DuoBar 1.2.1 (сборка 5) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
 
+<p align="center">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.2.1 в строке меню macOS" width="1340">
+</p>
+
 ## Скачивание и установка
 
 ### Шаг 1. Скачать DuoBar
@@ -75,6 +79,10 @@ DuoBar постоянно в строке меню. Три части значк
 - Выйти из DuoBar
 
 В настройках можно включить **Open on Hover** (открывать при наведении).
+
+<p align="center">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="Панель DuoBar 1.2.1" width="480">
+</p>
 
 ## Возможности
 

@@ -14,6 +14,10 @@
 
 DuoBar 1.2.1（Build 5）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
 
+<p align="center">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.2.1 菜单栏" width="1340">
+</p>
+
 ## 📥 下载与安装教程
 
 ### 第一步：下载 DuoBar
@@ -83,6 +87,10 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 点击「网络」会打开 Wi-Fi 或网络设置，行内开关只负责打开或关闭 Wi-Fi。点击「电池」会打开电池设置。
 
 设置中还可以选择开启 **Open on Hover（悬停打开）**。
+
+<p align="center">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.2.1 弹出面板" width="480">
+</p>
 
 ## 功能
 

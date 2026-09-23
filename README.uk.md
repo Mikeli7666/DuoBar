@@ -8,6 +8,10 @@
 
 DuoBar 1.2.1 (збірка 5) · macOS 13+ · Apple Silicon та Intel · Universal 2 · Безкоштовний проєкт із відкритим кодом
 
+<p align="center">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.2.1 у рядку меню macOS" width="1340">
+</p>
+
 ## 📥 Встановлення для початківців
 
 1. Відкрийте [реліз DuoBar 1.2.1](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.2.1).
@@ -30,6 +34,10 @@ DuoBar 1.2.1 підписано Developer ID та нотаризовано Apple
 - Тимчасове відображення AirPods/навушників, Open on Hover і регулювання розміру значка.
 - Швидкі переходи до налаштувань Network, Battery і Sound.
 - English, 简体中文, 繁體中文, русский та українська.
+
+<p align="center">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="Спливаюча панель DuoBar 1.2.1" width="480">
+</p>
 
 ## Системні вимоги та сумісність
 
