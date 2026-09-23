@@ -29,6 +29,10 @@ DuoBar adapts the iPhone Duo-style three-in-one status concept for the Mac menu 
 Persistent status stays monochrome and native-looking. When AirPods or another supported Bluetooth audio output becomes active, the center briefly transitions from Network → AirPods/headphones → Network. Disconnecting does not trigger an animation.
 
 <p align="center">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="DuoBar 1.2.1 visual states" width="800">
+</p>
+
+<p align="center">
   <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.2.1 popover" width="480">
 </p>
 

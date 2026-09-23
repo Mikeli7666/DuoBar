@@ -36,6 +36,10 @@ DuoBar 1.2.1 підписано Developer ID та нотаризовано Apple
 - English, 简体中文, 繁體中文, русский та українська.
 
 <p align="center">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="Стани DuoBar 1.2.1" width="800">
+</p>
+
+<p align="center">
   <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="Спливаюча панель DuoBar 1.2.1" width="480">
 </p>
 

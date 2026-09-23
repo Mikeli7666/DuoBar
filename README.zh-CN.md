@@ -75,6 +75,10 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 - **中间** → Wi-Fi、Ethernet 或其他网络状态
 - **下方四个点** → 音量
 
+<p align="center">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="DuoBar 1.2.1 状态" width="800">
+</p>
+
 点击 DuoBar 图标即可打开弹出面板。面板包含：
 
 - 网络
