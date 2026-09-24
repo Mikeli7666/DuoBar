@@ -124,4 +124,4 @@ DuoBar — независимый проект. Apple Inc. к нему не от
 
 ## Лицензия
 
-DuoBar распространяется по [лицензии MIT](LICENSE).
+DuoBar распространяется по [MIT License](LICENSE).

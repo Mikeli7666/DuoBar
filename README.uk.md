@@ -124,4 +124,4 @@ DuoBar — незалежний проєкт. Apple Inc. до нього не н
 
 ## Ліцензія
 
-DuoBar поширюється за [ліцензією MIT](LICENSE).
+DuoBar поширюється за [MIT License](LICENSE).
