@@ -16,7 +16,7 @@ macOS 15+ · Apple Silicon · Open Source
 
 DuoBar recreates the iPhone Duo three-in-one status concept on macOS, mapping real Mac system state into one compact menu-bar glyph:
 
-- **Outer arc** → live battery level
+- **Outer arc** → live battery level; white normally, green when plugged in, yellow at 20% or below, red at 10% or below (dim gray when unavailable)
 - **Center Wi-Fi glyph** → live Wi-Fi connection and signal
 - **Four lower dots** → Bluetooth state, connected-device count, pinned devices, or an accessory battery gauge
 - **Separate lightning indicator beside the ring** → charging

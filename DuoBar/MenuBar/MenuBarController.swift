@@ -8,6 +8,7 @@ final class MenuBarController: NSObject {
     private let statusStore: SystemStatusStore
     private var hostingView: PassthroughHostingView<DuoStatusView>?
     private var isInvalidated = false
+    private let settingsController = SettingsWindowController()
 
     init(statusStore: SystemStatusStore) {
         self.statusStore = statusStore
@@ -49,7 +50,11 @@ final class MenuBarController: NSObject {
         popover.behavior = .transient
         popover.animates = true
         let controller = NSHostingController(
-            rootView: StatusPopoverView(statusStore: statusStore) { [weak self] in
+            rootView: StatusPopoverView(statusStore: statusStore, onOpenSettings: { [weak self] in
+                guard let self else { return }
+                self.popover.performClose(nil)
+                self.settingsController.show(statusStore: self.statusStore)
+            }) { [weak self] in
                 self?.popover.performClose(nil)
             }
         )
@@ -86,6 +91,7 @@ final class MenuBarController: NSObject {
     func invalidate() {
         guard !isInvalidated else { return }
         isInvalidated = true
+        settingsController.close()
         popover.performClose(nil)
         hostingView?.removeFromSuperview()
         hostingView = nil

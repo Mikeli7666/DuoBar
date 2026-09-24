@@ -214,11 +214,7 @@ struct BluetoothControlView: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             if dotPreferences.mode == .pinnedDevices || dotPreferences.mode == .accessoryBattery {
-                SettingsLink { Text("Choose Dot Devices…") }
-                    .simultaneousGesture(TapGesture().onEnded {
-                        NSApp.activate(ignoringOtherApps: true)
-                        onOpenDuoSettings()
-                    })
+                Button("Choose Dot Devices…", action: onOpenDuoSettings)
             }
         }
         .font(.system(size: 11.5))

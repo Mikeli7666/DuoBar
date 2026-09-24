@@ -47,6 +47,7 @@ struct DuoGlyphView: View {
                 )
                 .frame(width: metrics.ringDiameter, height: metrics.ringDiameter)
                 .offset(y: metrics.ringYOffset)
+                .foregroundStyle(status.battery.ringState.color)
                 .opacity(glyphState.batteryArcOpacity)
                 .animation(arcAnimation, value: glyphState.batteryProgress)
                 .animation(layerAnimation, value: glyphState.batteryArcOpacity)
@@ -112,7 +113,7 @@ struct DuoGlyphView: View {
                 .opacity(0.18)
             DuoArcShape(startDegrees: start, endDegrees: end, progress: progress)
                 .stroke(style: StrokeStyle(lineWidth: metrics.ringLineWidth, lineCap: .round))
-                .foregroundStyle((status.battery.percentage ?? 100) < 20 ? Color.red : Color.primary)
+                .foregroundStyle(status.battery.ringState.color)
                 .opacity(glyphState.batteryArcOpacity)
                 .animation(arcAnimation, value: progress)
         }

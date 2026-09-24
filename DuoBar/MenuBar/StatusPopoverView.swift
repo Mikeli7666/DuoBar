@@ -11,12 +11,14 @@ struct StatusPopoverView: View {
     @StateObject private var bluetoothControls = BluetoothControls()
     private var dotPreferences = BluetoothDotPreferences()
     private let onClose: () -> Void
+    private let onOpenSettings: () -> Void
 
     private enum Section { case wifi, bluetooth, battery }
 
-    init(statusStore: SystemStatusStore, onClose: @escaping () -> Void) {
+    init(statusStore: SystemStatusStore, onOpenSettings: @escaping () -> Void, onClose: @escaping () -> Void) {
         self.statusStore = statusStore
         self.onClose = onClose
+        self.onOpenSettings = onOpenSettings
     }
 
     var body: some View {
@@ -75,7 +77,7 @@ struct StatusPopoverView: View {
             .accessibilityValue(expandedSection == .bluetooth ? "Expanded" : "Collapsed")
 
             if expandedSection == .bluetooth {
-                BluetoothControlView(statusStore: statusStore, controls: bluetoothControls, onOpenDuoSettings: onClose) {
+                BluetoothControlView(statusStore: statusStore, controls: bluetoothControls, onOpenDuoSettings: onOpenSettings) {
                     openSystemSettings("com.apple.BluetoothSettings")
                 }
             }
@@ -139,14 +141,10 @@ struct StatusPopoverView: View {
             Divider()
 
             HStack(spacing: 6) {
-                SettingsLink {
+                Button(action: onOpenSettings) {
                     Label("Settings", systemImage: "gearshape")
                 }
                 .buttonStyle(.plain)
-                .simultaneousGesture(TapGesture().onEnded {
-                    NSApp.activate(ignoringOtherApps: true)
-                    onClose()
-                })
 
                 Spacer()
 
