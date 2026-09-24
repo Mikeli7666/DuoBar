@@ -6,7 +6,7 @@
 
 **Three live states. One glyph. Less menu bar clutter.**
 
-[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
 
 [**Download DuoBar 1.2.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.1/DuoBar-1.2.1.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
 
@@ -61,7 +61,7 @@ The original 1.0 release established DuoBar's Battery, Network, and Volume found
 - Compact volume slider, public Core Audio mute, and output-device switching where supported
 - Temporary AirPods/headphones connection presentation
 - Adjustable menu-bar Icon Size
-- English, Russian, Ukrainian, Simplified Chinese, and Traditional Chinese
+- English, Russian, Ukrainian, Simplified Chinese, Traditional Chinese, and Thai
 - Compact custom popover: Network and Battery open System Settings, Wi-Fi power, Volume, Audio Output selection, Settings, and Quit
 - Light and Dark Mode
 - Launch at Login
