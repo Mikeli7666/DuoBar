@@ -11,9 +11,11 @@ enum DuoCenterState: Hashable {
     case airPods
     case headphones
     case audioDevice
+    case adaptiveBrightness
     case performanceCPU
     case performanceMemory
     case performanceThermal
+    case adaptiveEntry
 }
 
 enum DuoSemanticFeedback: Equatable {
@@ -112,7 +114,10 @@ struct DuoGlyphState: Equatable {
         self.ringPresentation = resolvedRing
         batteryProgress = resolvedRing.progress
         batteryArcOpacity = resolvedRing.opacity
-        isCharging = resolvedRing.mode == .battery && battery.isAvailable && battery.isCharging
+        isCharging = resolvedRing.mode == .battery
+            && battery.isAvailable
+            && battery.isCharging
+            && !battery.isFullyCharged
         batteryPresentation = resolvedRing.batteryPresentation
         volumeActiveDotCount = status.audio.volume.activeDotCount
 

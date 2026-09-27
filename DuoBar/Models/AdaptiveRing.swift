@@ -21,6 +21,32 @@ enum AdaptiveRingState: Equatable, Sendable {
     }
 }
 
+/// The user-visible identity of the currently active Adaptive source. Values
+/// are intentionally independent of their changing normalized ring progress.
+enum AdaptiveRingSourceIdentity: Hashable, Sendable {
+    case neutral
+    case brightness
+    case cpu
+    case memory
+    case thermal
+
+    init(state: AdaptiveRingState) {
+        switch state {
+        case .neutral:
+            self = .neutral
+        case .brightness:
+            self = .brightness
+        case let .performance(metric, _):
+            switch metric {
+            case .idle: self = .neutral
+            case .cpu: self = .cpu
+            case .memory: self = .memory
+            case .thermal: self = .thermal
+            }
+        }
+    }
+}
+
 struct AdaptiveRingCoordinator: Sendable {
     var brightnessMaximumAge: TimeInterval = 4
 
@@ -178,6 +204,36 @@ enum AdaptiveRingPresentation {
               newMetric != oldMetric
         else { return nil }
         return newMetric
+    }
+}
+
+enum AdaptiveEntryCenterPolicy {
+    static let duration: TimeInterval = 1.35
+
+    static func shouldRequest(from oldMode: LaptopRingMode, to newMode: LaptopRingMode) -> Bool {
+        oldMode == .battery && newMode == .adaptive
+    }
+
+    static func allows(over event: StatusEvent?) -> Bool {
+        guard let event else { return true }
+        if case .charging = event.kind { return true }
+        return false
+    }
+}
+
+enum AdaptiveSourcePresentationPolicy {
+    static let duration: TimeInterval = 1.35
+
+    static func shouldPresent(
+        from previous: AdaptiveRingSourceIdentity,
+        to current: AdaptiveRingSourceIdentity,
+        isAdaptiveEntryPresenting: Bool,
+        hasHigherPriorityEvent: Bool
+    ) -> Bool {
+        previous != current
+            && current != .neutral
+            && !isAdaptiveEntryPresenting
+            && !hasHigherPriorityEvent
     }
 }
 

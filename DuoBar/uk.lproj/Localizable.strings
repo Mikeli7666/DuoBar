@@ -4,8 +4,14 @@
 "Icon Size" = "Розмір значка";
 "Menu bar icon size" = "Розмір значка в рядку меню";
 "Small" = "Малий";
+"Default" = "Типовий";
 "Large" = "Великий";
 "Adjust DuoBar to better match your menu bar." = "Підлаштуйте DuoBar під ваш рядок меню.";
+"Choose a preset or fine-tune DuoBar to better match your menu bar." = "Виберіть розмір або точно налаштуйте DuoBar під рядок меню.";
+"DuoBar is running from the disk image." = "DuoBar запущено з образу диска.";
+"Move DuoBar to Applications to keep it installed after ejecting the disk image." = "Перемістіть DuoBar до «Applications», щоб він залишався встановленим після вилучення образу диска.";
+"Open Applications" = "Відкрити Applications";
+"Not Now" = "Не зараз";
 "General" = "Загальні";
 "Open on Hover" = "Відкривати при наведенні";
 "Open DuoBar when the pointer moves over the menu bar icon." = "Відкривати DuoBar, коли вказівник наводиться на значок у рядку меню.";

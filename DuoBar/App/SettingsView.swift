@@ -24,6 +24,13 @@ struct SettingsView: View {
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text(localized("Icon Size"))
+                    Picker(localized("Icon Size"), selection: resolvedMenuBarIconScale) {
+                        Text(localized("Small")).tag(MenuBarIconSize.minimumScale)
+                        Text(localized("Default")).tag(MenuBarIconSize.defaultScale)
+                        Text(localized("Large")).tag(MenuBarIconSize.maximumScale)
+                    }
+                    .pickerStyle(.segmented)
+                    .accessibilityLabel(localized("Menu bar icon size"))
                     HStack(spacing: 10) {
                         Text(localized("Small"))
                             .font(.caption)
@@ -39,7 +46,7 @@ struct SettingsView: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-                    Text(localized("Adjust DuoBar to better match your menu bar."))
+                    Text(localized("Choose a preset or fine-tune DuoBar to better match your menu bar."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

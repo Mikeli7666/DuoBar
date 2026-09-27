@@ -91,53 +91,61 @@ struct DuoGlyphView: View {
 
     var body: some View {
         ZStack {
-            if glyphState.ringPresentation.mode == .adaptive {
-                DuoArcShape(
-                    startDegrees: metrics.arcStartDegrees,
-                    endDegrees: metrics.arcEndDegrees,
-                    progress: CGFloat(glyphState.batteryProgress)
-                )
-                .stroke(arcColor, style: ringStrokeStyle)
-                .frame(width: metrics.ringPathDiameter, height: metrics.ringPathDiameter)
-                .offset(y: metrics.ringYOffset)
-                .opacity(glyphState.batteryArcOpacity)
-                .animation(arcAnimation, value: glyphState.batteryProgress)
-                .animation(arcOpacityAnimation, value: glyphState.batteryArcOpacity)
-            } else {
-                DuoArcShape(
-                    startDegrees: metrics.arcStartDegrees,
-                    endDegrees: metrics.arcEndDegrees,
-                    progress: 1
-                )
-                .stroke(arcColor, style: ringStrokeStyle)
-                .frame(width: metrics.ringPathDiameter, height: metrics.ringPathDiameter)
-                .offset(y: metrics.ringYOffset)
-                .opacity(
-                    glyphState.batteryArcOpacity
-                        * DuoNativeVisualConstants.chargingTrackOpacity
-                        * effectiveChargingTrackProgress
-                )
+            Group {
+                if glyphState.ringPresentation.mode == .adaptive {
+                    DuoArcShape(
+                        startDegrees: metrics.arcStartDegrees,
+                        endDegrees: metrics.arcEndDegrees,
+                        progress: CGFloat(glyphState.batteryProgress)
+                    )
+                    .stroke(ringColorOverride ?? .primary, style: ringStrokeStyle)
+                    .frame(width: metrics.ringPathDiameter, height: metrics.ringPathDiameter)
+                    .offset(y: metrics.ringYOffset)
+                    .opacity(glyphState.batteryArcOpacity)
+                    .animation(arcAnimation, value: glyphState.batteryProgress)
+                    .animation(arcOpacityAnimation, value: glyphState.batteryArcOpacity)
+                    .transition(.opacity)
+                } else {
+                    ZStack {
+                        DuoArcShape(
+                            startDegrees: metrics.arcStartDegrees,
+                            endDegrees: metrics.arcEndDegrees,
+                            progress: 1
+                        )
+                        .stroke(batteryArcColor, style: ringStrokeStyle)
+                        .frame(width: metrics.ringPathDiameter, height: metrics.ringPathDiameter)
+                        .offset(y: metrics.ringYOffset)
+                        .opacity(
+                            glyphState.batteryArcOpacity
+                                * DuoNativeVisualConstants.chargingTrackOpacity
+                                * Double(chargingTrackProgressOverride ?? chargingTrackProgress)
+                        )
 
-                DuoArcShape(
-                    startDegrees: metrics.arcStartDegrees,
-                    endDegrees: metrics.arcEndDegrees,
-                    progress: CGFloat(glyphState.batteryProgress)
-                )
-                .stroke(arcColor, style: ringStrokeStyle)
-                .frame(width: metrics.ringPathDiameter, height: metrics.ringPathDiameter)
-                .offset(y: metrics.ringYOffset)
-                .opacity(glyphState.batteryArcOpacity)
-                .animation(arcAnimation, value: glyphState.batteryProgress)
-                .animation(arcOpacityAnimation, value: glyphState.batteryArcOpacity)
+                        DuoArcShape(
+                            startDegrees: metrics.arcStartDegrees,
+                            endDegrees: metrics.arcEndDegrees,
+                            progress: CGFloat(glyphState.batteryProgress)
+                        )
+                        .stroke(batteryArcColor, style: ringStrokeStyle)
+                        .frame(width: metrics.ringPathDiameter, height: metrics.ringPathDiameter)
+                        .offset(y: metrics.ringYOffset)
+                        .opacity(glyphState.batteryArcOpacity)
+                        .animation(arcAnimation, value: glyphState.batteryProgress)
+                        .animation(arcOpacityAnimation, value: glyphState.batteryArcOpacity)
+
+                        DuoChargingBolt(
+                            progress: chargingBoltProgressOverride ?? chargingBoltProgress,
+                            size: chargingBoltSize,
+                            offset: chargingBoltOffset,
+                            color: .primary,
+                            opacity: chargingBoltOpacity
+                        )
+                    }
+                    .frame(width: DuoGlyphMetrics.canvasSize, height: DuoGlyphMetrics.canvasSize)
+                    .transition(.opacity)
+                }
             }
-
-            DuoChargingBolt(
-                progress: effectiveChargingBoltProgress,
-                size: chargingBoltSize,
-                offset: chargingBoltOffset,
-                color: .primary,
-                opacity: chargingBoltOpacity
-            )
+            .animation(ringModeTransitionAnimation, value: glyphState.ringPresentation.mode)
 
             DuoCenterTransitionView(
                 targetState: glyphState.centerState,
@@ -164,32 +172,32 @@ struct DuoGlyphView: View {
         .frame(width: metrics.overallSize, height: metrics.overallSize)
         .accessibilityHidden(true)
         .task(id: glyphState.audioEventID) {
-            centerPulseScale = 1
+            $centerPulseScale.wrappedValue = 1
             guard glyphState.audioEventID != nil, motionAllowed else { return }
             try? await Task.sleep(for: .milliseconds(260))
             guard !Task.isCancelled else { return }
             withAnimation(.easeOut(duration: 0.1)) {
-                centerPulseScale = 1.055
+                $centerPulseScale.wrappedValue = 1.055
             }
             try? await Task.sleep(for: .milliseconds(100))
             guard !Task.isCancelled else {
-                centerPulseScale = 1
+                $centerPulseScale.wrappedValue = 1
                 return
             }
             withAnimation(.spring(response: 0.24, dampingFraction: 0.9)) {
-                centerPulseScale = 1
+                $centerPulseScale.wrappedValue = 1
             }
         }
         .onChange(of: chargingPresentationTarget) { target in
             let showing = target > 0
             if chargingBoltProgressOverride == nil {
                 withAnimation(boltAnimation(showing: showing)) {
-                    chargingBoltProgress = target
+                    $chargingBoltProgress.wrappedValue = target
                 }
             }
             if chargingTrackProgressOverride == nil {
                 withAnimation(trackAnimation(showing: showing)) {
-                    chargingTrackProgress = target
+                    $chargingTrackProgress.wrappedValue = target
                 }
             }
         }
@@ -197,7 +205,7 @@ struct DuoGlyphView: View {
             guard chargingColorMixOverride == nil else { return }
             guard chargingColorMix != chargingColorTarget else { return }
             guard motionAllowed else {
-                chargingColorMix = chargingColorTarget
+                $chargingColorMix.wrappedValue = chargingColorTarget
                 return
             }
 
@@ -206,9 +214,16 @@ struct DuoGlyphView: View {
                 guard !Task.isCancelled else { return }
             }
             withAnimation(chargingColorAnimation(showing: chargingColorTarget > 0)) {
-                chargingColorMix = chargingColorTarget
+                $chargingColorMix.wrappedValue = chargingColorTarget
             }
         }
+        #if DEBUG
+        .onChange(of: glyphState.centerState) { centerState in
+            if centerState == .adaptiveEntry {
+                NSLog("%@", "[DuoBar Adaptive QA] sparkles displayed")
+            }
+        }
+        #endif
     }
 
     private var motionAllowed: Bool {
@@ -223,11 +238,7 @@ struct DuoGlyphView: View {
         )
     }
 
-    private var arcColor: Color {
-        if glyphState.ringPresentation.mode == .adaptive {
-            return ringColorOverride ?? .primary
-        }
-
+    private var batteryArcColor: Color {
         if effectiveChargingColorMix > 0 {
             let base = nsColor(for: nonChargingBatteryColorRole)
             let mixed = base.blended(
@@ -237,7 +248,7 @@ struct DuoGlyphView: View {
             return Color(nsColor: mixed)
         }
 
-        switch glyphState.batteryPresentation.colorRole {
+        switch BatteryRingPresentation.resolve(battery: status.battery, colorCodingEnabled: batteryColorCodingEnabled).colorRole {
         case .charging: return Color(nsColor: nsColor(for: nonChargingBatteryColorRole))
         case .lowPowerMode: return Color(nsColor: .systemYellow)
         case .lowBattery: return Color(nsColor: .systemRed)
@@ -265,14 +276,12 @@ struct DuoGlyphView: View {
         motionAllowed ? AnimationConstants.content : nil
     }
 
+    private var ringModeTransitionAnimation: Animation? {
+        motionAllowed ? .easeInOut(duration: 0.32) : nil
+    }
+
     private var chargingBoltOffset: CGSize {
-        let point: CGPoint
-        switch glyphState.batteryPresentation.boltPlacement {
-        case .topGap:
-            point = DuoRingGeometry.chargingBoltPoint(metrics: metrics)
-        case .none:
-            point = .zero
-        }
+        let point = DuoRingGeometry.chargingBoltPoint(metrics: metrics)
         return CGSize(
             width: point.x,
             height: point.y
@@ -293,16 +302,6 @@ struct DuoGlyphView: View {
 
     private var chargingColorTarget: CGFloat {
         glyphState.batteryPresentation.colorRole == .charging ? 1 : 0
-    }
-
-    private var effectiveChargingBoltProgress: CGFloat {
-        guard glyphState.ringPresentation.mode == .battery else { return 0 }
-        return chargingBoltProgressOverride ?? chargingBoltProgress
-    }
-
-    private var effectiveChargingTrackProgress: Double {
-        guard glyphState.ringPresentation.mode == .battery else { return 0 }
-        return Double(chargingTrackProgressOverride ?? chargingTrackProgress)
     }
 
     private var effectiveChargingColorMix: CGFloat {
@@ -454,24 +453,24 @@ struct DuoCenterTransitionView: View {
         .task(id: targetState) {
             try? await Task.sleep(for: .milliseconds(270))
             guard !Task.isCancelled else { return }
-            outgoingState = nil
+            $outgoingState.wrappedValue = nil
         }
     }
 
     private func transition(to newState: DuoCenterState) {
         guard newState != displayedState else { return }
         guard animationsEnabled else {
-            outgoingState = nil
-            displayedState = newState
-            transitionProgress = 1
+            $outgoingState.wrappedValue = nil
+            $displayedState.wrappedValue = newState
+            $transitionProgress.wrappedValue = 1
             return
         }
 
-        outgoingState = displayedState
-        displayedState = newState
-        transitionProgress = 0
+        $outgoingState.wrappedValue = displayedState
+        $displayedState.wrappedValue = newState
+        $transitionProgress.wrappedValue = 0
         withAnimation(.easeInOut(duration: 0.25)) {
-            transitionProgress = 1
+            $transitionProgress.wrappedValue = 1
         }
     }
 }
@@ -615,7 +614,7 @@ struct DuoCenterGlyph: View {
                     verticalAdjustment: wifiVerticalAdjustment
                 )
             } else {
-                Image(systemName: symbolName)
+                Image(systemName: Self.symbolName(for: state))
                     .font(.system(size: symbolSize, weight: .semibold))
                     .symbolRenderingMode(.monochrome)
             }
@@ -625,7 +624,7 @@ struct DuoCenterGlyph: View {
         .frame(width: size * 1.65, height: size * 1.4)
     }
 
-    private var symbolName: String {
+    static func symbolName(for state: DuoCenterState) -> String {
         switch state {
         case .wifi: "wifi"
         case .ethernet: "cable.connector.horizontal"
@@ -637,16 +636,18 @@ struct DuoCenterGlyph: View {
         case .airPods: "airpods"
         case .headphones: "headphones"
         case .audioDevice: "speaker.wave.2"
+        case .adaptiveBrightness: "sun.max.fill"
         case .performanceCPU: "cpu"
         case .performanceMemory: "memorychip"
         case .performanceThermal: "thermometer.medium"
+        case .adaptiveEntry: "sparkles"
         }
     }
 
     private var symbolSize: CGFloat {
         switch state {
         case .ethernet, .other, .airPodsPro, .airPodsMax, .airPods, .headphones, .audioDevice,
-             .performanceCPU, .performanceMemory, .performanceThermal:
+             .adaptiveBrightness, .performanceCPU, .performanceMemory, .performanceThermal, .adaptiveEntry:
             size * 0.92
         case .wifi, .offline, .unavailable: size
         }
@@ -787,7 +788,7 @@ private extension DuoCenterState {
         switch self {
         case .airPodsPro, .airPodsMax, .airPods, .headphones, .audioDevice: true
         case .wifi, .ethernet, .offline, .other, .unavailable,
-             .performanceCPU, .performanceMemory, .performanceThermal:
+             .adaptiveBrightness, .performanceCPU, .performanceMemory, .performanceThermal, .adaptiveEntry:
             false
         }
     }

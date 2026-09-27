@@ -35,13 +35,25 @@ final class SystemStatusStore: ObservableObject {
         let resolvedDeviceContext = deviceContext ?? DeviceContextService().current()
         self.deviceContext = resolvedDeviceContext
         let resolvedLaptopRingModeController = laptopRingModeController ?? LaptopRingModeController(
-            hasInternalBattery: resolvedDeviceContext.hasInternalBattery
+            hasInternalBattery: resolvedDeviceContext.hasInternalBattery,
+            fullChargeDelay: Self.developmentFullChargeDelay
         )
         self.laptopRingModeController = resolvedLaptopRingModeController
         laptopRingModeState = resolvedLaptopRingModeController.state
 
         resolvedLaptopRingModeController.onStateChange = { [weak self] state in
-            self?.laptopRingModeState = state
+            guard let self else { return }
+            let previous = self.laptopRingModeState
+            #if DEBUG
+            NSLog(
+                "%@",
+                "[DuoBar Adaptive QA] LaptopRingMode \(previous.mode) -> \(state.mode); "
+                    + "session=\(state.sessionStartPercentage.map(String.init) ?? "nil") "
+                    + "target=\(state.targetPercentage.map(String.init) ?? "nil") "
+                    + "waiting=\(state.isWaitingForFullChargeDelay)"
+            )
+            #endif
+            self.laptopRingModeState = state
         }
 
         batteryService.onStatusChange = { [weak self] value in
@@ -79,6 +91,16 @@ final class SystemStatusStore: ObservableObject {
         }
     }
 
+    private static let developmentFullChargeDelay: LaptopAdaptiveFullChargeDelay = {
+        #if DEBUG
+        // TEMPORARY: real-hardware MacBook Adaptive Ring QA. Restore `.default`
+        // after the physical full-charge-delay path has been validated.
+        return .oneMinute
+        #else
+        return .default
+        #endif
+    }()
+
     func refresh() {
         batteryService.refresh()
         networkService.refresh()
@@ -113,11 +135,11 @@ final class SystemStatusStore: ObservableObject {
         deviceContext.ringBehavior == .adaptiveRing || laptopRingModeState.mode == .adaptive
     }
 
-    /// The 1.2 production presentation policy. Laptop Adaptive-after-charging
-    /// remains available in the model for 1.3 development, but is intentionally
-    /// not eligible to change the released MacBook glyph yet.
+    /// The authoritative 1.3 production presentation policy. Desktop systems
+    /// are Adaptive by device policy; MacBooks become Adaptive only when the
+    /// existing laptop controller has transitioned out of Battery mode.
     var usesReleasedAdaptiveRing: Bool {
-        deviceContext.ringBehavior == .adaptiveRing
+        deviceContext.ringBehavior == .adaptiveRing || laptopRingModeState.mode == .adaptive
     }
 
     var usesLaptopAdaptiveRing: Bool {
@@ -235,6 +257,75 @@ final class SystemStatusStore: ObservableObject {
     func applyDebugBatteryStatus(_ battery: BatteryStatus) {
         debugBatteryOverride = battery
         acceptBatteryStatus(battery)
+    }
+
+    /// Resets the real controller with its synthetic 50% unplugged baseline
+    /// while preserving the battery percentage currently visible in the glyph.
+    func applyDebugAdaptiveBatteryBaseline() {
+        let controllerBattery = BatteryStatus(
+            percentage: DebugBatteryLevel.half.rawValue,
+            isCharging: false,
+            isPluggedIn: false,
+            isFullyCharged: false,
+            isAvailable: true
+        )
+        var visibleBattery = debugVisibleAdaptiveBattery()
+        visibleBattery.isCharging = false
+        visibleBattery.isPluggedIn = false
+        visibleBattery.isFullyCharged = false
+
+        debugBatteryOverride = visibleBattery
+        mutate { $0.battery = visibleBattery }
+        laptopRingModeController.update(with: controllerBattery)
+    }
+
+    /// Prepares the real controller's hidden 50% -> 80% session while only
+    /// publishing Charging semantics at the glyph's current visible percentage.
+    func applyDebugAdaptiveChargingBaseline() {
+        let controllerUnplugged = BatteryStatus(
+            percentage: DebugBatteryLevel.half.rawValue,
+            isCharging: false,
+            isPluggedIn: false,
+            isFullyCharged: false,
+            isAvailable: true
+        )
+        let controllerCharging = BatteryStatus(
+            percentage: DebugBatteryLevel.half.rawValue,
+            isCharging: true,
+            isPluggedIn: true,
+            isFullyCharged: false,
+            isAvailable: true
+        )
+        var visibleCharging = debugVisibleAdaptiveBattery()
+        visibleCharging.isCharging = true
+        visibleCharging.isPluggedIn = true
+        visibleCharging.isFullyCharged = false
+
+        laptopRingModeController.update(with: controllerUnplugged)
+        laptopRingModeController.update(with: controllerCharging)
+        debugBatteryOverride = visibleCharging
+        mutate { $0.battery = visibleCharging }
+    }
+
+    /// Crosses the prepared session target in the real controller while the
+    /// menu-bar glyph keeps its stable Charging baseline until mode changes.
+    func reachDebugAdaptiveTarget() {
+        guard var battery = debugBatteryOverride,
+              battery.isCharging,
+              battery.isPluggedIn,
+              let target = laptopRingModeState.targetPercentage
+        else { return }
+        battery.percentage = target
+        laptopRingModeController.update(with: battery)
+    }
+
+    private func debugVisibleAdaptiveBattery() -> BatteryStatus {
+        var battery = debugBatteryOverride ?? status.battery
+        if !battery.isAvailable || battery.percentage == nil {
+            battery.percentage = DebugBatteryLevel.half.rawValue
+            battery.isAvailable = true
+        }
+        return battery
     }
 
     func applyDebugNetworkState(_ networkState: DebugNetworkState) {

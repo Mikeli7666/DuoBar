@@ -97,16 +97,21 @@ final class LaptopRingModeController {
             return
         }
 
-        if battery.isFullyCharged {
-            ensureChargingSession(startingAt: percentage)
-            beginFullChargeDelayIfNeeded()
-            return
-        }
-
         if awaitingAuthoritativeFullCharge {
             // Full was previously observed but is no longer authoritative. The prior
             // delayed callback is invalid; wait for a fresh full observation.
             cancelFullChargeDelay()
+            return
+        }
+
+        if battery.isFullyCharged {
+            ensureChargingSession(startingAt: percentage)
+            guard let target = state.targetPercentage else { return }
+            if target < 100, percentage >= target {
+                activateAdaptive()
+            } else {
+                beginFullChargeDelayIfNeeded()
+            }
             return
         }
 
@@ -119,13 +124,17 @@ final class LaptopRingModeController {
         ensureChargingSession(startingAt: percentage)
         guard let target = state.targetPercentage else { return }
 
-        if target == 100 {
-            awaitingAuthoritativeFullCharge = true
+        // A session whose target is below 100 unlocks as soon as that target is
+        // reached, even when the next IOPowerSources snapshot is authoritative
+        // full charge and skips the exact percentage notification.
+        if target < 100, percentage >= target {
+            activateAdaptive()
             return
         }
 
-        if percentage >= target {
-            activateAdaptive()
+        if target == 100 {
+            awaitingAuthoritativeFullCharge = true
+            return
         }
     }
 

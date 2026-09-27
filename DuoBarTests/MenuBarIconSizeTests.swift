@@ -32,6 +32,15 @@ final class MenuBarIconSizeTests: XCTestCase {
         XCTAssertEqual(MenuBarIconSize.resolve(1.0), 1.0, accuracy: 0.0001)
     }
 
+    func testProductionPresetsMapToExistingScaleModel() {
+        XCTAssertEqual(MenuBarIconSize.minimumScale, 0.80, accuracy: 0.0001)
+        XCTAssertEqual(MenuBarIconSize.defaultScale, 1.00, accuracy: 0.0001)
+        XCTAssertEqual(MenuBarIconSize.maximumScale, 1.05, accuracy: 0.0001)
+        XCTAssertEqual(MenuBarIconSize.resolve(MenuBarIconSize.minimumScale), 0.80, accuracy: 0.0001)
+        XCTAssertEqual(MenuBarIconSize.resolve(MenuBarIconSize.defaultScale), 1.00, accuracy: 0.0001)
+        XCTAssertEqual(MenuBarIconSize.resolve(MenuBarIconSize.maximumScale), 1.05, accuracy: 0.0001)
+    }
+
     func testDefaultScaledMetricsExactlyPreserveStandardGeometry() {
         XCTAssertEqual(DuoGlyphMetrics.standard.scaled(by: 1), DuoGlyphMetrics.standard)
         XCTAssertEqual(DuoGlyphMetrics.standard.scaled(by: 1).statusItemWidth, 27, accuracy: 0.0001)

@@ -4,8 +4,14 @@
 "Icon Size" = "Icon Size";
 "Menu bar icon size" = "Menu bar icon size";
 "Small" = "Small";
+"Default" = "Default";
 "Large" = "Large";
 "Adjust DuoBar to better match your menu bar." = "Adjust DuoBar to better match your menu bar.";
+"Choose a preset or fine-tune DuoBar to better match your menu bar." = "Choose a preset or fine-tune DuoBar to better match your menu bar.";
+"DuoBar is running from the disk image." = "DuoBar is running from the disk image.";
+"Move DuoBar to Applications to keep it installed after ejecting the disk image." = "Move DuoBar to Applications to keep it installed after ejecting the disk image.";
+"Open Applications" = "Open Applications";
+"Not Now" = "Not Now";
 "General" = "General";
 "Open on Hover" = "Open on Hover";
 "Open DuoBar when the pointer moves over the menu bar icon." = "Open DuoBar when the pointer moves over the menu bar icon.";

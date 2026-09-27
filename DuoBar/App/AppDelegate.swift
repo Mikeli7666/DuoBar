@@ -8,6 +8,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusStore: SystemStatusStore?
     private var menuBarController: MenuBarController?
     private var wakeObserver: NSObjectProtocol?
+    private var hasPresentedDiskImageInstallHelp = false
 
     #if DEBUG
     private var marketingCaptureObserver: NSObjectProtocol?
@@ -63,6 +64,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let menuBarController = MenuBarController(statusStore: statusStore)
         self.menuBarController = menuBarController
 
+        presentDiskImageInstallHelpIfNeeded()
+
         #if DEBUG
         if MarketingCaptureMode.isEnabled, MarketingCaptureMode.opensPopover {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak menuBarController] in
@@ -90,6 +93,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         ) { [weak statusStore] _ in
             Task { @MainActor in
                 statusStore?.refresh()
+            }
+        }
+    }
+
+    private func presentDiskImageInstallHelpIfNeeded() {
+        guard InstallationLocation.shouldOfferApplicationsHelp(
+            bundleURL: Bundle.main.bundleURL,
+            hasPresentedThisLaunch: hasPresentedDiskImageInstallHelp
+        ) else { return }
+
+        hasPresentedDiskImageInstallHelp = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            let alert = NSAlert()
+            alert.messageText = localized("DuoBar is running from the disk image.")
+            alert.informativeText = localized("Move DuoBar to Applications to keep it installed after ejecting the disk image.")
+            alert.addButton(withTitle: localized("Open Applications"))
+            alert.addButton(withTitle: localized("Not Now"))
+
+            if alert.runModal() == .alertFirstButtonReturn {
+                NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications", isDirectory: true))
             }
         }
     }

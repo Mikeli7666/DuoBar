@@ -69,6 +69,10 @@ struct StatusPopoverView: View {
                 onOpenSoundSettings: openSoundSettings
             )
 
+            #if DEBUG
+            DebugStatusSimulatorView(statusStore: statusStore)
+            #endif
+
             // Development diagnostics belong in the dedicated DEBUG diagnostics
             // surface, never in the production status-card hierarchy.
             Divider()
@@ -300,9 +304,9 @@ struct BatteryStatusRow: View {
         return localized("Using battery power")
     }
 
-    private var symbol: String {
-        if battery.isCharging { return "battery.100percent.bolt" }
+    var symbol: String {
         if battery.isFullyCharged { return "battery.100percent" }
+        if battery.isCharging { return "battery.100percent.bolt" }
         switch battery.percentage ?? 0 {
         case 76...100: return "battery.100percent"
         case 51...75: return "battery.75percent"
@@ -319,69 +323,111 @@ private struct DebugStatusSimulatorView: View {
     @ObservedObject private var adaptiveRingMonitor = AdaptiveRingMonitor.shared
 
     var body: some View {
-        VStack(spacing: 5) {
+        Menu {
+            Menu("Simulate") {
+                simulationControls
+            }
+
+            Menu("Diagnostics") {
+                diagnosticItem("Laptop Ring Mode", value: laptopRingModeLabel)
+                diagnosticItem("Charging session", value: chargingSessionLabel)
+                diagnosticItem("Waiting for full charge", value: waitingForFullChargeLabel)
+                diagnosticItem("Adaptive telemetry lease", value: adaptiveRingMonitor.monitoringOwnerCount > 0 ? "Active" : "Inactive")
+                diagnosticItem("Adaptive monitor", value: adaptiveRingMonitor.isMonitoring ? "Running" : "Stopped")
+                diagnosticItem("Adaptive source", value: adaptiveRingMonitor.debugTestSource.rawValue)
+                diagnosticItem("Brightness", value: brightnessLabel)
+                diagnosticItem("Adaptive metric", value: adaptiveRingMonitor.state.diagnosticLabel)
+                diagnosticItem("Adaptive progress", value: adaptiveProgressLabel)
+                diagnosticItem("Final ring target", value: finalRingOverrideLabel)
+            }
+        } label: {
             HStack {
                 Label("Debug Simulator", systemImage: "hammer")
                     .font(.system(size: 10.5, weight: .medium))
                     .foregroundStyle(.secondary)
                 Spacer()
-                Menu("Simulate") {
-                    Menu("Battery Level") {
-                        ForEach(DebugBatteryLevel.allCases) { level in
-                            Button(level.title) { statusStore.applyDebugBatteryLevel(level) }
-                        }
-                    }
-                    Menu("Battery Power") {
-                        ForEach(DebugPowerState.allCases) { powerState in
-                            Button(powerState.rawValue) { statusStore.applyDebugPowerState(powerState) }
-                        }
-                    }
-                    Menu("Low Power Mode") {
-                        ForEach(DebugLowPowerMode.allCases) { lowPowerMode in
-                            Button(lowPowerMode.rawValue) { statusStore.applyDebugLowPowerMode(lowPowerMode) }
-                        }
-                    }
-                    Menu("Battery Color Coding") {
-                        Button("Off") { batteryColorCoding = false }
-                        Button("On") { batteryColorCoding = true }
-                    }
-                    Menu("Network") {
-                        ForEach(DebugNetworkState.allCases) { networkState in
-                            Button(networkState.rawValue) { statusStore.applyDebugNetworkState(networkState) }
-                        }
-                    }
-                    Menu("Volume") {
-                        ForEach(DebugVolumeState.allCases) { volumeState in
-                            Button(volumeState.rawValue) { statusStore.applyDebugVolumeState(volumeState) }
-                        }
-                    }
-                    Menu("Audio Connection") {
-                        ForEach(DebugAudioDeviceState.allCases) { deviceState in
-                            Button(deviceState.rawValue) { statusStore.applyDebugAudioDeviceState(deviceState) }
-                        }
-                    }
-                    Divider()
-                    Button("Restore Live Data") { statusStore.restoreLiveStatus() }
-                }
-                .menuStyle(.borderlessButton)
-                .fixedSize()
+                Text(debugSummary)
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(.tertiary)
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 8.5, weight: .semibold))
+                    .foregroundStyle(.tertiary)
             }
-
-            Divider()
-
-            LabeledContent("Laptop Ring Mode", value: laptopRingModeLabel)
-            LabeledContent("Charging session", value: chargingSessionLabel)
-            LabeledContent("Adaptive telemetry lease", value: adaptiveRingMonitor.monitoringOwnerCount > 0 ? "Active" : "Inactive")
-            LabeledContent("Adaptive monitor", value: adaptiveRingMonitor.isMonitoring ? "Running" : "Stopped")
-            LabeledContent("Adaptive source", value: adaptiveRingMonitor.debugTestSource.rawValue)
-            LabeledContent("Brightness", value: brightnessLabel)
-            LabeledContent("Adaptive metric", value: adaptiveRingMonitor.state.diagnosticLabel)
-            LabeledContent("Adaptive progress", value: adaptiveProgressLabel)
-            LabeledContent("Final ring override", value: finalRingOverrideLabel)
-
+            .contentShape(Rectangle())
         }
+        .menuStyle(.borderlessButton)
+        .buttonStyle(.plain)
         .padding(.horizontal, 6)
         .frame(minHeight: 26)
+    }
+
+    @ViewBuilder
+    private var simulationControls: some View {
+        Menu("Battery Level") {
+            ForEach(DebugBatteryLevel.allCases) { level in
+                Button(level.title) { statusStore.applyDebugBatteryLevel(level) }
+            }
+        }
+        Menu("Battery Power") {
+            ForEach(DebugPowerState.allCases) { powerState in
+                Button(powerState.rawValue) { statusStore.applyDebugPowerState(powerState) }
+            }
+        }
+        Menu("Low Power Mode") {
+            ForEach(DebugLowPowerMode.allCases) { lowPowerMode in
+                Button(lowPowerMode.rawValue) { statusStore.applyDebugLowPowerMode(lowPowerMode) }
+            }
+        }
+        Menu("Battery Color Coding") {
+            Button("Off") { batteryColorCoding = false }
+            Button("On") { batteryColorCoding = true }
+        }
+        Menu("MacBook Adaptive Ring") {
+            Button("Battery / Unplugged") {
+                statusStore.applyDebugAdaptiveBatteryBaseline()
+                adaptiveRingMonitor.clearDebugSyntheticInput()
+            }
+            Button("Charging") {
+                scheduleAdaptiveChargingSimulation()
+            }
+            Divider()
+            Button("Adaptive — Neutral") { scheduleAdaptive(.neutral) }
+            Button("Adaptive — Brightness") { scheduleAdaptive(.brightness50) }
+            Button("Adaptive — CPU") { scheduleAdaptive(.cpuHigh) }
+            Button("Adaptive — Memory") { scheduleAdaptive(.memoryPressure) }
+            Button("Adaptive — Thermal") { scheduleAdaptive(.thermalSerious) }
+            Divider()
+            Button("Use Live System State") {
+                adaptiveRingMonitor.clearDebugSyntheticInput()
+                statusStore.restoreLiveStatus()
+            }
+        }
+        Menu("Network") {
+            ForEach(DebugNetworkState.allCases) { networkState in
+                Button(networkState.rawValue) { statusStore.applyDebugNetworkState(networkState) }
+            }
+        }
+        Menu("Volume") {
+            ForEach(DebugVolumeState.allCases) { volumeState in
+                Button(volumeState.rawValue) { statusStore.applyDebugVolumeState(volumeState) }
+            }
+        }
+        Menu("Audio Connection") {
+            ForEach(DebugAudioDeviceState.allCases) { deviceState in
+                Button(deviceState.rawValue) { statusStore.applyDebugAudioDeviceState(deviceState) }
+            }
+        }
+        Divider()
+        Button("Restore Live Data") { statusStore.restoreLiveStatus() }
+    }
+
+    private func diagnosticItem(_ title: String, value: String) -> some View {
+        Button("\(title): \(value)") {}
+            .disabled(true)
+    }
+
+    private var debugSummary: String {
+        "\(laptopRingModeLabel) · \(adaptiveRingMonitor.debugTestSource.rawValue)"
     }
 
     private var laptopRingModeLabel: String {
@@ -397,6 +443,10 @@ private struct DebugStatusSimulatorView: View {
         else { return "None" }
         let waiting = statusStore.laptopRingModeState.isWaitingForFullChargeDelay ? " · waiting for full delay" : ""
         return "\(start)% → \(target)%\(waiting)"
+    }
+
+    private var waitingForFullChargeLabel: String {
+        statusStore.laptopRingModeState.isWaitingForFullChargeDelay ? "Yes" : "No"
     }
 
     private var brightnessLabel: String {
@@ -416,6 +466,54 @@ private struct DebugStatusSimulatorView: View {
         guard statusStore.usesAdaptiveRing else { return "Battery Ring" }
         let target = AdaptiveRingVisualTarget(state: adaptiveRingMonitor.state).progress
         return String(format: "%.1f%%", target * 100)
+    }
+
+    private func scheduleAdaptiveChargingSimulation() {
+        Task { @MainActor in
+            statusStore.applyDebugAdaptiveChargingBaseline()
+            adaptiveRingMonitor.clearDebugSyntheticInput()
+            adaptiveQALog("DEBUG controller prepared at 50%; visible Charging percentage preserved; awaiting 80% target")
+        }
+    }
+
+    private func scheduleAdaptive(_ scenario: AdaptiveRingSyntheticScenario) {
+        Task { @MainActor in
+            await activateAdaptive(scenario)
+        }
+    }
+
+    @MainActor
+    private func activateAdaptive(_ scenario: AdaptiveRingSyntheticScenario) async {
+        if statusStore.laptopRingModeState.mode == .adaptive {
+            useAdaptiveSourceScenario(scenario)
+            return
+        }
+
+        // Direct selection first lets the real Charging presentation settle.
+        if statusStore.laptopRingModeState.targetPercentage != DebugBatteryLevel.eighty.rawValue
+            || !statusStore.status.battery.isCharging {
+            statusStore.applyDebugAdaptiveChargingBaseline()
+            try? await Task.sleep(for: .seconds(BatteryChargingAnimationProfile.entranceDuration))
+            guard !Task.isCancelled else { return }
+        }
+
+        useAdaptiveSourceScenario(scenario)
+        await Task.yield()
+        statusStore.reachDebugAdaptiveTarget()
+        adaptiveQALog("DEBUG crossed controller target without publishing a synthetic battery jump for \(scenario.rawValue)")
+    }
+
+    private func useAdaptiveSourceScenario(_ scenario: AdaptiveRingSyntheticScenario) {
+        let preference: PerformancePreference = scenario == .memoryPressure ? .memory : .automatic
+        adaptiveRingMonitor.useDebugSyntheticInput(
+            scenario.input,
+            label: scenario.rawValue,
+            preference: preference
+        )
+    }
+
+    private func adaptiveQALog(_ message: String) {
+        NSLog("%@", "[DuoBar Adaptive QA] \(message)")
     }
 }
 #endif

@@ -393,6 +393,66 @@ final class AdaptiveRingTests: XCTestCase {
         )
     }
 
+    func testAdaptiveSourcePresentationUsesIdentityChangesAndProtectsEntry() {
+        XCTAssertTrue(
+            AdaptiveSourcePresentationPolicy.shouldPresent(
+                from: .neutral,
+                to: .brightness,
+                isAdaptiveEntryPresenting: false,
+                hasHigherPriorityEvent: false
+            )
+        )
+        XCTAssertFalse(
+            AdaptiveSourcePresentationPolicy.shouldPresent(
+                from: .brightness,
+                to: .brightness,
+                isAdaptiveEntryPresenting: false,
+                hasHigherPriorityEvent: false
+            )
+        )
+        XCTAssertTrue(
+            AdaptiveSourcePresentationPolicy.shouldPresent(
+                from: .brightness,
+                to: .cpu,
+                isAdaptiveEntryPresenting: false,
+                hasHigherPriorityEvent: false
+            )
+        )
+        XCTAssertTrue(
+            AdaptiveSourcePresentationPolicy.shouldPresent(
+                from: .cpu,
+                to: .memory,
+                isAdaptiveEntryPresenting: false,
+                hasHigherPriorityEvent: false
+            )
+        )
+        XCTAssertTrue(
+            AdaptiveSourcePresentationPolicy.shouldPresent(
+                from: .memory,
+                to: .thermal,
+                isAdaptiveEntryPresenting: false,
+                hasHigherPriorityEvent: false
+            )
+        )
+        XCTAssertFalse(
+            AdaptiveSourcePresentationPolicy.shouldPresent(
+                from: .thermal,
+                to: .neutral,
+                isAdaptiveEntryPresenting: false,
+                hasHigherPriorityEvent: false
+            )
+        )
+        XCTAssertFalse(
+            AdaptiveSourcePresentationPolicy.shouldPresent(
+                from: .neutral,
+                to: .brightness,
+                isAdaptiveEntryPresenting: true,
+                hasHigherPriorityEvent: false
+            )
+        )
+        XCTAssertEqual(AdaptiveSourcePresentationPolicy.duration, 1.35)
+    }
+
     func testReduceMotionMakesRingPresentationImmediate() {
         let transition = AdaptiveRingPresentation.transition(
             from: .neutral,
@@ -431,7 +491,7 @@ final class AdaptiveRingTests: XCTestCase {
 
     func testColorResolverKeepsBaselineMonochromeAndUsesMetricRoles() {
         let cpu = colorDecision(.cpu, severity: .elevated)
-        XCTAssertEqual(AdaptiveRingColorResolver.resolve(state: .brightness(0.7), decision: cpu, colorCodingEnabled: true).role, .monochrome)
+        XCTAssertEqual(AdaptiveRingColorResolver.resolve(state: .brightness(0.7), decision: cpu, colorCodingEnabled: true).role, .brightness)
         XCTAssertEqual(AdaptiveRingColorResolver.resolve(state: .neutral, decision: .idle, colorCodingEnabled: true).role, .monochrome)
         XCTAssertEqual(AdaptiveRingColorResolver.resolve(state: .performance(metric: .cpu, value: 0.7), decision: cpu, colorCodingEnabled: false).role, .monochrome)
         XCTAssertEqual(AdaptiveRingColorResolver.resolve(state: .performance(metric: .cpu, value: 0.7), decision: cpu, colorCodingEnabled: true).role, .cpu)
@@ -463,14 +523,37 @@ final class AdaptiveRingTests: XCTestCase {
     }
 
     func testProductionSettingsEligibilityUsesRealDeviceBehavior() {
-        XCTAssertFalse(AdaptiveRingSettingsEligibility.isEligible(for: DeviceContext(hasInternalBattery: true)))
+        XCTAssertTrue(AdaptiveRingSettingsEligibility.isEligible(for: DeviceContext(hasInternalBattery: true)))
         XCTAssertTrue(AdaptiveRingSettingsEligibility.isEligible(for: DeviceContext(hasInternalBattery: false)))
+    }
+
+    func testAdaptiveEntryCenterPolicyTriggersOnlyAcrossModeBoundaryAndCanRepeat() {
+        XCTAssertTrue(AdaptiveEntryCenterPolicy.shouldRequest(from: .battery, to: .adaptive))
+        XCTAssertFalse(AdaptiveEntryCenterPolicy.shouldRequest(from: .adaptive, to: .adaptive))
+        XCTAssertFalse(AdaptiveEntryCenterPolicy.shouldRequest(from: .battery, to: .battery))
+        XCTAssertFalse(AdaptiveEntryCenterPolicy.shouldRequest(from: .adaptive, to: .battery))
+        XCTAssertEqual(AdaptiveEntryCenterPolicy.duration, 1.35)
+
+        let modes: [LaptopRingMode] = [.battery, .adaptive, .adaptive, .battery, .adaptive]
+        let triggers = zip(modes, modes.dropFirst()).filter {
+            AdaptiveEntryCenterPolicy.shouldRequest(from: $0.0, to: $0.1)
+        }
+        XCTAssertEqual(triggers.count, 2)
+    }
+
+    func testAdaptiveEntryCenterDefersToExistingNonChargingStatusEvents() {
+        XCTAssertTrue(AdaptiveEntryCenterPolicy.allows(over: nil))
+        XCTAssertTrue(AdaptiveEntryCenterPolicy.allows(over: StatusEvent(kind: .charging, priority: .informational)))
+        XCTAssertFalse(AdaptiveEntryCenterPolicy.allows(over: StatusEvent(kind: .networkDisconnected, priority: .attention)))
+        XCTAssertFalse(AdaptiveEntryCenterPolicy.allows(over: StatusEvent(kind: .lowBattery, priority: .critical)))
+        let airPods = DebugAudioDeviceState.airPods.status.defaultOutput!
+        XCTAssertFalse(AdaptiveEntryCenterPolicy.allows(over: StatusEvent(kind: .audioDeviceConnected(airPods), priority: .informational)))
     }
 
     #if DEBUG
     func testDebugSettingsEligibilityHonorsDesktopSimulationWithoutSeparatePreferences() {
         let macBook = DeviceContext(hasInternalBattery: true)
-        XCTAssertFalse(AdaptiveRingSettingsEligibility.isEligible(for: macBook, simulateDesktop: false))
+        XCTAssertTrue(AdaptiveRingSettingsEligibility.isEligible(for: macBook, simulateDesktop: false))
         XCTAssertTrue(AdaptiveRingSettingsEligibility.isEligible(for: macBook, simulateDesktop: true))
         XCTAssertEqual(PreferenceKeys.adaptiveRingColorCoding, "adaptiveRingColorCoding")
         XCTAssertEqual(PreferenceKeys.adaptiveRingPriority, "adaptiveRingPriority")

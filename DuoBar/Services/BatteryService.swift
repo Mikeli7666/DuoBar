@@ -1,6 +1,37 @@
 import Foundation
 import IOKit.ps
 
+/// Maps the authoritative internal-battery values returned by IOPowerSources.
+///
+/// `kIOPSIsChargedKey` is deliberately the only full-charge signal. A displayed
+/// 100% is an estimate and must never be promoted to an authoritative full state.
+enum BatteryPowerSourceStatusMapper {
+    static func status(
+        currentCapacity: Int?,
+        maximumCapacity: Int?,
+        isCharging: Bool,
+        powerSourceState: String?,
+        isCharged: Bool?,
+        lowPowerModeEnabled: Bool
+    ) -> BatteryStatus {
+        let percentage: Int?
+        if let currentCapacity, let maximumCapacity, maximumCapacity > 0 {
+            percentage = min(max(Int((Double(currentCapacity) / Double(maximumCapacity) * 100).rounded()), 0), 100)
+        } else {
+            percentage = nil
+        }
+
+        return BatteryStatus(
+            percentage: percentage,
+            isCharging: isCharging,
+            isPluggedIn: powerSourceState == kIOPSACPowerValue,
+            isFullyCharged: isCharged == true,
+            isAvailable: true,
+            isLowPowerModeEnabled: lowPowerModeEnabled
+        )
+    }
+}
+
 @MainActor
 final class BatteryService {
     var onStatusChange: ((BatteryStatus) -> Void)?
@@ -64,35 +95,20 @@ final class BatteryService {
         let descriptions = sources.compactMap {
             IOPSGetPowerSourceDescription(info, $0)?.takeUnretainedValue() as? [String: Any]
         }
-        guard let dictionary = descriptions.first(where: { $0["Type"] as? String == kIOPSInternalBatteryType })
-            ?? descriptions.first
-        else {
+        // Never treat an AC adapter or UPS dictionary as an internal battery.
+        guard let dictionary = descriptions.first(where: { $0["Type"] as? String == kIOPSInternalBatteryType }) else {
             publish(.unavailable, trigger: trigger)
             return
         }
 
-        let currentCapacity = dictionary[kIOPSCurrentCapacityKey] as? Int
-        let maximumCapacity = dictionary[kIOPSMaxCapacityKey] as? Int
-        let percentage: Int?
-        if let currentCapacity, let maximumCapacity, maximumCapacity > 0 {
-            percentage = min(max(Int((Double(currentCapacity) / Double(maximumCapacity) * 100).rounded()), 0), 100)
-        } else {
-            percentage = nil
-        }
-
-        let isCharging = dictionary[kIOPSIsChargingKey] as? Bool ?? false
-        let powerSourceState = dictionary[kIOPSPowerSourceStateKey] as? String
-        let isPluggedIn = powerSourceState == kIOPSACPowerValue
-        let isFullyCharged = dictionary[kIOPSIsChargedKey] as? Bool ?? (percentage == 100 && isPluggedIn && !isCharging)
-
         publish(
-            BatteryStatus(
-                percentage: percentage,
-                isCharging: isCharging,
-                isPluggedIn: isPluggedIn,
-                isFullyCharged: isFullyCharged,
-                isAvailable: true,
-                isLowPowerModeEnabled: ProcessInfo.processInfo.isLowPowerModeEnabled
+            BatteryPowerSourceStatusMapper.status(
+                currentCapacity: dictionary[kIOPSCurrentCapacityKey] as? Int,
+                maximumCapacity: dictionary[kIOPSMaxCapacityKey] as? Int,
+                isCharging: dictionary[kIOPSIsChargingKey] as? Bool ?? false,
+                powerSourceState: dictionary[kIOPSPowerSourceStateKey] as? String,
+                isCharged: dictionary[kIOPSIsChargedKey] as? Bool,
+                lowPowerModeEnabled: ProcessInfo.processInfo.isLowPowerModeEnabled
             ),
             trigger: trigger
         )
@@ -105,7 +121,7 @@ final class BatteryService {
 
         #if DEBUG
         let percentage = status.percentage.map { "\($0)%" } ?? "unavailable"
-        NSLog("%@", "[BatteryService] battery = \(percentage), charging = \(status.isCharging), pluggedIn = \(status.isPluggedIn), source = \(trigger.rawValue)")
+        NSLog("%@", "[BatteryService] battery = \(percentage), charging = \(status.isCharging), fullyCharged = \(status.isFullyCharged), pluggedIn = \(status.isPluggedIn), source = \(trigger.rawValue)")
         if let previous, previous.isCharging != status.isCharging {
             NSLog("%@", "[BatteryService] charging changed: \(previous.isCharging) → \(status.isCharging)")
         }

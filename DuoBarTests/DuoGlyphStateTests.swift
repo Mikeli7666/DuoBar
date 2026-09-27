@@ -21,6 +21,30 @@ final class DuoGlyphStateTests: XCTestCase {
         XCTAssertEqual(state.centerState, .performanceThermal)
     }
 
+    func testAuthoritativeFullSuppressesChargingSemanticsEvenIfChargingFlagIsConcurrent() {
+        let state = DuoGlyphState(
+            status: makeStatus(batteryPercentage: 100, charging: true, fullyCharged: true)
+        )
+
+        XCTAssertFalse(state.isCharging)
+        XCTAssertEqual(state.batteryPresentation.boltPlacement, .none)
+        XCTAssertEqual(state.batteryPresentation.colorRole, .monochrome)
+    }
+
+    func testAdaptiveBrightnessOverrideUsesSunSymbolAndRestoresLiveNetwork() {
+        let status = makeStatus(network: wifi(rssi: -84))
+        let identified = DuoGlyphState(
+            status: status,
+            ringPresentation: .adaptive(progress: 0.5),
+            centerStateOverride: .adaptiveBrightness
+        )
+        XCTAssertEqual(identified.centerState, .adaptiveBrightness)
+        XCTAssertEqual(DuoCenterGlyph.symbolName(for: .adaptiveBrightness), "sun.max.fill")
+
+        let restored = DuoGlyphState(status: status, ringPresentation: .adaptive(progress: 0.5))
+        XCTAssertEqual(restored.centerState, .wifi(.weak))
+    }
+
     func testNeutralAdaptiveRingUsesSingleProgressArcWithoutChangingVolumeOrNetwork() {
         let state = DuoGlyphState(
             status: makeStatus(batteryPercentage: 64, charging: true),

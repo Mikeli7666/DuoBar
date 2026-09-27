@@ -4,8 +4,14 @@
 "Icon Size" = "图标大小";
 "Menu bar icon size" = "菜单栏图标大小";
 "Small" = "小";
+"Default" = "默认";
 "Large" = "大";
 "Adjust DuoBar to better match your menu bar." = "调整 DuoBar 以更好地匹配菜单栏。";
+"Choose a preset or fine-tune DuoBar to better match your menu bar." = "选择预设，或微调 DuoBar 以更好地匹配菜单栏。";
+"DuoBar is running from the disk image." = "DuoBar 正在从磁盘映像运行。";
+"Move DuoBar to Applications to keep it installed after ejecting the disk image." = "请将 DuoBar 移到“应用程序”，以便在推出磁盘映像后继续使用。";
+"Open Applications" = "打开“应用程序”";
+"Not Now" = "暂不";
 "General" = "通用";
 "Open on Hover" = "悬停时打开";
 "Open DuoBar when the pointer moves over the menu bar icon." = "将指针移到菜单栏图标上时打开 DuoBar。";

@@ -24,6 +24,13 @@ struct BatteryRingPresentation: Equatable, Sendable {
             return BatteryRingPresentation(boltPlacement: .none, colorRole: .monochrome)
         }
 
+        // IOPowerSources' authoritative full flag wins over a concurrent or
+        // stale charging flag. Fully charged must not retain charging bolt or
+        // green charging semantics.
+        if battery.isFullyCharged {
+            return BatteryRingPresentation(boltPlacement: .none, colorRole: .monochrome)
+        }
+
         let boltPlacement: BatteryBoltPlacement = battery.isPluggedIn ? .topGap : .none
 
         guard colorCodingEnabled else {

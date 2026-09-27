@@ -1,7 +1,9 @@
+import AppKit
 import SwiftUI
 
 enum AdaptiveRingColorRole: String, Equatable {
     case monochrome
+    case brightness
     case cpu
     case memory
     case thermal
@@ -16,6 +18,7 @@ struct AdaptiveRingColorPresentation: Equatable {
         let base: Color
         switch role {
         case .monochrome: return nil
+        case .brightness: base = Color(nsColor: .systemYellow)
         case .cpu: base = .blue
         case .memory: base = .purple
         case .thermal: base = .orange
@@ -30,8 +33,15 @@ enum AdaptiveRingColorResolver {
         decision: PerformanceDecision,
         colorCodingEnabled: Bool
     ) -> AdaptiveRingColorPresentation {
-        guard colorCodingEnabled,
-              case .performance(let metric, _) = state,
+        guard colorCodingEnabled else {
+            return AdaptiveRingColorPresentation(role: .monochrome, intensity: 1)
+        }
+
+        if case .brightness = state {
+            return AdaptiveRingColorPresentation(role: .brightness, intensity: 1)
+        }
+
+        guard case .performance(let metric, _) = state,
               metric == decision.activeMetric
         else { return AdaptiveRingColorPresentation(role: .monochrome, intensity: 1) }
 

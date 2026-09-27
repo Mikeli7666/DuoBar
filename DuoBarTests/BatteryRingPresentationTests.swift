@@ -21,10 +21,10 @@ final class BatteryRingPresentationTests: XCTestCase {
         XCTAssertEqual(presentation(percentage: 15, charging: true, lowPowerMode: true).colorRole, .charging)
     }
 
-    func testFullPluggedUsesChargingColor() {
+    func testAuthoritativeFullSuppressesChargingColor() {
         XCTAssertEqual(
             presentation(percentage: 100, charging: true, pluggedIn: true, fullyCharged: true).colorRole,
-            .charging
+            .monochrome
         )
     }
 
@@ -93,10 +93,10 @@ final class BatteryRingPresentationTests: XCTestCase {
         XCTAssertEqual(presentation(percentage: 50, pluggedIn: true).boltPlacement, .topGap)
     }
 
-    func testFullConnectedBatteryUsesSameTopGapBolt() {
+    func testAuthoritativeFullConnectedBatterySuppressesBolt() {
         XCTAssertEqual(
             presentation(percentage: 100, pluggedIn: true, fullyCharged: true).boltPlacement,
-            .topGap
+            .none
         )
     }
 
@@ -147,10 +147,10 @@ final class BatteryRingPresentationTests: XCTestCase {
         XCTAssertEqual(state.batteryPresentation.boltPlacement, .topGap)
     }
 
-    func testFullConnectedUsesTopGapBoltWithoutReplacingNetwork() {
+    func testAuthoritativeFullSuppressesBoltWithoutReplacingNetwork() {
         let state = DuoGlyphState(status: status(percentage: 100, pluggedIn: true, fullyCharged: true))
         XCTAssertEqual(state.centerState, .wifi(.strong))
-        XCTAssertEqual(state.batteryPresentation.boltPlacement, .topGap)
+        XCTAssertEqual(state.batteryPresentation.boltPlacement, .none)
     }
 
     func testUnpluggingFullBatteryRestoresNormalNetworkCenter() {
@@ -159,7 +159,7 @@ final class BatteryRingPresentationTests: XCTestCase {
         XCTAssertEqual(state.batteryPresentation.boltPlacement, .none)
     }
 
-    func testAudioEventRetainsPriorityOverFullChargeCenterBolt() {
+    func testAudioEventRetainsPriorityOverAuthoritativeFullCharge() {
         let device = AudioDeviceStatus(
             uid: "airpods", name: "AirPods Pro", transport: .bluetooth, isAlive: true,
             modelUID: "2027 4c", manufacturer: "Apple Inc.", terminalType: .headphones
@@ -170,7 +170,7 @@ final class BatteryRingPresentationTests: XCTestCase {
             presentation: .event(event)
         )
         XCTAssertEqual(state.centerState, .airPodsPro)
-        XCTAssertEqual(state.batteryPresentation.boltPlacement, .topGap)
+        XCTAssertEqual(state.batteryPresentation.boltPlacement, .none)
     }
 
     func testAdaptiveRingOverrideCannotLeakBatteryBolt() {
