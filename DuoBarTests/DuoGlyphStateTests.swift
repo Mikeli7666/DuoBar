@@ -349,6 +349,7 @@ final class DuoGlyphStateTests: XCTestCase {
     private func makeStatus(
         batteryPercentage: Int = 100,
         charging: Bool = false,
+        fullyCharged: Bool = false,
         network: NetworkStatus? = nil,
         volume: Double? = 0.75,
         muted: Bool = false,
@@ -360,7 +361,7 @@ final class DuoGlyphStateTests: XCTestCase {
                 percentage: batteryPercentage,
                 isCharging: charging,
                 isPluggedIn: charging,
-                isFullyCharged: false,
+                isFullyCharged: fullyCharged,
                 isAvailable: true
             ),
             network: network ?? wifi(rssi: -42),
