@@ -97,7 +97,7 @@ final class LaptopRingModeController {
             return
         }
 
-        if awaitingAuthoritativeFullCharge {
+        if awaitingAuthoritativeFullCharge, !battery.isFullyCharged {
             // Full was previously observed but is no longer authoritative. The prior
             // delayed callback is invalid; wait for a fresh full observation.
             cancelFullChargeDelay()

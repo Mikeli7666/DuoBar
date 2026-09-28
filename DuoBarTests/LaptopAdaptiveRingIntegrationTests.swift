@@ -169,6 +169,14 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
                 decision: .idle,
                 colorCodingEnabled: true
             ).role,
+            .brightness
+        )
+        XCTAssertEqual(
+            AdaptiveRingColorResolver.resolve(
+                state: .brightness(0.7),
+                decision: .idle,
+                colorCodingEnabled: false
+            ).role,
             .monochrome
         )
     }
