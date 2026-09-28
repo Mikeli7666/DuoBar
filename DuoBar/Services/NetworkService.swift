@@ -7,6 +7,7 @@ import Foundation
 @MainActor
 final class NetworkService: NSObject, @preconcurrency CLLocationManagerDelegate {
     var onStatusChange: ((NetworkStatus) -> Void)?
+    var onSSIDAuthorizationChange: ((SSIDAuthorizationState) -> Void)?
 
     private let client = CWWiFiClient.shared()
     private let wifiPowerCoordinator: WiFiPowerControlCoordinator
@@ -82,6 +83,10 @@ final class NetworkService: NSObject, @preconcurrency CLLocationManagerDelegate 
         )
     }
 
+    var currentSSIDAuthorization: SSIDAuthorizationState {
+        SSIDAuthorizationState(locationManager.authorizationStatus)
+    }
+
     func refresh() {
         refresh(reason: .manual)
     }
@@ -151,6 +156,7 @@ final class NetworkService: NSObject, @preconcurrency CLLocationManagerDelegate 
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        onSSIDAuthorizationChange?(SSIDAuthorizationState(manager.authorizationStatus))
         performSSIDAccessActions(
             ssidAccessCoordinator.authorizationDidChange(
                 to: SSIDAuthorizationState(manager.authorizationStatus)

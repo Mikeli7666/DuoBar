@@ -39,6 +39,11 @@ struct StatusPopoverView: View {
                 activationHint: networkSettingsHint
             )
 
+            NearbyWiFiButton(
+                statusStore: statusStore,
+                onOpenSettings: openWiFiSettings
+            )
+
             VolumeStatusRow(
                 volume: statusStore.status.audio.volume,
                 hasOutputDevice: statusStore.status.audio.defaultOutput != nil,
@@ -150,6 +155,11 @@ struct StatusPopoverView: View {
 
     private func openNetworkSettings() {
         _ = SystemSettingsOpener.open(SystemSettingsOpener.pane(for: statusStore.status.network))
+        onClose()
+    }
+
+    private func openWiFiSettings() {
+        _ = SystemSettingsOpener.open(.wifi)
         onClose()
     }
 

@@ -36,7 +36,30 @@ final class LocalizationTests: XCTestCase {
         "Open Wi-Fi Settings",
         "Open Network Settings",
         "Open Battery Settings",
-        "No output devices"
+        "No output devices",
+        "Nearby Networks",
+        "Browse nearby Wi-Fi networks",
+        "Scanning…",
+        "Refresh",
+        "Network Settings…",
+        "Wi-Fi is Off",
+        "Wi-Fi unavailable",
+        "Unable to Scan",
+        "No Networks Found",
+        "Secured network",
+        "Current Network",
+        "Joining…",
+        "Join network",
+        "Strong signal",
+        "Medium signal",
+        "Weak signal",
+        "Signal unavailable",
+        "Password",
+        "Cancel",
+        "Join",
+        "Unable to Join",
+        "Location access is needed to show Wi-Fi network names.",
+        "Open System Settings…"
     ]
 
     func testAllSupportedLocalizationResourcesExist() {

@@ -6,10 +6,12 @@ final class SystemStatusStore: ObservableObject {
     @Published private(set) var status: SystemStatus = .unavailable
     @Published private(set) var laptopRingModeState: LaptopRingModeState
     @Published private(set) var wifiPowerControlError: String?
+    @Published private(set) var wifiSSIDAuthorization: SSIDAuthorizationState = .notDetermined
 
     let priorityController = StatusPriorityController()
     let deviceContext: DeviceContext
     let laptopRingModeController: LaptopRingModeController
+    let nearbyWiFiController: NearbyWiFiController
 
     private let batteryService: BatteryService
     private let networkService: NetworkService
@@ -26,7 +28,8 @@ final class SystemStatusStore: ObservableObject {
     init(
         startServices: Bool = true,
         deviceContext: DeviceContext? = nil,
-        laptopRingModeController: LaptopRingModeController? = nil
+        laptopRingModeController: LaptopRingModeController? = nil,
+        nearbyWiFiProvider: (any NearbyWiFiProviding)? = nil
     ) {
         batteryService = BatteryService()
         networkService = NetworkService()
@@ -39,6 +42,10 @@ final class SystemStatusStore: ObservableObject {
             fullChargeDelay: Self.developmentFullChargeDelay
         )
         self.laptopRingModeController = resolvedLaptopRingModeController
+        nearbyWiFiController = NearbyWiFiController(
+            provider: nearbyWiFiProvider ?? CoreWLANNearbyWiFiProvider()
+        )
+        wifiSSIDAuthorization = networkService.currentSSIDAuthorization
         laptopRingModeState = resolvedLaptopRingModeController.state
 
         resolvedLaptopRingModeController.onStateChange = { [weak self] state in
@@ -69,6 +76,13 @@ final class SystemStatusStore: ObservableObject {
             guard self?.debugNetworkOverride == nil else { return }
             #endif
             self?.mutate { $0.network = value }
+        }
+        networkService.onSSIDAuthorizationChange = { [weak self] authorization in
+            guard let self else { return }
+            self.wifiSSIDAuthorization = authorization
+            if authorization == .authorized, self.nearbyWiFiController.hasRequestedScan {
+                self.nearbyWiFiController.refreshAfterCurrentRequest()
+            }
         }
         audioOutputService.onStatusChange = { [weak self] value in
             #if DEBUG
@@ -129,6 +143,25 @@ final class SystemStatusStore: ObservableObject {
         case .unavailable:
             wifiPowerControlError = localized("Wi-Fi control unavailable")
         }
+    }
+
+    func scanNearbyWiFiIfNeeded() async {
+        requestWiFiSSIDAccess(trigger: .popoverOpened)
+        await nearbyWiFiController.scanIfNeeded()
+    }
+
+    func refreshNearbyWiFi() async {
+        requestWiFiSSIDAccess(trigger: .popoverOpened)
+        await nearbyWiFiController.refresh()
+    }
+
+    @discardableResult
+    func joinNearbyWiFi(_ network: NearbyWiFiNetwork, password: String?) async -> Bool {
+        let joined = await nearbyWiFiController.join(network, password: password)
+        guard joined else { return false }
+        networkService.refresh()
+        await nearbyWiFiController.refresh()
+        return true
     }
 
     var usesAdaptiveRing: Bool {

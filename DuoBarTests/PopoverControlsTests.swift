@@ -46,6 +46,7 @@ final class PopoverControlsTests: XCTestCase {
                 XCTAssertTrue(string.hasPrefix("x-apple.systempreferences:"), string)
             }
         }
+        XCTAssertEqual(SystemSettingsOpener.urlStrings(for: .privacy), [])
     }
 
     func testDebugAudioPickerExposesMultipleOutputs() {

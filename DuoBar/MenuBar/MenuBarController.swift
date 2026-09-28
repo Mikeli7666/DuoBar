@@ -68,7 +68,7 @@ final class MenuBarController: NSObject {
         updatePopoverBehavior()
         popover.delegate = self
         popover.animates = true
-        popover.contentSize = NSSize(width: 304, height: 316)
+        popover.contentSize = NSSize(width: 304, height: 352)
         let hostingController = NSHostingController(
             rootView: StatusPopoverView(statusStore: statusStore) { [weak self] in
                 self?.closePopoverFromContent()
