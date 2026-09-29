@@ -4,22 +4,22 @@
 
 Компактний індикатор для рядка меню macOS: акумулятор, мережа й гучність в одному значку.
 
-[Завантажити DuoBar 1.2.1](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.2.1) · [Усі версії](https://github.com/Mikeli7666/DuoBar/releases) · [Повідомити про помилку](https://github.com/Mikeli7666/DuoBar/issues)
+[Завантажити DuoBar 1.3.0](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.0/DuoBar-1.3.0.dmg) · [Усі версії](https://github.com/Mikeli7666/DuoBar/releases) · [Повідомити про помилку](https://github.com/Mikeli7666/DuoBar/issues)
 
-DuoBar 1.2.1 (збірка 5) · macOS 13+ · Apple Silicon та Intel · Universal 2 · Безкоштовний проєкт із відкритим кодом
+DuoBar 1.3.0 (збірка 6) · macOS 13+ · Apple Silicon та Intel · Universal 2 · Безкоштовний проєкт із відкритим кодом
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.2.1 у рядку меню macOS" width="1340">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 у рядку меню macOS" width="1340">
 </p>
 
 ## 📥 Встановлення для початківців
 
-1. Відкрийте [реліз DuoBar 1.2.1](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.2.1).
-2. У розділі **Assets** завантажте **DuoBar-1.2.1.dmg**. Не завантажуйте `Source code (zip)` або `Source code (tar.gz)` — це вихідний код.
-3. Двічі клацніть файл **DuoBar-1.2.1.dmg** і перетягніть **DuoBar.app** до **Applications / Програми**.
+1. Відкрийте [реліз DuoBar 1.3.0](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.0).
+2. У розділі **Assets** завантажте **DuoBar-1.3.0.dmg**. Не завантажуйте `Source code (zip)` або `Source code (tar.gz)` — це вихідний код.
+3. Двічі клацніть файл **DuoBar-1.3.0.dmg** і перетягніть **DuoBar.app** до **Applications / Програми**.
 4. Відкрийте «Програми» та запустіть DuoBar. Це утиліта рядка меню, тому зазвичай вона не з’являється в Dock.
 
-DuoBar 1.2.1 підписано Developer ID та нотаризовано Apple. Не потрібно вимикати Gatekeeper або SIP, використовувати Terminal, `sudo` чи `xattr`.
+DuoBar 1.3.0 підписано Developer ID та нотаризовано Apple. Не потрібно вимикати Gatekeeper або SIP, використовувати Terminal, `sudo` чи `xattr`.
 
 ## Дозвіл геолокації та Wi‑Fi
 
@@ -28,7 +28,7 @@ DuoBar 1.2.1 підписано Developer ID та нотаризовано Apple
 ## Можливості
 
 - Battery Ring: рівень акумулятора, заряджання, динамічна блискавка та необов’язкове кольорове кодування.
-- Adaptive Ring на настільних Mac: яскравість, а за потреби CPU, пам’ять або температура.
+- Adaptive Ring на настільних Mac: Neutral за відсутності помітної продуктивної активності та автоматичне відображення навантаження на CPU, пам’ять або теплового стану за потреби.
 - Network: Wi‑Fi, Ethernet, офлайн-стан, SSID і публічний перемикач Wi‑Fi.
 - Гучність: чотири крапки, повзунок, вимкнення/увімкнення звуку та вибір аудіовиходу.
 - Тимчасове відображення AirPods/навушників, Open on Hover і регулювання розміру значка.
@@ -36,11 +36,11 @@ DuoBar 1.2.1 підписано Developer ID та нотаризовано Apple
 - English, 简体中文, 繁體中文, русский та українська.
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="Стани DuoBar 1.2.1" width="800">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="Стани DuoBar 1.3.0" width="800">
 </p>
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="Спливаюча панель DuoBar 1.2.1" width="480">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="Спливаюча панель DuoBar 1.3.0" width="480">
 </p>
 
 ## Системні вимоги та сумісність
@@ -53,8 +53,8 @@ DuoBar 1.2.1 підписано Developer ID та нотаризовано Apple
 
 Системний стан обробляється локально: немає аналітики, відстеження, бекенду, телеметрії чи сторонніх мережевих запитів. DuoBar не сканує найближчі Wi‑Fi мережі, не підключається до них і не створює пару з Bluetooth-пристроями. Деякі зовнішні аудіопристрої не підтримують програмне керування гучністю.
 
-SHA-256 офіційного DMG:
+SHA-256 офіційного DMG DuoBar 1.3.0:
 
-`ac4c3acbe4569c2ccc984ff52c007c208a557abb96b32764a8ec6eeab79f0235`
+`bd638b5fac84b7bc56ab71988e10d6d4a3188bea973584c77b1fe6979f243fb5`
 
 DuoBar поширюється за [MIT License](LICENSE).
