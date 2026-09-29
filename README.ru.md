@@ -4,21 +4,21 @@
 
 Индикатор в стиле iPhone Duo для строки меню macOS: батарея, сеть и громкость в одном значке.
 
-[**Скачать DuoBar 1.2.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.1/DuoBar-1.2.1.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**Скачать DuoBar 1.3.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.0/DuoBar-1.3.0.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
-DuoBar 1.2.1 (сборка 5) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
+DuoBar 1.3.0 (сборка 6) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.2.1 в строке меню macOS" width="1340">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 в строке меню macOS" width="1340">
 </p>
 
 ## Скачивание и установка
 
 ### Шаг 1. Скачать DuoBar
 
-Нажмите «Скачать DuoBar 1.2.1» выше. Браузер загрузит файл:
+Нажмите «Скачать DuoBar 1.3.0» выше. Браузер загрузит файл:
 
-`DuoBar-1.2.1.dmg`
+`DuoBar-1.3.0.dmg`
 
 Обычному пользователю нужен только этот DMG. Не скачивайте:
 
@@ -29,13 +29,13 @@ DuoBar 1.2.1 (сборка 5) · macOS 13 Ventura или новее · Apple Sil
 
 Если вы открыли страницу [Releases](https://github.com/Mikeli7666/DuoBar/releases):
 
-1. Найдите последнюю версию **DuoBar 1.2.1**.
+1. Найдите последнюю версию **DuoBar 1.3.0**.
 2. Внизу страницы откройте список **Assets**.
-3. Скачайте **DuoBar-1.2.1.dmg**.
+3. Скачайте **DuoBar-1.3.0.dmg**.
 
 ### Шаг 2. Установить
 
-1. Дважды щёлкните `DuoBar-1.2.1.dmg`.
+1. Дважды щёлкните `DuoBar-1.3.0.dmg`.
 2. Finder откроет окно образа диска.
 3. Перетащите `DuoBar.app` в папку **Программы / Applications**.
 4. Дождитесь окончания копирования.
@@ -44,7 +44,7 @@ DuoBar 1.2.1 (сборка 5) · macOS 13 Ventura или новее · Apple Sil
 
 ### Шаг 3. Первый запуск
 
-DuoBar 1.2.1 подписан Developer ID и прошёл нотариальную проверку Apple. Для обычной установки не нужно отключать Gatekeeper или SIP, использовать Terminal, `sudo` или `xattr`.
+DuoBar 1.3.0 подписан Developer ID и прошёл нотариальную проверку Apple. Для обычной установки не нужно отключать Gatekeeper или SIP, использовать Terminal, `sudo` или `xattr`.
 
 DuoBar живёт в строке меню и **не появляется в Dock**. После запуска смотрите на верхний край экрана — значок DuoBar будет там.
 
@@ -70,7 +70,7 @@ DuoBar постоянно в строке меню. Три части значк
 - **Четыре точки снизу** → громкость
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="Состояния DuoBar 1.2.1" width="800">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="Состояния DuoBar 1.3.0" width="800">
 </p>
 
 Нажмите на значок, чтобы открыть панель:
@@ -85,13 +85,13 @@ DuoBar постоянно в строке меню. Три части значк
 В настройках можно включить **Open on Hover** (открывать при наведении).
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="Панель DuoBar 1.2.1" width="480">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="Панель DuoBar 1.3.0" width="480">
 </p>
 
 ## Возможности
 
 - Battery Ring: заряд, состояние зарядки, динамическая молния и опциональная цветовая индикация
-- Adaptive Ring: на настольных Mac — яркость, а при необходимости автоматически нагрузку на CPU, память или тепловое состояние
+- Adaptive Ring: на настольных Mac остаётся Neutral при отсутствии заметной нагрузки и автоматически показывает нагрузку на CPU, память или тепловое состояние при необходимости
 - Скруглённый индикатор Wi‑Fi и визуальный язык Duo
 - Имя текущей сети Wi‑Fi (SSID)
 - Включение и выключение Wi‑Fi прямо в DuoBar
@@ -112,7 +112,7 @@ DuoBar постоянно в строке меню. Три части значк
 
 ## Безопасность и приватность
 
-DuoBar 1.2.1 подписан Apple Developer ID и прошёл нотариальную проверку Apple. Приложение не распространяется через Mac App Store.
+DuoBar 1.3.0 подписан Apple Developer ID и прошёл нотариальную проверку Apple. Приложение не распространяется через Mac App Store.
 
 Состояние системы обрабатывается локально:
 
@@ -139,9 +139,9 @@ DuoBar — независимый проект и не связан с Apple Inc
 
 ## Целостность загрузки
 
-SHA-256 официального DMG DuoBar 1.2.1:
+SHA-256 официального DMG DuoBar 1.3.0:
 
-`ac4c3acbe4569c2ccc984ff52c007c208a557abb96b32764a8ec6eeab79f0235`
+`bd638b5fac84b7bc56ab71988e10d6d4a3188bea973584c77b1fe6979f243fb5`
 
 Обычному пользователю это проверять не нужно. Строка для тех, кто хочет убедиться, что файл не подменили.
 

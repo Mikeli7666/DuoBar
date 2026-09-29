@@ -8,13 +8,13 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md)
 
-[**Download DuoBar 1.2.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.2.1/DuoBar-1.2.1.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
+[**Download DuoBar 1.3.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.0/DuoBar-1.3.0.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
 
-DuoBar 1.2.1 (Build 5) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
+DuoBar 1.3.0 (Build 6) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
 
 <br>
 
-<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.2.1 in the macOS menu bar" width="1340">
+<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 in the macOS menu bar" width="1340">
 
 </div>
 
@@ -29,30 +29,26 @@ DuoBar adapts the iPhone Duo-style three-in-one status concept for the Mac menu 
 Persistent status stays monochrome and native-looking. When AirPods or another supported Bluetooth audio output becomes active, the center briefly transitions from Network → AirPods/headphones → Network. Disconnecting does not trigger an animation.
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="DuoBar 1.2.1 visual states" width="800">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="DuoBar 1.3.0 visual states" width="800">
 </p>
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.2.1 popover" width="480">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.3.0 popover" width="480">
 </p>
 
 ## Adaptive Ring and Battery Ring
 
-On MacBooks, the outer Battery Ring shows live battery level, a dynamic charging bolt, and optional battery color coding for charging, Low Power Mode, and low-battery states. On desktop Macs, Adaptive Ring shows display brightness when publicly available and automatically surfaces sustained CPU, memory, or thermal pressure when it needs attention. It remains automatic: there is no manual metric selector.
+On MacBooks, the outer Battery Ring shows live battery level, a dynamic charging bolt, and optional battery color coding for charging, Low Power Mode, and low-battery states. On desktop Macs, Adaptive Ring remains Neutral when there is no meaningful performance activity and automatically surfaces sustained CPU, memory, or thermal pressure when appropriate. It remains automatic: there is no manual metric selector.
 
 ## DuoBar on macOS
 
-The original 1.0 release established DuoBar's Battery, Network, and Volume foundation. The current 1.2.1 release builds on it with broader connectivity controls, refined visuals, localization, and compatibility fixes.
+The current 1.3.0 release brings the Battery, Network, and Volume foundation together with MacBook Adaptive Ring behavior, refined controls, adjustable icon size, and installation polish.
 
 <p align="center">
-  <a href="https://github.com/Mikeli7666/DuoBar/releases/download/v1.0.0/DuoBar-1.0-Official-Launch-Film.mp4">
-    Historical: DuoBar 1.0 Official Launch Film →
-  </a>
-</p>
 ## Features
 
 - Battery Ring with live level, dynamic charging bolt, low-battery state, and optional Battery Color Coding
-- Adaptive Ring for desktop Macs: brightness baseline with automatic CPU, memory, and thermal pressure awareness
+- Adaptive Ring for desktop Macs: Neutral by default, with automatic CPU, memory, and thermal pressure awareness
 - Refined native Duo visual language, rounded Wi-Fi indicator, Battery Ring, volume indicators, and charging presentation
 - Automatic Wi-Fi, Ethernet, and offline network states
 - Wi-Fi network name display and public Wi-Fi power control
@@ -76,14 +72,14 @@ The original 1.0 release established DuoBar's Battery, Network, and Volume found
 
 ## Installation
 
-1. Open the [DuoBar 1.2.1 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.2.1) and find **Assets**.
-2. Download **DuoBar-1.2.1.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
+1. Open the [DuoBar 1.3.0 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.0) and find **Assets**.
+2. Download **DuoBar-1.3.0.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
 3. Double-click the DMG and drag **DuoBar.app** to **Applications**.
 4. Open Applications and launch DuoBar. It is a menu-bar utility and normally does not appear in the Dock.
 
-DuoBar 1.2.1 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
+DuoBar 1.3.0 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
 
-SHA-256: `ac4c3acbe4569c2ccc984ff52c007c208a557abb96b32764a8ec6eeab79f0235`
+SHA-256: `bd638b5fac84b7bc56ab71988e10d6d4a3188bea973584c77b1fe6979f243fb5`
 
 Build and compatibility/reliability work was checked using Xcode 27 and the macOS 27 SDK while continuing to support macOS 13+. This does not claim macOS 27 hardware validation.
 
