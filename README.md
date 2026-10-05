@@ -20,7 +20,7 @@ DuoBar 1.3.0 (Build 6) · macOS 13+ · Apple Silicon or Intel · Universal 2 · 
 
 
 
-  ![DuoBar 1.3.0 promo](marketing/video/duobar-1.3.0-promo.mp4)
+  [![▶ Watch the release video](https://img.shields.io/badge/Watch_the_release_video-0969da?style=for-the-badge)](https://github.com/user-attachments/assets/3af8d3cf-230b-4073-932b-c54c4a1553e6)
 </p>
 
 ## One glyph, three live states
