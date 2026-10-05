@@ -14,10 +14,14 @@ DuoBar 1.3.0 (Build 6) · macOS 13+ · Apple Silicon or Intel · Universal 2 · 
 
 <br>
 
-<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 in the macOS menu bar" width="1340">
+<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 in the macOS menu bar" w</p></p></p>idth="1340">
 
 </div>
 
+
+<p align="center">
+  <video src="marketing/video/duobar-1.3.0-promo.mp4" width="100%" controls></video>
+</p>
 ## One glyph, three live states
 
 DuoBar adapts the iPhone Duo-style three-in-one status concept for the Mac menu bar. One compact glyph presents the system information normally spread across several indicators:
@@ -26,11 +30,8 @@ DuoBar adapts the iPhone Duo-style three-in-one status concept for the Mac menu 
 - **Center** → the active network: Wi-Fi, Ethernet, or an offline/fallback state
 - **Four lower dots** → live output volume
 
-Persistent status stays monochrome and native-looking. When AirPods or another supported Bluetooth audio output becomes active, the center briefly transitions from Network → AirPods/headphones → Network. Disconnecting does not trigger an animation.
-
-<p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="DuoBar 1.3.0 visual states" width="800">
-</p>
+Persistent status stays monochrome and native-looking. When AirPods or another supported Bluetooth audio output becomes active, the center briefly transitions from Network → AirPods/headphones → twork. Disconnecting does not trigger an animation.
+p>
 
 <p align="center">
   <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.3.0 popover" width="480">
