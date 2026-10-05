@@ -14,7 +14,7 @@ DuoBar 1.3.0 (Build 6) · macOS 13+ · Apple Silicon or Intel · Universal 2 · 
 
 <br>
 
-<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 in the macOS menu bar" w</p></p></p>idth="1340">
+<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 in the macOS menu bar" width"1340">
 
 </div>
 
