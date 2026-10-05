@@ -18,7 +18,7 @@ DuoBar 1.3.0（Build 6）· macOS 13 Ventura 或更高版本 · Apple Silicon �
   <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 菜单栏" width="1340">
 
 <p align="center">
-  https://github.com/user-attachments/assets/a5a82872-bb82-42fa-8849-2b4642d308d4
+  <a href="https://github.com/user-attachments/assets/a5a82872-bb82-42fa-8849-2b4642d308d4">▶ 观看发布视频</a>
 </p>
 </p>
 
