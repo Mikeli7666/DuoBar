@@ -16,6 +16,10 @@ DuoBar 1.3.0（Build 6）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 <p align="center">
   <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 菜单栏" width="1340">
+
+<p align="center">
+  ![DuoBar 1.3.0 promo](marketing/video/duobar-1.3.0-promo.mp4)
+</p>
 </p>
 
 ## 📥 下载与安装教程
@@ -74,10 +78,7 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 - **外圈** → 电池 / Adaptive Ring
 - **中间** → Wi-Fi、Ethernet 或其他网络状态
 - **下方四个点** → 音量
-
-<p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="DuoBar 1.3.0 状态" width="800">
-</p>
+/p>
 
 点击 DuoBar 图标即可打开弹出面板。面板包含：
 
