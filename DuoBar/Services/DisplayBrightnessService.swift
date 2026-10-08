@@ -23,17 +23,23 @@ struct DisplayBrightnessService: DisplayBrightnessReading {
             isBuiltIn: CGDisplayIsBuiltin(mainDisplayID) != 0,
             bounds: CGDisplayBounds(mainDisplayID)
         )
-        let availability = readBrightness(for: mainDisplay, recorder: recorder)
+        let measured = readBrightness(for: mainDisplay, recorder: recorder)
         return DisplayBrightnessSnapshot(
             mainDisplay: mainDisplay,
-            availability: availability,
+            availability: Self.availability(
+                measured: measured,
+                slider: DisplaySliderBrightness.read(displayID: mainDisplayID)
+            ),
             sampledAt: timestamp,
-            diagnostic: recorder.complete(availability: availability)
+            diagnostic: recorder.complete(availability: measured)
         )
         #else
         return DisplayBrightnessSnapshot(
             mainDisplay: mainDisplay,
-            availability: readBrightness(for: mainDisplay),
+            availability: Self.availability(
+                measured: readBrightness(for: mainDisplay),
+                slider: DisplaySliderBrightness.read(displayID: mainDisplayID)
+            ),
             sampledAt: timestamp
         )
         #endif
@@ -52,6 +58,16 @@ struct DisplayBrightnessService: DisplayBrightnessReading {
             }
         }
         return .unavailable
+    }
+
+    /// Keeps a successful IOKit read. When the framebuffer path is missing, uses the Control Center slider.
+    static func availability(
+        measured: DisplayBrightnessAvailability,
+        slider: Double?
+    ) -> DisplayBrightnessAvailability {
+        if case .available = measured { return measured }
+        guard let slider else { return .unavailable }
+        return validatedBrightness(slider)
     }
 
     #if DEBUG
@@ -406,3 +422,25 @@ private final class DisplayBrightnessDiagnosticRecorder {
     }
 }
 #endif
+
+/// Control Center brightness. IOFramebuffer is not published for the built-in panel on newer macOS.
+private enum DisplaySliderBrightness {
+    private typealias Getter = @convention(c) (UInt32, UnsafeMutablePointer<Float>) -> Int32
+
+    private static let getter: Getter? = {
+        guard let handle = dlopen(
+            "/System/Library/PrivateFrameworks/DisplayServices.framework/DisplayServices",
+            RTLD_LAZY
+        ), let symbol = dlsym(handle, "DisplayServicesGetBrightness") else {
+            return nil
+        }
+        return unsafeBitCast(symbol, to: Getter.self)
+    }()
+
+    static func read(displayID: CGDirectDisplayID) -> Double? {
+        guard let getter else { return nil }
+        var value: Float = 0
+        guard getter(displayID, &value) == 0 else { return nil }
+        return Double(value)
+    }
+}

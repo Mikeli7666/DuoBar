@@ -69,6 +69,25 @@ final class AdaptiveRingTests: XCTestCase {
         XCTAssertEqual(DisplayBrightnessService.validatedBrightness(0), .available(0))
     }
 
+    func testSliderBrightnessFillsInWhenTheFramebufferReadIsUnavailable() {
+        XCTAssertEqual(
+            DisplayBrightnessService.availability(measured: .unavailable, slider: 1),
+            .available(1)
+        )
+        XCTAssertEqual(
+            DisplayBrightnessService.availability(measured: .available(0.4), slider: 1),
+            .available(0.4)
+        )
+        XCTAssertEqual(
+            DisplayBrightnessService.availability(measured: .unavailable, slider: nil),
+            .unavailable
+        )
+        XCTAssertEqual(
+            DisplayBrightnessService.availability(measured: .unavailable, slider: 1.4),
+            .unavailable
+        )
+    }
+
     func testLinearBrightnessFallbackIsUsedOnlyWhenStandardBrightnessIsUnavailable() {
         XCTAssertEqual(
             DisplayBrightnessService.resolvedBrightness(standard: 0.22, linearFallback: 0.81),
