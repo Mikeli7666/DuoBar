@@ -69,6 +69,25 @@ final class AdaptiveRingTests: XCTestCase {
         XCTAssertEqual(DisplayBrightnessService.validatedBrightness(0), .available(0))
     }
 
+    func testSliderBrightnessFillsInWhenTheFramebufferReadIsUnavailable() {
+        XCTAssertEqual(
+            DisplayBrightnessService.availability(measured: .unavailable, slider: 1),
+            .available(1)
+        )
+        XCTAssertEqual(
+            DisplayBrightnessService.availability(measured: .available(0.4), slider: 1),
+            .available(0.4)
+        )
+        XCTAssertEqual(
+            DisplayBrightnessService.availability(measured: .unavailable, slider: nil),
+            .unavailable
+        )
+        XCTAssertEqual(
+            DisplayBrightnessService.availability(measured: .unavailable, slider: 1.4),
+            .unavailable
+        )
+    }
+
     func testLinearBrightnessFallbackIsUsedOnlyWhenStandardBrightnessIsUnavailable() {
         XCTAssertEqual(
             DisplayBrightnessService.resolvedBrightness(standard: 0.22, linearFallback: 0.81),
@@ -499,10 +518,84 @@ final class AdaptiveRingTests: XCTestCase {
         XCTAssertEqual(AdaptiveRingColorResolver.resolve(state: .performance(metric: .thermal, value: 1), decision: colorDecision(.thermal, severity: .critical), colorCodingEnabled: true).role, .thermal)
     }
 
-    func testColorIntensityConsumesEngineSeverity() {
-        XCTAssertEqual(AdaptiveRingColorResolver.intensity(for: .elevated), 0.68)
-        XCTAssertEqual(AdaptiveRingColorResolver.intensity(for: .serious), 0.82)
-        XCTAssertEqual(AdaptiveRingColorResolver.intensity(for: .critical), 1)
+    func testAdaptiveRingCueNamesTheActiveSource() {
+        XCTAssertEqual(AdaptiveRingCue.centerState(for: .brightness), .adaptiveBrightness)
+        XCTAssertEqual(AdaptiveRingCue.centerState(for: .cpu), .performanceCPU)
+        XCTAssertEqual(AdaptiveRingCue.centerState(for: .memory), .performanceMemory)
+        XCTAssertEqual(AdaptiveRingCue.centerState(for: .thermal), .performanceThermal)
+        XCTAssertNil(AdaptiveRingCue.centerState(for: .neutral))
+        XCTAssertEqual(
+            AdaptiveRingCue.localizationKey(usesAdaptiveRing: false, state: .brightness(1)),
+            "Battery level"
+        )
+        XCTAssertEqual(
+            AdaptiveRingCue.localizationKey(usesAdaptiveRing: true, state: .brightness(1)),
+            "Brightness"
+        )
+        XCTAssertEqual(
+            AdaptiveRingCue.localizationKey(usesAdaptiveRing: true, state: .performance(metric: .cpu, value: 0.7)),
+            "Processor"
+        )
+        XCTAssertEqual(
+            AdaptiveRingCue.localizationKey(usesAdaptiveRing: true, state: .performance(metric: .thermal, value: 1)),
+            "Heat"
+        )
+        XCTAssertEqual(
+            AdaptiveRingCue.symbolName(usesAdaptiveRing: true, state: .performance(metric: .memory, value: 0.8)),
+            "memorychip"
+        )
+        XCTAssertEqual(AdaptiveRingCue.symbolName(usesAdaptiveRing: false, state: .neutral), "battery.100")
+    }
+
+    func testOuterRingChoiceCanPinAMetricWithoutFollowingAutomaticPolicy() {
+        let adaptiveBrightness = OuterRingSample(
+            automaticUsesAdaptiveRing: true,
+            automaticState: .brightness(0.9),
+            cpuLoad: 0.22,
+            memoryUsed: 0.61,
+            thermal: .fair,
+            brightness: 0.9
+        )
+        let onBattery = OuterRingSample(
+            automaticUsesAdaptiveRing: false,
+            automaticState: .neutral,
+            cpuLoad: 0.22,
+            memoryUsed: 0.61,
+            thermal: .nominal,
+            brightness: 1
+        )
+
+        XCTAssertEqual(OuterRingResolver.resolve(choice: .automatic, sample: onBattery).subject, .battery)
+        XCTAssertEqual(OuterRingResolver.resolve(choice: .battery, sample: adaptiveBrightness).subject, .battery)
+        XCTAssertEqual(
+            OuterRingResolver.resolve(choice: .automatic, sample: adaptiveBrightness).subject,
+            .brightness(0.9)
+        )
+        XCTAssertEqual(
+            OuterRingResolver.resolve(choice: .processor, sample: onBattery).subject,
+            .processor(0.22)
+        )
+        XCTAssertEqual(
+            OuterRingResolver.resolve(choice: .memory, sample: onBattery).subject,
+            .memory(0.61)
+        )
+        XCTAssertEqual(OuterRingResolver.resolve(choice: .heat, sample: onBattery).progress, 0.12, accuracy: 0.0001)
+        XCTAssertEqual(
+            OuterRingResolver.resolve(choice: .brightness, sample: onBattery).localizationKey,
+            "Brightness"
+        )
+        XCTAssertEqual(OuterRingResolver.resolve(choice: .processor, sample: onBattery).centerState, .performanceCPU)
+        XCTAssertFalse(OuterRingChoice.automaticAdaptiveRingIsActive(enabled: false, systemUsesAdaptiveRing: true))
+        XCTAssertTrue(OuterRingChoice.automaticAdaptiveRingIsActive(enabled: true, systemUsesAdaptiveRing: true))
+        XCTAssertEqual(PreferenceKeys.adaptiveRingEnabled, "adaptiveRingEnabled")
+        XCTAssertEqual(OuterRingChoice(stored: "nope"), .automatic)
+        XCTAssertEqual(PreferenceKeys.outerRingChoice, "outerRingChoice")
+    }
+
+    func testColorIntensityStaysSolidSoTheMetricStaysReadable() {
+        for severity: PerformanceSeverity in [.idle, .normal, .elevated, .serious, .critical] {
+            XCTAssertEqual(AdaptiveRingColorResolver.intensity(for: severity), 1)
+        }
     }
 
     func testAdaptiveRingSettingsDefaultsAndPersistValues() {

@@ -6,8 +6,10 @@ struct SettingsView: View {
     @AppStorage(PreferenceKeys.animationsEnabled) private var animationsEnabled = true
     @AppStorage(PreferenceKeys.menuBarIconScale) private var menuBarIconScale = MenuBarIconSize.defaultScale
     @AppStorage(PreferenceKeys.batteryColorCoding) private var batteryColorCoding = false
+    @AppStorage(PreferenceKeys.adaptiveRingEnabled) private var adaptiveRingEnabled = true
     @AppStorage(PreferenceKeys.adaptiveRingPriority) private var adaptiveRingPriorityRaw = PerformancePreference.automatic.rawValue
     @AppStorage(PreferenceKeys.adaptiveRingColorCoding) private var adaptiveRingColorCoding = false
+    @AppStorage(PreferenceKeys.outerRingChoice) private var outerRingChoiceRaw = OuterRingChoice.automatic.rawValue
     @AppStorage(PreferenceKeys.openOnHover) private var openOnHover = false
     @StateObject private var launchAtLogin = LaunchAtLoginService()
     @ObservedObject private var adaptiveRingMonitor = AdaptiveRingMonitor.shared
@@ -83,6 +85,17 @@ struct SettingsView: View {
                 }
             }
 
+            Section(localized("Outer Ring")) {
+                Picker(localized("Outer Ring"), selection: outerRingChoice) {
+                    ForEach(OuterRingChoice.allCases) { choice in
+                        Text(localized(choice.localizationKey)).tag(choice)
+                    }
+                }
+                Text(localized("Choose what the outer arc shows. Automatic keeps battery level while on battery power and switches while charging."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             if showsBatteryRingSettings {
                 Section(localized("Battery Ring")) {
                     Toggle(localized("Battery Color Coding"), isOn: $batteryColorCoding)
@@ -91,14 +104,20 @@ struct SettingsView: View {
 
             if showsAdaptiveRingSettings {
                 Section(localized("Adaptive Ring")) {
-                    Picker(localized("Adaptive Ring Priority"), selection: adaptiveRingPriority) {
-                        ForEach(PerformancePreference.allCases, id: \.self) { preference in
-                            Text(preference.localizedDisplayName).tag(preference)
-                        }
-                    }
-                    Text(localized("Used only when multiple system conditions need attention. Critical conditions can still take priority."))
+                    Toggle(localized("Enable Adaptive Ring"), isOn: $adaptiveRingEnabled)
+                    Text(localized("While charging, the outer arc can leave battery level and show brightness, processor, memory, or heat."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    if adaptiveRingEnabled {
+                        Picker(localized("Adaptive Ring Priority"), selection: adaptiveRingPriority) {
+                            ForEach(PerformancePreference.allCases, id: \.self) { preference in
+                                Text(preference.localizedDisplayName).tag(preference)
+                            }
+                        }
+                        Text(localized("Used only when multiple system conditions need attention. Critical conditions can still take priority."))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                     Toggle(localized("Adaptive Ring Color Coding"), isOn: $adaptiveRingColorCoding)
                 }
             }
@@ -132,8 +151,15 @@ struct SettingsView: View {
         #if DEBUG
         MarketingCaptureMode.isEnabled ? 360 : 850
         #else
-        360
+        470
         #endif
+    }
+
+    private var outerRingChoice: Binding<OuterRingChoice> {
+        Binding(
+            get: { OuterRingChoice(stored: outerRingChoiceRaw) },
+            set: { outerRingChoiceRaw = $0.rawValue }
+        )
     }
 
     private var adaptiveRingPriority: Binding<PerformancePreference> {

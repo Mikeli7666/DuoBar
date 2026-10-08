@@ -59,7 +59,17 @@ final class LocalizationTests: XCTestCase {
         "Join",
         "Unable to Join",
         "Location access is needed to show Wi-Fi network names.",
-        "Open System Settings…"
+        "Open System Settings…",
+        "Outer Ring",
+        "Battery level",
+        "Brightness",
+        "Processor",
+        "Memory",
+        "Heat",
+        "Choose outer ring",
+        "Choose what the outer arc shows. Automatic keeps battery level while on battery power and switches while charging.",
+        "Enable Adaptive Ring",
+        "While charging, the outer arc can leave battery level and show brightness, processor, memory, or heat."
     ]
 
     func testAllSupportedLocalizationResourcesExist() {

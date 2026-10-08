@@ -171,3 +171,50 @@ struct DuoGlyphState: Equatable {
         }
     }
 }
+
+/// What the outer arc means right now, in a form the menu bar and the popover can both show.
+enum AdaptiveRingCue {
+    static func centerState(for source: AdaptiveRingSourceIdentity) -> DuoCenterState? {
+        switch source {
+        case .neutral: nil
+        case .brightness: .adaptiveBrightness
+        case .cpu: .performanceCPU
+        case .memory: .performanceMemory
+        case .thermal: .performanceThermal
+        }
+    }
+
+    static func localizationKey(usesAdaptiveRing: Bool, state: AdaptiveRingState) -> String {
+        guard usesAdaptiveRing else { return "Battery level" }
+        switch AdaptiveRingSourceIdentity(state: state) {
+        case .neutral: return "Unavailable"
+        case .brightness: return "Brightness"
+        case .cpu: return "Processor"
+        case .memory: return "Memory"
+        case .thermal: return "Heat"
+        }
+    }
+
+    static func symbolName(usesAdaptiveRing: Bool, state: AdaptiveRingState) -> String {
+        guard usesAdaptiveRing else { return "battery.100" }
+        switch AdaptiveRingSourceIdentity(state: state) {
+        case .neutral: return "circle.dashed"
+        case .brightness: return "sun.max.fill"
+        case .cpu: return "cpu"
+        case .memory: return "memorychip"
+        case .thermal: return "thermometer.medium"
+        }
+    }
+}
+
+extension OuterRingReading {
+    var centerState: DuoCenterState? {
+        switch subject {
+        case .battery, .unavailable: nil
+        case .brightness: .adaptiveBrightness
+        case .processor: .performanceCPU
+        case .memory: .performanceMemory
+        case .heat: .performanceThermal
+        }
+    }
+}
