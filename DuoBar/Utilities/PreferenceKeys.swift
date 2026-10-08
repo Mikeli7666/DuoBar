@@ -4,9 +4,12 @@ enum PreferenceKeys {
     static let menuBarIconScale = MenuBarIconSize.preferenceKey
     static let batteryColorCoding = "batteryColorCoding"
     static let adaptiveRingPriority = "adaptiveRingPriority"
+    static let adaptiveRingEnabled = "adaptiveRingEnabled"
     static let adaptiveRingColorCoding = "adaptiveRingColorCoding"
+    static let outerRingChoice = "outerRingChoice"
     static let openOnHover = "duoBar.openOnHover"
     static let showInDock = "duoBar.showInDock"
+    static let liquidGlassEnabled = "duoBar.liquidGlassEnabled"
     static let showBatteryPercentageInMenuBar = "showBatteryPercentageInMenuBar"
     static let appLanguage = "duoBar.appLanguage"
     static let showDesktopWidget = "duoBar.showDesktopWidget"

@@ -103,15 +103,17 @@ struct DuoGlyphView: View {
         ZStack {
             Group {
                 if glyphState.ringPresentation.mode == .adaptive {
-                    DuoArcShape(
+                    GlyphArc(
                         startDegrees: metrics.arcStartDegrees,
                         endDegrees: metrics.arcEndDegrees,
-                        progress: CGFloat(glyphState.batteryProgress)
+                        progress: CGFloat(glyphState.batteryProgress),
+                        lineWidth: metrics.arcLineWidth,
+                        diameter: metrics.ringPathDiameter,
+                        yOffset: metrics.ringYOffset,
+                        swiftColor: ringColorOverride ?? .primary,
+                        solidColor: adaptiveSolidColor,
+                        opacity: glyphState.batteryArcOpacity
                     )
-                    .stroke(ringColorOverride ?? .primary, style: ringStrokeStyle)
-                    .frame(width: metrics.ringPathDiameter, height: metrics.ringPathDiameter)
-                    .offset(y: metrics.ringYOffset)
-                    .opacity(glyphState.batteryArcOpacity)
                     .animation(arcAnimation, value: glyphState.batteryProgress)
                     .animation(arcOpacityAnimation, value: glyphState.batteryArcOpacity)
                     .transition(.opacity)
@@ -185,7 +187,8 @@ struct DuoGlyphView: View {
                 centerYOffset: metrics.wifiYOffset,
                 pulseScale: centerPulseScale,
                 animationsEnabled: animationsEnabled,
-                reduceMotion: reduceMotion
+                reduceMotion: reduceMotion,
+                sourceTint: adaptiveSourceTint
             )
             .offset(y: metrics.wifiYOffset)
 
@@ -271,6 +274,15 @@ struct DuoGlyphView: View {
         #endif
     }
 
+    private var adaptiveSourceTint: Color? {
+        switch glyphState.centerState {
+        case .adaptiveBrightness, .performanceCPU, .performanceMemory, .performanceThermal:
+            return ringColorOverride
+        default:
+            return nil
+        }
+    }
+
     private var motionAllowed: Bool {
         animationsEnabled && !reduceMotion
     }
@@ -281,6 +293,25 @@ struct DuoGlyphView: View {
             lineCap: .round,
             lineJoin: .round
         )
+    }
+
+    /// Real color for the arc. Nil keeps the menu-bar template tint, so the arc stays white or black with the other icons.
+    private var adaptiveSolidColor: NSColor? {
+        guard let ringColorOverride else { return nil }
+        return NSColor(ringColorOverride)
+    }
+
+    private var solidBatteryColor: NSColor? {
+        if effectiveChargingColorMix > 0 {
+            let base = nsColor(for: nonChargingBatteryColorRole)
+            return base.blended(withFraction: effectiveChargingColorMix, of: .systemGreen) ?? .systemGreen
+        }
+        switch BatteryRingPresentation.resolve(battery: status.battery, colorCodingEnabled: batteryColorCodingEnabled).colorRole {
+        case .charging: return nsColor(for: nonChargingBatteryColorRole)
+        case .lowPowerMode: return .systemYellow
+        case .lowBattery: return .systemRed
+        case .monochrome: return nil
+        }
     }
 
     private var batteryArcColor: Color {
@@ -491,6 +522,7 @@ struct DuoCenterTransitionView: View {
     let pulseScale: CGFloat
     let animationsEnabled: Bool
     let reduceMotion: Bool
+    var sourceTint: Color? = nil
 
     @State private var displayedState: DuoCenterState
     @State private var outgoingState: DuoCenterState?
@@ -504,7 +536,8 @@ struct DuoCenterTransitionView: View {
         centerYOffset: CGFloat,
         pulseScale: CGFloat,
         animationsEnabled: Bool,
-        reduceMotion: Bool
+        reduceMotion: Bool,
+        sourceTint: Color? = nil
     ) {
         self.targetState = targetState
         self.size = size
@@ -514,6 +547,7 @@ struct DuoCenterTransitionView: View {
         self.pulseScale = pulseScale
         self.animationsEnabled = animationsEnabled
         self.reduceMotion = reduceMotion
+        self.sourceTint = sourceTint
         _displayedState = State(initialValue: targetState)
     }
 
@@ -522,6 +556,7 @@ struct DuoCenterTransitionView: View {
             outgoingState: outgoingState,
             incomingState: displayedState,
             progress: transitionProgress,
+            sourceTint: sourceTint,
             pulseScale: pulseScale,
             size: size,
             ringDiameter: ringDiameter,
@@ -564,6 +599,7 @@ struct DuoCenterTransitionLayer: View {
     let outgoingState: DuoCenterState?
     let incomingState: DuoCenterState
     let progress: CGFloat
+    var sourceTint: Color? = nil
     let pulseScale: CGFloat
     let size: CGFloat
     let ringDiameter: CGFloat
@@ -574,6 +610,7 @@ struct DuoCenterTransitionLayer: View {
         outgoingState: DuoCenterState?,
         incomingState: DuoCenterState,
         progress: CGFloat,
+        sourceTint: Color? = nil,
         pulseScale: CGFloat,
         size: CGFloat,
         ringDiameter: CGFloat = DuoGlyphMetrics.standard.ringDiameter,
@@ -587,6 +624,7 @@ struct DuoCenterTransitionLayer: View {
         self.outgoingState = outgoingState
         self.incomingState = incomingState
         self.progress = progress
+        self.sourceTint = sourceTint
         self.pulseScale = pulseScale
         self.size = size
         self.ringDiameter = ringDiameter
@@ -601,7 +639,8 @@ struct DuoCenterTransitionLayer: View {
                     state: outgoingState,
                     size: size,
                     ringDiameter: ringDiameter,
-                    wifiVerticalAdjustment: wifiVerticalAdjustment
+                    wifiVerticalAdjustment: wifiVerticalAdjustment,
+                    sourceTint: sourceTint
                 )
                     .opacity(1 - progress)
                     .scaleEffect(usesSpatialMotion ? 1 - (0.1 * progress) : 1)
@@ -615,7 +654,8 @@ struct DuoCenterTransitionLayer: View {
                 state: incomingState,
                 size: size,
                 ringDiameter: ringDiameter,
-                wifiVerticalAdjustment: wifiVerticalAdjustment
+                wifiVerticalAdjustment: wifiVerticalAdjustment,
+                sourceTint: sourceTint
             )
                 .opacity(progress)
                 .scaleEffect((usesSpatialMotion ? 0.9 + (0.1 * progress) : 1) * incomingPulseScale)
@@ -635,6 +675,125 @@ struct DuoCenterTransitionLayer: View {
     // This produces an effective two-point displacement at the installed size.
     private var travelDistance: CGFloat {
         size * 0.215
+    }
+}
+
+/// Draws one arc. A real NSColor is painted outside menu-bar vibrancy so yellow, blue, and red stay colored. A nil color uses the template tint.
+private struct GlyphArc: View {
+    let startDegrees: Double
+    let endDegrees: Double
+    let progress: CGFloat
+    let lineWidth: CGFloat
+    let diameter: CGFloat
+    let yOffset: CGFloat
+    let swiftColor: Color
+    let solidColor: NSColor?
+    let opacity: Double
+
+    var body: some View {
+        Group {
+            if let solidColor {
+                MenuBarSolidArc(
+                    startDegrees: startDegrees,
+                    endDegrees: endDegrees,
+                    progress: progress,
+                    lineWidth: lineWidth,
+                    color: solidColor,
+                    opacity: opacity
+                )
+            } else {
+                DuoArcShape(
+                    startDegrees: startDegrees,
+                    endDegrees: endDegrees,
+                    progress: progress
+                )
+                .stroke(
+                    swiftColor,
+                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round)
+                )
+                .opacity(opacity)
+            }
+        }
+        .frame(width: diameter, height: diameter)
+        .offset(y: yOffset)
+    }
+}
+
+/// Menu-bar vibrancy turns ordinary SwiftUI color into the template tint. This view opts out, so a colored arc stays colored while the Wi-Fi mark and volume dots remain white or black with the rest of the menu bar.
+private struct MenuBarSolidArc: NSViewRepresentable {
+    var startDegrees: Double
+    var endDegrees: Double
+    var progress: CGFloat
+    var lineWidth: CGFloat
+    var color: NSColor
+    var opacity: Double
+
+    func makeNSView(context: Context) -> MenuBarSolidArcView {
+        let view = MenuBarSolidArcView()
+        view.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        view.setContentHuggingPriority(.defaultLow, for: .vertical)
+        return view
+    }
+
+    func updateNSView(_ view: MenuBarSolidArcView, context: Context) {
+        view.startDegrees = startDegrees
+        view.endDegrees = endDegrees
+        view.progress = progress
+        view.lineWidth = lineWidth
+        view.strokeColor = color
+        view.strokeOpacity = opacity
+        view.needsDisplay = true
+    }
+}
+
+private final class MenuBarSolidArcView: NSView {
+    var startDegrees: Double = 0
+    var endDegrees: Double = 0
+    var progress: CGFloat = 0
+    var lineWidth: CGFloat = 2
+    var strokeColor: NSColor = .systemYellow
+    var strokeOpacity: Double = 1
+
+    override var allowsVibrancy: Bool { false }
+    override var isOpaque: Bool { false }
+    override var isFlipped: Bool { true }
+
+    override func hitTest(_ point: NSPoint) -> NSView? { nil }
+
+    override func draw(_ dirtyRect: NSRect) {
+        let clamped = min(max(progress, 0), 1)
+        guard clamped > 0, bounds.width > 0, bounds.height > 0 else { return }
+
+        let visibleEnd = DuoRingGeometry.endDegrees(
+            startDegrees: startDegrees,
+            endDegrees: endDegrees,
+            progress: Double(clamped)
+        )
+        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let radius = min(bounds.width, bounds.height) / 2
+        let sampleCount = 72
+        let path = NSBezierPath()
+        path.lineWidth = lineWidth
+        path.lineCapStyle = .round
+        path.lineJoinStyle = .round
+
+        for index in 0...sampleCount {
+            let sampleProgress = Double(index) / Double(sampleCount)
+            let degrees = startDegrees + (visibleEnd - startDegrees) * sampleProgress
+            let radians = degrees * .pi / 180
+            let point = CGPoint(
+                x: center.x + CGFloat(cos(radians)) * radius,
+                y: center.y + CGFloat(sin(radians)) * radius
+            )
+            if index == 0 {
+                path.move(to: point)
+            } else {
+                path.line(to: point)
+            }
+        }
+
+        strokeColor.withAlphaComponent(strokeOpacity).setStroke()
+        path.stroke()
     }
 }
 
@@ -689,6 +848,7 @@ struct DuoCenterGlyph: View {
     let size: CGFloat
     let ringDiameter: CGFloat
     let wifiVerticalAdjustment: CGFloat
+    var sourceTint: Color? = nil
 
     var body: some View {
         Group {
@@ -745,7 +905,9 @@ struct DuoCenterGlyph: View {
     }
 
     private var glyphColor: Color {
-        state.isTemporaryAudioState ? .accentColor.opacity(0.86) : .primary
+        if state.isTemporaryAudioState { return .accentColor.opacity(0.86) }
+        if let sourceTint, state.usesAdaptiveSourceColor { return sourceTint }
+        return .primary
     }
 }
 
@@ -883,6 +1045,13 @@ private struct DuoWiFiCoreShape: Shape {
 }
 
 private extension DuoCenterState {
+    var usesAdaptiveSourceColor: Bool {
+        switch self {
+        case .adaptiveBrightness, .performanceCPU, .performanceMemory, .performanceThermal: true
+        default: false
+        }
+    }
+
     var isTemporaryAudioState: Bool {
         switch self {
         case .airPodsPro, .airPodsMax, .airPods, .headphones, .audioDevice: true

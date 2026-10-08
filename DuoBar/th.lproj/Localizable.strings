@@ -100,3 +100,13 @@
 "Extra Large" = "ใหญ่พิเศษ";
 "Battery Percentage" = "เปอร์เซ็นต์แบตเตอรี่";
 "Default" = "ค่าเริ่มต้น";
+"Enable Adaptive Ring" = "เปิดวงแหวนแบบปรับได้";
+"While charging, the outer arc can leave battery level and show brightness, processor, memory, or heat." = "ขณะชาร์จ ส่วนโค้งด้านนอกสามารถออกจากระดับแบตเตอรี่และแสดงความสว่าง โปรเซสเซอร์ หน่วยความจำ หรือความร้อน";
+"Outer Ring" = "วงแหวนนอก";
+"Battery level" = "ระดับแบตเตอรี่";
+"Brightness" = "ความสว่าง";
+"Processor" = "โปรเซสเซอร์";
+"Memory" = "หน่วยความจำ";
+"Heat" = "ความร้อน";
+"Choose outer ring" = "เลือกวงแหวนนอก";
+"Choose what the outer arc shows. Automatic keeps battery level while on battery power and switches while charging." = "เลือกสิ่งที่ส่วนโค้งด้านนอกแสดง อัตโนมัติคงระดับแบตเตอรี่เมื่อใช้แบตเตอรี่ และสลับขณะชาร์จ";

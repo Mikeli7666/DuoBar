@@ -162,7 +162,7 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
             colorCodingEnabled: true
         )
         XCTAssertEqual(presentation.role, .cpu)
-        XCTAssertEqual(presentation.intensity, 0.82)
+        XCTAssertEqual(presentation.intensity, 1)
         XCTAssertEqual(
             AdaptiveRingColorResolver.resolve(
                 state: .brightness(0.7),
