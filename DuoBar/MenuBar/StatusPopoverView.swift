@@ -3,8 +3,12 @@ import SwiftUI
 
 struct StatusPopoverView: View {
     @ObservedObject private var statusStore: SystemStatusStore
+    @ObservedObject private var adaptiveRingMonitor = AdaptiveRingMonitor.shared
     @AppStorage(PreferenceKeys.showBatteryPercentage) private var showBatteryPercentage = true
     @AppStorage(PreferenceKeys.batteryColorCoding) private var batteryColorCoding = false
+    @AppStorage(PreferenceKeys.adaptiveRingColorCoding) private var adaptiveRingColorCoding = false
+    @AppStorage(PreferenceKeys.adaptiveRingEnabled) private var adaptiveRingEnabled = true
+    @AppStorage(PreferenceKeys.outerRingChoice) private var outerRingChoiceRaw = OuterRingChoice.automatic.rawValue
     private let onClose: () -> Void
 
     init(statusStore: SystemStatusStore, onClose: @escaping () -> Void) {
@@ -22,6 +26,9 @@ struct StatusPopoverView: View {
                     status: statusStore.status,
                     metrics: DuoGlyphMetrics.standard.sized(20),
                     animationsEnabled: false,
+                    ringPresentation: popoverRingPresentation,
+                    centerStateOverride: popoverRingCenter,
+                    ringColorOverride: popoverRingColor,
                     batteryColorCodingEnabled: batteryColorCoding
                 )
             }
@@ -73,6 +80,32 @@ struct StatusPopoverView: View {
                 onSelect: { statusStore.setDefaultOutput(uid: $0) },
                 onOpenSoundSettings: openSoundSettings
             )
+
+            Menu {
+                Picker(selection: outerRingChoice) {
+                    ForEach(OuterRingChoice.allCases) { choice in
+                        Text(localized(choice.localizationKey)).tag(choice)
+                    }
+                } label: {
+                    Text(localized("Outer Ring"))
+                }
+                .pickerStyle(.inline)
+            } label: {
+                StatusRow(
+                    symbol: outerRingReading.symbolName,
+                    title: localized("Outer Ring"),
+                    detail: localized(outerRingReading.localizationKey),
+                    stateText: ringStateText,
+                    tint: popoverRingColor ?? .primary,
+                    accessory: .menu
+                )
+            }
+            .menuStyle(.borderlessButton)
+            .menuIndicator(.hidden)
+            .frame(maxWidth: .infinity)
+            .accessibilityLabel(localized("Outer Ring"))
+            .accessibilityValue(localized(outerRingReading.localizationKey))
+            .accessibilityHint(localized("Choose outer ring"))
 
             #if DEBUG
             DebugStatusSimulatorView(statusStore: statusStore)
@@ -145,6 +178,67 @@ struct StatusPopoverView: View {
             }
         }
         return nil
+    }
+
+    private var outerRingChoice: Binding<OuterRingChoice> {
+        Binding(
+            get: { OuterRingChoice(stored: outerRingChoiceRaw) },
+            set: { outerRingChoiceRaw = $0.rawValue }
+        )
+    }
+
+    private var outerRingReading: OuterRingReading {
+        let brightness: Double?
+        if case .available(let value) = adaptiveRingMonitor.brightnessSnapshot?.availability {
+            brightness = value
+        } else {
+            brightness = nil
+        }
+        return OuterRingResolver.resolve(
+            choice: outerRingChoice.wrappedValue,
+            sample: OuterRingSample(
+                automaticUsesAdaptiveRing: OuterRingChoice.automaticAdaptiveRingIsActive(
+                    enabled: adaptiveRingEnabled,
+                    systemUsesAdaptiveRing: statusStore.usesReleasedAdaptiveRing
+                ),
+                automaticState: adaptiveRingMonitor.state,
+                cpuLoad: adaptiveRingMonitor.performanceSnapshot?.cpuLoad,
+                memoryUsed: adaptiveRingMonitor.performanceSnapshot?.memory.map { 1 - $0.availableHeadroom },
+                thermal: adaptiveRingMonitor.performanceSnapshot?.thermalState ?? .nominal,
+                brightness: brightness
+            )
+        )
+    }
+
+    private var popoverRingPresentation: DuoPersistentRingPresentation {
+        guard outerRingReading.showsAdaptiveArc else {
+            return .battery(statusStore.status.battery, colorCodingEnabled: batteryColorCoding)
+        }
+        return .adaptive(progress: outerRingReading.progress)
+    }
+
+    private var popoverRingCenter: DuoCenterState? {
+        outerRingReading.centerState
+    }
+
+    private var popoverRingColor: Color? {
+        guard outerRingReading.showsAdaptiveArc else { return nil }
+        return AdaptiveRingColorResolver.resolve(
+            reading: outerRingReading,
+            colorCodingEnabled: adaptiveRingColorCoding
+        ).color
+    }
+
+    private var ringStateText: String {
+        switch outerRingReading.subject {
+        case .battery:
+            guard let percentage = statusStore.status.battery.percentage else { return "" }
+            return localized("%d%%", percentage)
+        case .unavailable:
+            return ""
+        case .brightness, .processor, .memory, .heat:
+            return localized("%d%%", Int((outerRingReading.progress * 100).rounded()))
+        }
     }
 
     private var networkSettingsHint: String {

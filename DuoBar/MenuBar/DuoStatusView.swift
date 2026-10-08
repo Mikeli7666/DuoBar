@@ -8,6 +8,8 @@ struct DuoStatusView: View {
     @AppStorage(PreferenceKeys.menuBarIconScale) private var menuBarIconScale = MenuBarIconSize.defaultScale
     @AppStorage(PreferenceKeys.batteryColorCoding) private var batteryColorCoding = false
     @AppStorage(PreferenceKeys.adaptiveRingColorCoding) private var adaptiveRingColorCoding = false
+    @AppStorage(PreferenceKeys.adaptiveRingEnabled) private var adaptiveRingEnabled = true
+    @AppStorage(PreferenceKeys.outerRingChoice) private var outerRingChoiceRaw = OuterRingChoice.automatic.rawValue
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var adaptiveRingOwner = UUID()
     @State private var temporaryAdaptiveSource: AdaptiveRingSourceIdentity?
@@ -71,7 +73,7 @@ struct DuoStatusView: View {
             ringPresentation: resolvedRingPresentation,
             centerStateOverride: centerStateOverride,
             ringTransitionAnimation: adaptiveRingAnimation,
-            usesCustomRingTransition: usesAdaptiveRing,
+            usesCustomRingTransition: showsAdaptiveArc,
             ringColorOverride: adaptiveRingColor,
             batteryColorCodingEnabled: batteryColorCoding
         )
@@ -85,9 +87,7 @@ struct DuoStatusView: View {
             lastAdaptiveSourceBinding.wrappedValue = AdaptiveRingSourceIdentity(state: adaptiveRingMonitor.state)
             adaptiveSourcePresentationsEnabledBinding.wrappedValue = usesAdaptiveRing
             lastLaptopRingModeBinding.wrappedValue = statusStore.laptopRingModeState.mode
-            if usesAdaptiveRing {
-                beginAdaptiveMonitoring(startFresh: usesLaptopAdaptiveRing)
-            }
+            syncOuterRingMonitoring(startFresh: true)
         }
         .onDisappear {
             adaptiveEntryCenterOverrideBinding.wrappedValue = nil
@@ -96,7 +96,11 @@ struct DuoStatusView: View {
         }
         .onChange(of: usesAdaptiveRing) { isAdaptive in
             temporaryAdaptiveSourceBinding.wrappedValue = nil
-            if isAdaptive {
+            guard outerRingChoice == .automatic else {
+                syncOuterRingMonitoring(startFresh: false)
+                return
+            }
+            if isAdaptive, adaptiveRingEnabled {
                 adaptiveSourcePresentationsEnabledBinding.wrappedValue = !usesLaptopAdaptiveRing
                 beginAdaptiveMonitoring(startFresh: usesLaptopAdaptiveRing)
             } else {
@@ -106,6 +110,16 @@ struct DuoStatusView: View {
                 adaptiveSourcePresentationsEnabledBinding.wrappedValue = false
                 adaptiveRingMonitor.release(owner: adaptiveRingOwner)
             }
+        }
+        .onChange(of: outerRingChoiceRaw) { _ in
+            temporaryAdaptiveSourceBinding.wrappedValue = nil
+            adaptiveEntryCenterOverrideBinding.wrappedValue = nil
+            syncOuterRingMonitoring(startFresh: false)
+        }
+        .onChange(of: adaptiveRingEnabled) { _ in
+            temporaryAdaptiveSourceBinding.wrappedValue = nil
+            adaptiveEntryCenterOverrideBinding.wrappedValue = nil
+            syncOuterRingMonitoring(startFresh: false)
         }
         .onChange(of: statusStore.laptopRingModeState.mode) { newMode in
             let oldMode = lastLaptopRingMode
@@ -136,7 +150,7 @@ struct DuoStatusView: View {
             adaptiveSourcePresentationsEnabledBinding.wrappedValue = true
         }
         .onChange(of: adaptiveRingMonitor.state) { newState in
-            guard usesAdaptiveRing else { return }
+            guard tracksAdaptiveSource else { return }
             let oldSource = lastAdaptiveSource ?? AdaptiveRingSourceIdentity(state: newState)
             let newSource = AdaptiveRingSourceIdentity(state: newState)
             lastAdaptiveSourceBinding.wrappedValue = newSource
@@ -194,7 +208,8 @@ struct DuoStatusView: View {
             volume = statusStore.status.audio.volume.percentage.map { localized("volume %d percent", $0) } ?? localized("volume unavailable")
         }
         let battery = statusStore.status.battery.percentage.map { localized("battery %d percent", $0) } ?? localized("battery unavailable")
-        return localized("%@, %@, %@", network, volume, battery)
+        let ring = localized(outerRingReading.localizationKey)
+        return localized("%@, %@, %@", network, volume, battery) + ", " + ring
     }
 
     private var metrics: DuoGlyphMetrics {
@@ -218,10 +233,15 @@ struct DuoStatusView: View {
     }
 
     private var resolvedRingPresentation: DuoPersistentRingPresentation {
-        let mode: DuoPersistentRingMode = usesAdaptiveRing ? .adaptive : .battery
-        let adaptiveProgress = usesLaptopAdaptiveRing && !adaptiveSessionIsSynchronized
-            ? AdaptiveRingVisualTarget.neutralBaseline
-            : adaptiveRingPresentationState.displayedProgress
+        let mode: DuoPersistentRingMode = showsAdaptiveArc ? .adaptive : .battery
+        let adaptiveProgress: Double
+        if outerRingChoice == .automatic {
+            adaptiveProgress = usesLaptopAdaptiveRing && !adaptiveSessionIsSynchronized
+                ? AdaptiveRingVisualTarget.neutralBaseline
+                : adaptiveRingPresentationState.displayedProgress
+        } else {
+            adaptiveProgress = outerRingReading.progress
+        }
         return DuoPersistentRingPresentationResolver.resolve(
             mode: mode,
             battery: statusStore.status.battery,
@@ -231,7 +251,7 @@ struct DuoStatusView: View {
     }
 
     private var adaptiveRingAnimation: Animation? {
-        guard usesAdaptiveRing else { return nil }
+        guard showsAdaptiveArc else { return nil }
         let duration = adaptiveRingTransition.effectiveDuration(
             animationsEnabled: animationsEnabled,
             reduceMotion: reduceMotion
@@ -242,26 +262,23 @@ struct DuoStatusView: View {
     }
 
     private var adaptiveRingColor: Color? {
-        guard usesAdaptiveRing else { return nil }
-        guard !usesLaptopAdaptiveRing || adaptiveSessionIsSynchronized else { return nil }
+        guard showsAdaptiveArc else { return nil }
+        if outerRingChoice == .automatic, usesLaptopAdaptiveRing, !adaptiveSessionIsSynchronized {
+            return nil
+        }
         return AdaptiveRingColorResolver.resolve(
-            state: adaptiveRingMonitor.state,
-            decision: adaptiveRingMonitor.performanceDecision,
+            reading: outerRingReading,
             colorCodingEnabled: adaptiveRingColorCoding
         ).color
     }
 
     private var performanceCenterState: DuoCenterState? {
-        guard usesAdaptiveRing else { return nil }
-        guard !usesLaptopAdaptiveRing || adaptiveSessionIsSynchronized else { return nil }
-        guard priorityController.presentation.event == nil else { return nil }
-        switch temporaryAdaptiveSource {
-        case .brightness: return .adaptiveBrightness
-        case .cpu: return .performanceCPU
-        case .memory: return .performanceMemory
-        case .thermal: return .performanceThermal
-        case .neutral, nil: return nil
+        guard showsAdaptiveArc else { return nil }
+        if outerRingChoice == .automatic {
+            guard !usesLaptopAdaptiveRing || adaptiveSessionIsSynchronized else { return nil }
         }
+        guard priorityController.presentation.event == nil else { return nil }
+        return outerRingReading.centerState
     }
 
     private var centerStateOverride: DuoCenterState? {
@@ -271,6 +288,67 @@ struct DuoStatusView: View {
 
     private var allowsAdaptiveEntryCenterPresentation: Bool {
         AdaptiveEntryCenterPolicy.allows(over: priorityController.presentation.event)
+    }
+
+    private var outerRingChoice: OuterRingChoice {
+        OuterRingChoice(stored: outerRingChoiceRaw)
+    }
+
+    private var outerRingReading: OuterRingReading {
+        let brightness: Double?
+        if case .available(let value) = adaptiveRingMonitor.brightnessSnapshot?.availability {
+            brightness = value
+        } else {
+            brightness = nil
+        }
+        return OuterRingResolver.resolve(
+            choice: outerRingChoice,
+            sample: OuterRingSample(
+                automaticUsesAdaptiveRing: OuterRingChoice.automaticAdaptiveRingIsActive(
+                    enabled: adaptiveRingEnabled,
+                    systemUsesAdaptiveRing: usesAdaptiveRing
+                ),
+                automaticState: adaptiveRingMonitor.state,
+                cpuLoad: adaptiveRingMonitor.performanceSnapshot?.cpuLoad,
+                memoryUsed: adaptiveRingMonitor.performanceSnapshot?.memory.map { 1 - $0.availableHeadroom },
+                thermal: adaptiveRingMonitor.performanceSnapshot?.thermalState ?? .nominal,
+                brightness: brightness
+            )
+        )
+    }
+
+    private var tracksAdaptiveSource: Bool {
+        outerRingChoice.needsTelemetry || OuterRingChoice.automaticAdaptiveRingIsActive(
+            enabled: adaptiveRingEnabled,
+            systemUsesAdaptiveRing: usesAdaptiveRing
+        )
+    }
+
+    private var showsAdaptiveArc: Bool {
+        if outerRingChoice == .automatic {
+            return OuterRingChoice.automaticAdaptiveRingIsActive(
+                enabled: adaptiveRingEnabled,
+                systemUsesAdaptiveRing: usesAdaptiveRing
+            )
+        }
+        return outerRingReading.showsAdaptiveArc
+    }
+
+    private func syncOuterRingMonitoring(startFresh: Bool) {
+        switch outerRingChoice {
+        case .battery:
+            adaptiveSessionIsSynchronized = false
+            adaptiveRingMonitor.release(owner: adaptiveRingOwner)
+        case .automatic:
+            guard tracksAdaptiveSource else {
+                adaptiveSessionIsSynchronized = false
+                adaptiveRingMonitor.release(owner: adaptiveRingOwner)
+                return
+            }
+            beginAdaptiveMonitoring(startFresh: startFresh && usesLaptopAdaptiveRing)
+        case .brightness, .processor, .memory, .heat:
+            beginAdaptiveMonitoring(startFresh: false)
+        }
     }
 
     private var usesAdaptiveRing: Bool {
