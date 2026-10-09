@@ -102,6 +102,22 @@ struct HoverPopoverInteraction {
         return [.cancelClose, .close]
     }
 
+    /// The popover is still on screen although the interaction believes it is
+    /// closed (for example a close was blocked by a sheet). Treat it as pinned
+    /// so the next click on the status item or outside the popover closes it.
+    mutating func popoverShownExternally() {
+        guard state == .closed else { return }
+        state = .pinned
+    }
+
+    /// The user is working inside the popover (a sheet or a nested popover is
+    /// open), so moving the pointer away must not dismiss it.
+    mutating func popoverEngaged() -> [HoverPopoverCommand] {
+        guard state == .hoverOpen else { return [] }
+        state = .pinned
+        return [.cancelClose]
+    }
+
     mutating func applicationResignedActive() -> [HoverPopoverCommand] {
         closeCommandsIfPointerIsOutside()
     }

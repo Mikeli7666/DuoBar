@@ -44,4 +44,36 @@ final class HoverPopoverInteractionOutsideClickTests: XCTestCase {
         XCTAssertEqual(interaction.statusItemClicked(), [.cancelClose, .open])
         XCTAssertEqual(interaction.state, .pinned)
     }
+
+    func testShownExternallyTurnsClosedStateIntoPinned() {
+        var interaction = HoverPopoverInteraction(isEnabled: true)
+        interaction.popoverShownExternally()
+        XCTAssertEqual(interaction.state, .pinned)
+
+        XCTAssertEqual(interaction.statusItemClicked(), [.cancelClose, .close])
+        XCTAssertEqual(interaction.state, .closed)
+    }
+
+    func testShownExternallyDoesNotChangeOpenStates() {
+        var interaction = HoverPopoverInteraction(isEnabled: true)
+        _ = interaction.statusItemEntered()
+        interaction.popoverShownExternally()
+        XCTAssertEqual(interaction.state, .hoverOpen)
+    }
+
+    func testEngagedPinsHoverOpenPopover() {
+        var interaction = HoverPopoverInteraction(isEnabled: true)
+        _ = interaction.statusItemEntered()
+        XCTAssertEqual(interaction.popoverEngaged(), [.cancelClose])
+        XCTAssertEqual(interaction.state, .pinned)
+        XCTAssertEqual(interaction.closeDelayElapsed(), [])
+    }
+
+    func testEngagedDoesNothingWhenNotHoverOpen() {
+        var interaction = HoverPopoverInteraction(isEnabled: true)
+        XCTAssertEqual(interaction.popoverEngaged(), [])
+        _ = interaction.statusItemClicked()
+        XCTAssertEqual(interaction.popoverEngaged(), [])
+        XCTAssertEqual(interaction.state, .pinned)
+    }
 }

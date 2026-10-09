@@ -100,6 +100,10 @@ final class MenuBarController: NSObject {
     }
 
     @objc private func togglePopover() {
+        // Never trust the state machine over what is actually on screen.
+        if popover.isShown {
+            hoverInteraction.popoverShownExternally()
+        }
         perform(hoverInteraction.statusItemClicked())
     }
 
@@ -158,7 +162,20 @@ final class MenuBarController: NSObject {
 
     private func handleOutsideClick() {
         guard !isInvalidated, popover.isShown else { return }
-        perform(hoverInteraction.clickedOutside())
+        cancelHoverClose()
+        _ = hoverInteraction.clickedOutside()
+        // `close()` rather than `performClose(_:)`: an attached sheet or the
+        // nested Nearby Networks popover can make `performClose` a no-op, which
+        // would leave the popover on screen while the state says it is closed.
+        popover.close()
+    }
+
+    /// True while a sheet (Wi-Fi password) or a nested popover (Nearby
+    /// Networks) is attached to the popover window.
+    private var popoverHasAttachedWindows: Bool {
+        guard let window = popover.contentViewController?.view.window else { return false }
+        if window.attachedSheet != nil { return true }
+        return window.childWindows?.contains(where: { $0.isVisible }) ?? false
     }
 
     private func closePopoverFromContent() {
@@ -189,6 +206,10 @@ final class MenuBarController: NSObject {
             Task { @MainActor in
                 guard let self, self.hoverCloseGeneration == generation else { return }
                 self.pendingHoverClose = nil
+                if self.popoverHasAttachedWindows {
+                    self.perform(self.hoverInteraction.popoverEngaged())
+                    return
+                }
                 self.perform(self.hoverInteraction.closeDelayElapsed())
             }
         }
