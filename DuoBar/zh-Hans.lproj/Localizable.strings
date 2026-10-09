@@ -91,6 +91,8 @@
 "battery unavailable" = "电池不可用";
 "%@, %@, %@" = "%@，%@，%@";
 "Sound Settings…" = "声音设置…";
+"Bluetooth Settings…" = "蓝牙设置…";
+"Unable to Switch Output" = "无法切换输出设备";
 "Select audio output" = "选择音频输出";
 "Open Wi-Fi Settings" = "打开无线局域网设置";
 "Open Network Settings" = "打开网络设置";

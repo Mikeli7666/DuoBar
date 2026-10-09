@@ -91,6 +91,8 @@
 "battery unavailable" = "battery unavailable";
 "%@, %@, %@" = "%@, %@, %@";
 "Sound Settings…" = "Sound Settings…";
+"Bluetooth Settings…" = "Bluetooth Settings…";
+"Unable to Switch Output" = "Unable to Switch Output";
 "Select audio output" = "Select audio output";
 "Open Wi-Fi Settings" = "Open Wi-Fi Settings";
 "Open Network Settings" = "Open Network Settings";

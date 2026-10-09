@@ -48,12 +48,10 @@ enum AdaptiveRingSourceIdentity: Hashable, Sendable {
 }
 
 struct AdaptiveRingCoordinator: Sendable {
-    var brightnessMaximumAge: TimeInterval = 4
-
     func resolve(
-        brightness: DisplayBrightnessSnapshot,
+        brightness _: DisplayBrightnessSnapshot,
         performance: PerformanceDecision,
-        at timestamp: TimeInterval
+        at _: TimeInterval
     ) -> AdaptiveRingState {
         if performance.activeMetric != .idle {
             return .performance(
@@ -62,15 +60,7 @@ struct AdaptiveRingCoordinator: Sendable {
             )
         }
 
-        guard brightness.isFresh(at: timestamp, maximumAge: brightnessMaximumAge) else {
-            return .neutral
-        }
-        switch brightness.availability {
-        case .available(let value):
-            return .brightness(clamp(value))
-        case .unavailable:
-            return .neutral
-        }
+        return .neutral
     }
 
     private func clamp(_ value: Double) -> Double {

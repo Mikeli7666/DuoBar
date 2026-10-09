@@ -91,6 +91,8 @@
 "battery unavailable" = "аккумулятор недоступен";
 "%@, %@, %@" = "%@, %@, %@";
 "Sound Settings…" = "Настройки звука…";
+"Bluetooth Settings…" = "Настройки Bluetooth…";
+"Unable to Switch Output" = "Не удалось переключить аудиовыход";
 "Select audio output" = "Выбрать аудиовыход";
 "Open Wi-Fi Settings" = "Открыть настройки Wi‑Fi";
 "Open Network Settings" = "Открыть настройки сети";

@@ -71,7 +71,8 @@ struct StatusPopoverView: View {
                 outputs: statusStore.status.audio.selectableOutputs,
                 selectedUID: statusStore.status.audio.defaultOutput?.uid,
                 onSelect: { statusStore.setDefaultOutput(uid: $0) },
-                onOpenSoundSettings: openSoundSettings
+                onOpenSoundSettings: openSoundSettings,
+                onOpenBluetoothSettings: { SystemSettingsOpener.open(.bluetooth) }
             )
 
             #if DEBUG
@@ -230,10 +231,12 @@ struct StatusPopoverView: View {
 
     private var audioOutputSymbol: String {
         guard let output = statusStore.status.audio.defaultOutput else { return "speaker.slash" }
-        if output.transport.isBluetooth {
-            return output.temporaryGlyph == .airPods ? "airpodspro" : "headphones"
+        switch output.category {
+        case .airPods: return "airpodspro"
+        case .headphones, .bluetoothAudio: return "headphones"
+        case .displayAudio: return "display"
+        case .usbAudio, .builtInSpeaker, .other: return "speaker.wave.2"
         }
-        return "speaker.wave.2"
     }
 
     private var audioOutputDetail: String {

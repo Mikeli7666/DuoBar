@@ -184,7 +184,7 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
     func testAdaptivePipelineUsesExistingBrightnessCPUAndReleaseBehavior() {
         let brightness = DisplayBrightnessSnapshot(mainDisplay: integrationDisplay, availability: .available(0.64), sampledAt: 10)
         let coordinator = AdaptiveRingCoordinator()
-        XCTAssertEqual(coordinator.resolve(brightness: brightness, performance: .idle, at: 10), .brightness(0.64))
+        XCTAssertEqual(coordinator.resolve(brightness: brightness, performance: .idle, at: 10), .neutral)
 
         var engine = PerformanceDecisionEngine()
         _ = engine.update(with: snapshot(at: 0, cpu: 0.86))
@@ -198,7 +198,7 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
             availability: .available(0.64),
             sampledAt: 18
         )
-        XCTAssertEqual(coordinator.resolve(brightness: refreshedBrightness, performance: released, at: 18), .brightness(0.64))
+        XCTAssertEqual(coordinator.resolve(brightness: refreshedBrightness, performance: released, at: 18), .neutral)
     }
 
     func testExistingMemoryThermalAndNeutralAdaptiveStatesRemainAvailable() {
@@ -332,13 +332,13 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
         monitor.resetForNewMonitoringSession()
         monitor.acquire(owner: owner)
         XCTAssertTrue(monitor.isMonitoring)
-        XCTAssertEqual(monitor.state, .brightness(0.20))
+        XCTAssertEqual(monitor.state, .neutral)
 
         reader.value = 0.80
         monitor.refresh(at: 1)
         XCTAssertEqual(monitor.brightnessSnapshot?.availability, .available(0.80))
-        XCTAssertEqual(monitor.state, .brightness(0.80))
-        XCTAssertEqual(AdaptiveRingVisualTarget(state: monitor.state).progress, 0.80, accuracy: 0.0001)
+        XCTAssertEqual(monitor.state, .neutral)
+        XCTAssertEqual(AdaptiveRingVisualTarget(state: monitor.state).progress, 0.25, accuracy: 0.0001)
 
         store.applyDebugBatteryStatus(battery(43))
         XCTAssertFalse(store.usesAdaptiveRing)
@@ -350,7 +350,7 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
         store.applyDebugBatteryStatus(battery(70, charging: true, plugged: true))
         monitor.resetForNewMonitoringSession()
         monitor.acquire(owner: owner)
-        XCTAssertEqual(monitor.state, .brightness(0.35))
+        XCTAssertEqual(monitor.state, .neutral)
         monitor.release(owner: owner)
     }
 

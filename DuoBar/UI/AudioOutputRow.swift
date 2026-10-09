@@ -9,6 +9,8 @@ struct AudioOutputRow: View {
     let selectedUID: String?
     let onSelect: (String) -> Bool
     let onOpenSoundSettings: () -> Void
+    let onOpenBluetoothSettings: () -> Void
+    @State private var switchFailed = false
 
     var body: some View {
         Menu {
@@ -27,9 +29,16 @@ struct AudioOutputRow: View {
 
             Divider()
 
-            Button(localized("Sound Settings…")) {
-                onOpenSoundSettings()
-            }
+                Button(localized("Sound Settings…")) {
+                    onOpenSoundSettings()
+                }
+                Button(localized("Bluetooth Settings…")) {
+                    onOpenBluetoothSettings()
+                }
+                if switchFailed {
+                    Text(localized("Unable to Switch Output"))
+                        .foregroundStyle(.secondary)
+                }
         } label: {
             StatusRow(
                 symbol: symbol,
@@ -52,8 +61,8 @@ struct AudioOutputRow: View {
         Binding(
             get: { selectedUID ?? "" },
             set: { uid in
-                guard !uid.isEmpty else { return }
-                _ = onSelect(uid)
+                guard !uid.isEmpty, uid != selectedUID else { return }
+                switchFailed = !onSelect(uid)
             }
         )
     }

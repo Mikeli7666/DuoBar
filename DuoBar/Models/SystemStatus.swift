@@ -137,6 +137,16 @@ enum AudioDeviceGlyph: Equatable, Sendable {
     case headphones
 }
 
+enum AudioDeviceCategory: Equatable, Sendable {
+    case builtInSpeaker
+    case headphones
+    case airPods
+    case bluetoothAudio
+    case usbAudio
+    case displayAudio
+    case other
+}
+
 enum AudioConnectionGlyph: Equatable, Sendable {
     case airPodsPro
     case airPodsMax
@@ -161,6 +171,22 @@ struct AudioDeviceStatus: Equatable, Sendable, Identifiable {
     var modelUID: String? = nil
     var manufacturer: String? = nil
     var terminalType: AudioDeviceTerminalType = .unavailable
+
+    var category: AudioDeviceCategory {
+        if transport == .builtIn { return .builtInSpeaker }
+        if transport == .usb { return .usbAudio }
+        if transport == .hdmi || transport == .displayPort { return .displayAudio }
+        if transport.isBluetooth {
+            let normalized = name.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+            let manufacturerIsApple = manufacturer?
+                .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+                .contains("apple") == true
+            if manufacturerIsApple && normalized.contains("airpods") { return .airPods }
+            if terminalType == .headphones { return .headphones }
+            return .bluetoothAudio
+        }
+        return terminalType == .headphones ? .headphones : .other
+    }
 
     var temporaryGlyph: AudioDeviceGlyph {
         let normalizedName = name.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
@@ -246,6 +272,10 @@ struct AudioStatus: Equatable, Sendable {
             ordered.insert(defaultOutput, at: 0)
         }
 
+        if let defaultOutput, let index = ordered.firstIndex(where: { $0.uid == defaultOutput.uid }) {
+            let current = ordered.remove(at: index)
+            ordered.insert(current, at: 0)
+        }
         return ordered
     }
 }

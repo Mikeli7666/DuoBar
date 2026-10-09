@@ -91,6 +91,8 @@
 "battery unavailable" = "電池無法使用";
 "%@, %@, %@" = "%@、%@、%@";
 "Sound Settings…" = "聲音設定…";
+"Bluetooth Settings…" = "藍牙設定…";
+"Unable to Switch Output" = "無法切換輸出裝置";
 "Select audio output" = "選擇音訊輸出";
 "Open Wi-Fi Settings" = "打開無線區域網路設定";
 "Open Network Settings" = "打開網絡設定";

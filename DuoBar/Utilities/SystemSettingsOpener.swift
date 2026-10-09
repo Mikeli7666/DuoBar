@@ -7,6 +7,7 @@ enum SystemSettingsOpener {
         case network
         case battery
         case sound
+        case bluetooth
         case privacy
     }
 
@@ -38,6 +39,11 @@ enum SystemSettingsOpener {
         case .sound:
             [
                 "x-apple.systempreferences:com.apple.Sound-Settings.extension",
+            ]
+        case .bluetooth:
+            [
+                "x-apple.systempreferences:com.apple.BluetoothSettings",
+                "x-apple.systempreferences:com.apple.BluetoothSettings.extension",
             ]
         case .privacy:
             []

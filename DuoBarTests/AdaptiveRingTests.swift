@@ -2,10 +2,10 @@ import XCTest
 @testable import DuoBar
 
 final class AdaptiveRingTests: XCTestCase {
-    private let coordinator = AdaptiveRingCoordinator(brightnessMaximumAge: 4)
+    private let coordinator = AdaptiveRingCoordinator()
 
-    func testAvailableBrightnessIsBaselineWhenPerformanceIsIdle() {
-        XCTAssertEqual(resolve(.available(0.63)), .brightness(0.63))
+    func testAvailableBrightnessDoesNotAffectIdleAdaptiveRing() {
+        XCTAssertEqual(resolve(.available(0.63)), .neutral)
     }
 
     func testUnavailableBrightnessUsesNeutralBaseline() {
@@ -35,11 +35,17 @@ final class AdaptiveRingTests: XCTestCase {
         )
     }
 
-    func testPerformanceReleaseReturnsToBrightness() {
+    func testPerformanceReleaseReturnsToNeutral() {
         let active = resolve(.available(0.44), performance: decision(.cpu, value: 0.8))
         let released = resolve(.available(0.44), performance: .idle)
         XCTAssertEqual(active, .performance(metric: .cpu, value: 0.8))
-        XCTAssertEqual(released, .brightness(0.44))
+        XCTAssertEqual(released, .neutral)
+    }
+
+    func testBrightnessAvailabilityDoesNotAffectPerformanceResolution() {
+        let active = decision(.cpu, value: 0.72)
+        XCTAssertEqual(resolve(.available(0.1), performance: active), .performance(metric: .cpu, value: 0.72))
+        XCTAssertEqual(resolve(.unavailable, performance: active), .performance(metric: .cpu, value: 0.72))
     }
 
     func testPerformanceReleaseReturnsToNeutralWhenBrightnessIsUnavailable() {
@@ -112,18 +118,18 @@ final class AdaptiveRingTests: XCTestCase {
     }
 
     #if DEBUG
-    func testSyntheticBrightnessScenariosFlowThroughCoordinator() {
-        for (scenario, expected) in [
+    func testSyntheticBrightnessScenariosDoNotAffectCoordinator() {
+        for scenario in [
             (AdaptiveRingSyntheticScenario.brightness25, 0.25),
             (.brightness50, 0.50),
             (.brightness75, 0.75),
             (.brightness100, 1.00)
         ] {
-            let input = scenario.input
+            let input = scenario.0.input
             let engine = PerformanceDecisionEngine()
             let decision = engine.candidate(for: input.snapshot(at: 0))
-            XCTAssertEqual(decision.metric, .idle, scenario.rawValue)
-            XCTAssertEqual(resolve(input.brightness), .brightness(expected), scenario.rawValue)
+            XCTAssertEqual(decision.metric, .idle, scenario.0.rawValue)
+            XCTAssertEqual(resolve(input.brightness), .neutral, scenario.0.rawValue)
         }
     }
 

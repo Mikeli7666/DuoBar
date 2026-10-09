@@ -449,10 +449,16 @@ final class SystemStatusStore: ObservableObject {
             network.isConnected = false
             network.ssid = nil
             network.rssi = nil
+        case "ethernet":
+            network = DebugNetworkState.ethernet.status
         case "bluetoothOff":
             bluetooth.isPoweredOn = false
         case "volumeMuted":
             audio.volume = OutputVolumeStatus(level: 0, isMuted: true, isSettable: true)
+        case "airpodsConnected":
+            let airPods = DebugAudioDeviceState.airPods.status.defaultOutput!
+            audio.connectedBluetoothOutputs = [airPods]
+            audio.availableOutputs = [outputDevice, airPods]
         case "hero", "bluetoothOn":
             break
         default:
@@ -470,6 +476,14 @@ final class SystemStatusStore: ObservableObject {
             $0.network = network
             $0.audio = audio
             $0.bluetooth = bluetooth
+        }
+
+        if identifier == "airpodsConnected" {
+            if let airPods = audio.connectedBluetoothOutputs.first {
+                priorityController.present(
+                    StatusEvent(kind: .audioDeviceConnected(airPods), priority: .informational, duration: 30)
+                )
+            }
         }
     }
     #endif

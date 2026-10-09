@@ -38,7 +38,7 @@ final class PopoverControlsTests: XCTestCase {
     }
 
     func testSystemSettingsURLsAreWellFormed() {
-        for pane in [SystemSettingsOpener.Pane.wifi, .network, .battery, .sound] {
+        for pane in [SystemSettingsOpener.Pane.wifi, .network, .battery, .sound, .bluetooth] {
             let urls = SystemSettingsOpener.urlStrings(for: pane)
             XCTAssertFalse(urls.isEmpty, "Missing URLs for \(pane)")
             for string in urls {
@@ -53,8 +53,8 @@ final class PopoverControlsTests: XCTestCase {
         let audio = DebugAudioDeviceState.airPods.status
         XCTAssertEqual(audio.defaultOutput?.uid, "debug-AirPods Pro")
         XCTAssertEqual(audio.selectableOutputs.map(\.uid), [
-            "debug-MacBook Speakers",
             "debug-AirPods Pro",
+            "debug-MacBook Speakers",
             "debug-Bluetooth Headphones"
         ])
     }

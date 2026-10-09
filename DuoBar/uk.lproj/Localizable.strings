@@ -91,6 +91,8 @@
 "battery unavailable" = "акумулятор недоступний";
 "%@, %@, %@" = "%@, %@, %@";
 "Sound Settings…" = "Параметри звуку…";
+"Bluetooth Settings…" = "Параметри Bluetooth…";
+"Unable to Switch Output" = "Не вдалося перемкнути аудіовихід";
 "Select audio output" = "Вибрати аудіовихід";
 "Open Wi-Fi Settings" = "Відкрити параметри Wi‑Fi";
 "Open Network Settings" = "Відкрити параметри мережі";
