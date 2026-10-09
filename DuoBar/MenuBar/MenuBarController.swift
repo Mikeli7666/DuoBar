@@ -15,6 +15,7 @@ final class MenuBarController: NSObject {
     private var hoverCloseGeneration: UInt = 0
     private var defaultsObserver: NSObjectProtocol?
     private var applicationResignObserver: NSObjectProtocol?
+    private var globalOutsideClickMonitor: Any?
     private var hoverInteraction = HoverPopoverInteraction(
         isEnabled: UserDefaults.standard.bool(forKey: PreferenceKeys.openOnHover)
     )
@@ -35,6 +36,7 @@ final class MenuBarController: NSObject {
     private func configureStatusItem() {
         guard let button = statusItem.button else { return }
 
+        statusItem.isVisible = true
         button.target = self
         button.action = #selector(togglePopover)
         button.sendAction(on: [.leftMouseUp, .rightMouseUp])
@@ -108,6 +110,7 @@ final class MenuBarController: NSObject {
         NSApp.activate(ignoringOtherApps: true)
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         popover.contentViewController?.view.window?.makeKey()
+        installOutsideClickMonitors()
         // Let the accessory app finish activating and the popover become key
         // before asking CoreLocation to present its native authorization UI.
         DispatchQueue.main.async { [weak self] in
@@ -116,8 +119,46 @@ final class MenuBarController: NSObject {
     }
 
     private func closePopover() {
-        guard popover.isShown else { return }
+        guard popover.isShown else {
+            removeOutsideClickMonitors()
+            return
+        }
         popover.performClose(nil)
+    }
+
+    // MARK: - Outside-click dismissal
+
+    private static let outsideClickMask: NSEvent.EventTypeMask = [
+        .leftMouseDown, .rightMouseDown, .otherMouseDown
+    ]
+
+    /// Dismisses the popover when the user presses on another app or on another
+    /// menu bar icon. Global monitors only observe events sent to other
+    /// processes, so clicks inside DuoBar (the popover, its Wi-Fi password
+    /// sheet, and the status item itself) never reach this handler. Mouse
+    /// events need no Accessibility permission.
+    private func installOutsideClickMonitors() {
+        removeOutsideClickMonitors()
+
+        globalOutsideClickMonitor = NSEvent.addGlobalMonitorForEvents(
+            matching: Self.outsideClickMask
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.handleOutsideClick()
+            }
+        }
+    }
+
+    private func removeOutsideClickMonitors() {
+        if let globalOutsideClickMonitor {
+            NSEvent.removeMonitor(globalOutsideClickMonitor)
+            self.globalOutsideClickMonitor = nil
+        }
+    }
+
+    private func handleOutsideClick() {
+        guard !isInvalidated, popover.isShown else { return }
+        perform(hoverInteraction.clickedOutside())
     }
 
     private func closePopoverFromContent() {
@@ -214,8 +255,13 @@ final class MenuBarController: NSObject {
     }
     #endif
 
-    private func setStatusItemLength(_ targetLength: CGFloat) {
+    private func setStatusItemLength(_ requestedLength: CGFloat) {
         guard !isInvalidated else { return }
+        // A zero, negative, or non-finite width would leave a running app with
+        // no visible menu bar item, so fall back to the stored icon size.
+        let targetLength = requestedLength.isFinite && requestedLength > 1
+            ? requestedLength
+            : MenuBarIconSize.statusItemWidth(for: MenuBarIconSize.storedScale())
         lengthAnimationTimer?.invalidate()
 
         guard UserDefaults.standard.bool(forKey: PreferenceKeys.animationsEnabled) else {
@@ -254,6 +300,7 @@ final class MenuBarController: NSObject {
     func invalidate() {
         guard !isInvalidated else { return }
         isInvalidated = true
+        removeOutsideClickMonitors()
         cancelHoverClose()
         lengthAnimationTimer?.invalidate()
         lengthAnimationTimer = nil
@@ -274,6 +321,9 @@ final class MenuBarController: NSObject {
     }
 
     deinit {
+        if let globalOutsideClickMonitor {
+            NSEvent.removeMonitor(globalOutsideClickMonitor)
+        }
         pendingHoverClose?.cancel()
         lengthAnimationTimer?.invalidate()
         if let defaultsObserver {
@@ -290,6 +340,7 @@ final class MenuBarController: NSObject {
 
 extension MenuBarController: NSPopoverDelegate {
     func popoverDidClose(_ notification: Notification) {
+        removeOutsideClickMonitors()
         perform(hoverInteraction.popoverClosedExternally())
     }
 }

@@ -91,6 +91,17 @@ struct HoverPopoverInteraction {
         return [.close]
     }
 
+    /// A mouse press landed outside the popover and DuoBar's status item, for
+    /// example on another menu bar icon. System menu extras live in other
+    /// processes, so AppKit's `.transient` behavior never sees those clicks.
+    mutating func clickedOutside() -> [HoverPopoverCommand] {
+        guard state != .closed else { return [] }
+        state = .closed
+        suppressHoverUntilStatusItemExit = false
+        isPointerOverPopover = false
+        return [.cancelClose, .close]
+    }
+
     mutating func applicationResignedActive() -> [HoverPopoverCommand] {
         closeCommandsIfPointerIsOutside()
     }
