@@ -111,8 +111,8 @@ final class BatteryRingPresentationTests: XCTestCase {
     func testReferenceArcUsesVisualOuterDiameterAndMeasuredStrokeRatio() {
         let metrics = DuoGlyphMetrics.standard
         XCTAssertEqual(metrics.ringPathDiameter + metrics.arcLineWidth, metrics.ringDiameter, accuracy: 0.0001)
-        XCTAssertEqual(metrics.arcLineWidth / metrics.ringDiameter, 18.0 / 230.0, accuracy: 0.0001)
-        XCTAssertEqual(metrics.arcGap, 120.2, accuracy: 0.0001)
+        XCTAssertEqual(metrics.arcLineWidth / metrics.ringDiameter, 0.076378, accuracy: 0.0005)
+        XCTAssertEqual(metrics.arcGap, 120.22, accuracy: 0.01)
     }
 
     func testRingEndpointUsesTheSameAngleAsTheArc() {

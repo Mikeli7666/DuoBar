@@ -5,17 +5,18 @@ struct DuoGlyphMetrics: Equatable {
         overallSize: 24,
         ringDiameter: 26.5,
         ringLineWidth: 2.8,
-        arcGap: 120.2,
+        arcGap: 120.22,
         wifiSymbolSize: 12.4,
         wifiYOffset: -1.25,
-        dotDiameter: 2.477173913,
+        dotDiameter: 2.557303,
         dotSpacing: 1.766666667,
         dotYOffset: 7.495652174
     )
 
     static let canvasSize: CGFloat = 32
     static let menuBarVerticalOffset: CGFloat = 1
-    static let referenceArcStrokeRatio: CGFloat = 18 / 230
+    // Ring stroke / outer ring diameter, measured from Apple's iPhone Duo product photography.
+    static let referenceArcStrokeRatio: CGFloat = 0.076378
     private static let priorArcStrokeRatio: CGFloat = 2.8 / 26.5
 
     var overallSize: CGFloat
@@ -26,6 +27,7 @@ struct DuoGlyphMetrics: Equatable {
     var wifiYOffset: CGFloat
     var dotDiameter: CGFloat
     var dotSpacing: CGFloat
+    /// Legacy tuning value: the dots are now placed from the ring centre (see `DuoVolumeIndicatorGeometry`).
     var dotYOffset: CGFloat
 
     var ringYOffset: CGFloat = -0.8

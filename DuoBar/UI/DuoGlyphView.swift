@@ -163,7 +163,7 @@ struct DuoGlyphView: View {
                 activeCount: glyphState.volumeActiveDotCount,
                 diameter: metrics.dotDiameter,
                 ringDiameter: metrics.ringDiameter,
-                rowCenterYOffset: metrics.dotYOffset,
+                rowCenterYOffset: metrics.ringYOffset,
                 animationsEnabled: motionAllowed
             )
         }
@@ -682,29 +682,26 @@ enum DuoWiFiVisualStyle {
 }
 
 enum DuoWiFiReferenceGeometry {
-    // Measurements from the unobscured strong-Wi-Fi frame at 27.00 seconds.
-    // All production geometry is normalized to the 230 px reference outer-ring diameter.
-    static let referenceRingDiameter: CGFloat = 230
-    static let totalWidthRatio: CGFloat = 100 / referenceRingDiameter
-    static let totalHeightRatio: CGFloat = 73 / referenceRingDiameter
-    static let outerArcWidthRatio: CGFloat = 100 / referenceRingDiameter
-    static let outerArcHeightRatio: CGFloat = 31 / referenceRingDiameter
-    static let innerArcWidthRatio: CGFloat = 64 / referenceRingDiameter
-    static let innerArcHeightRatio: CGFloat = 23 / referenceRingDiameter
-    static let strokeWidthRatio: CGFloat = 14.5 / referenceRingDiameter
-    static let referenceRingStrokeRatio: CGFloat = 18 / referenceRingDiameter
-    static let coreWidthRatio: CGFloat = 29 / referenceRingDiameter
-    static let coreHeightRatio: CGFloat = 21 / referenceRingDiameter
-    static let outerToInnerCenterGapRatio: CGFloat = 11 / referenceRingDiameter
-    static let innerToCoreCenterGapRatio: CGFloat = 12 / referenceRingDiameter
-    static let opticalCenterYOffsetRatio: CGFloat = -15 / referenceRingDiameter
+    // Measured from Apple's iPhone Duo product photography: a least-squares fit of the status glyph
+    // (residual below 1 % of the ring diameter). Every value is normalised to the outer ring diameter
+    // (D = 1) and measured from the centre of the ring, so the Wi-Fi mark always sits where Apple's does.
+    static let apexYRatio: CGFloat = 0.128157
+    static let outerArcRadiusRatio: CGFloat = 0.268964
+    static let middleArcRadiusRatio: CGFloat = 0.155314
+    static let strokeWidthRatio: CGFloat = 0.060540
+    static let arcHalfSpanDegrees: Double = 43.673
+    static let coreRadiusRatio: CGFloat = 0.059620
+    static let coreHalfAngleDegrees: Double = 59.232
+    static let coreCornerRadiusRatio: CGFloat = 0.011273
 
+    /// The Wi-Fi mark is drawn around the ring centre, so the only correction needed is the distance
+    /// between the ring centre and the centre the enclosing view is laid out around.
     static func verticalAdjustment(
         ringDiameter: CGFloat,
         ringYOffset: CGFloat,
         centerYOffset: CGFloat
     ) -> CGFloat {
-        ringYOffset + ringDiameter * opticalCenterYOffsetRatio - centerYOffset
+        ringYOffset - centerYOffset
     }
 }
 
@@ -714,71 +711,86 @@ struct DuoWiFiGlyph: View {
     let verticalAdjustment: CGFloat
 
     var body: some View {
-        let width = ringDiameter * DuoWiFiReferenceGeometry.totalWidthRatio
-        let height = ringDiameter * DuoWiFiReferenceGeometry.totalHeightRatio
         let lineWidth = ringDiameter * DuoWiFiReferenceGeometry.strokeWidthRatio
+        let cornerWidth = ringDiameter * DuoWiFiReferenceGeometry.coreCornerRadiusRatio * 2
         ZStack {
-            DuoWiFiArcShape(kind: .outer)
+            DuoWiFiArcShape(radiusRatio: DuoWiFiReferenceGeometry.outerArcRadiusRatio)
                 .stroke(style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
                 .opacity(DuoWiFiVisualStyle.opacity(for: .outer, level: level))
-            DuoWiFiArcShape(kind: .middle)
+            DuoWiFiArcShape(radiusRatio: DuoWiFiReferenceGeometry.middleArcRadiusRatio)
                 .stroke(style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
                 .opacity(DuoWiFiVisualStyle.opacity(for: .middle, level: level))
-            DuoWiFiCoreShape()
-                .fill()
-                .opacity(DuoWiFiVisualStyle.opacity(for: .core, level: level))
+            ZStack {
+                DuoWiFiCoreShape().fill()
+                DuoWiFiCoreShape()
+                    .stroke(style: StrokeStyle(lineWidth: cornerWidth, lineCap: .round, lineJoin: .round))
+            }
+            .compositingGroup()
+            .opacity(DuoWiFiVisualStyle.opacity(for: .core, level: level))
         }
-        .frame(width: width, height: height)
+        .frame(width: ringDiameter, height: ringDiameter)
         .offset(y: verticalAdjustment)
     }
 }
 
+/// A circular arc centred on the Wi-Fi apex, symmetric about the vertical axis.
 private struct DuoWiFiArcShape: Shape {
-    enum Kind {
-        case outer
-        case middle
-    }
-
-    let kind: Kind
+    let radiusRatio: CGFloat
 
     func path(in rect: CGRect) -> Path {
+        let side = min(rect.width, rect.height)
+        let center = CGPoint(
+            x: rect.midX,
+            y: rect.midY + side * DuoWiFiReferenceGeometry.apexYRatio
+        )
+        let radius = side * radiusRatio
+        let span = DuoWiFiReferenceGeometry.arcHalfSpanDegrees
+        let sampleCount = 48
+
         var path = Path()
-        switch kind {
-        case .outer:
-            path.move(to: CGPoint(x: rect.width * 0.075, y: rect.height * 0.321918))
-            path.addQuadCurve(
-                to: CGPoint(x: rect.width * 0.915, y: rect.height * 0.321918),
-                control: CGPoint(x: rect.width * 0.495, y: rect.height * -0.130137)
+        for index in 0...sampleCount {
+            let degrees = 270 - span + (2 * span) * Double(index) / Double(sampleCount)
+            let radians = degrees * .pi / 180
+            let point = CGPoint(
+                x: center.x + CGFloat(cos(radians)) * radius,
+                y: center.y + CGFloat(sin(radians)) * radius
             )
-        case .middle:
-            path.move(to: CGPoint(x: rect.width * 0.25, y: rect.height * 0.568493))
-            path.addQuadCurve(
-                to: CGPoint(x: rect.width * 0.74, y: rect.height * 0.568493),
-                control: CGPoint(x: rect.width * 0.495, y: rect.height * 0.321918)
-            )
+            if index == 0 {
+                path.move(to: point)
+            } else {
+                path.addLine(to: point)
+            }
         }
         return path
     }
 }
 
+/// The solid wedge at the bottom of the Wi-Fi mark: a circular sector whose tip is the apex.
+/// Its rounded corners come from stroking the outline with a round join (see `DuoWiFiGlyph`).
 private struct DuoWiFiCoreShape: Shape {
     func path(in rect: CGRect) -> Path {
+        let side = min(rect.width, rect.height)
+        let apex = CGPoint(
+            x: rect.midX,
+            y: rect.midY + side * DuoWiFiReferenceGeometry.apexYRatio
+        )
+        let radius = side * DuoWiFiReferenceGeometry.coreRadiusRatio
+        let half = DuoWiFiReferenceGeometry.coreHalfAngleDegrees
+        let sampleCount = 24
+
         var path = Path()
-        path.move(to: CGPoint(x: rect.width * 0.365, y: rect.height * 0.815068))
-        path.addQuadCurve(
-            to: CGPoint(x: rect.width * 0.635, y: rect.height * 0.815068),
-            control: CGPoint(x: rect.width * 0.5, y: rect.height * 0.650685)
-        )
-        path.addCurve(
-            to: CGPoint(x: rect.width * 0.5, y: rect.height * 0.993151),
-            control1: CGPoint(x: rect.width * 0.635, y: rect.height * 0.883562),
-            control2: CGPoint(x: rect.width * 0.555, y: rect.height * 0.993151)
-        )
-        path.addCurve(
-            to: CGPoint(x: rect.width * 0.365, y: rect.height * 0.815068),
-            control1: CGPoint(x: rect.width * 0.445, y: rect.height * 0.993151),
-            control2: CGPoint(x: rect.width * 0.365, y: rect.height * 0.883562)
-        )
+        path.move(to: apex)
+        for index in 0...sampleCount {
+            let degrees = 270 - half + (2 * half) * Double(index) / Double(sampleCount)
+            let radians = degrees * .pi / 180
+            path.addLine(
+                to: CGPoint(
+                    x: apex.x + CGFloat(cos(radians)) * radius,
+                    y: apex.y + CGFloat(sin(radians)) * radius
+                )
+            )
+        }
+        path.closeSubpath()
         return path
     }
 }
@@ -828,23 +840,38 @@ struct DuoDotRow: View {
 }
 
 enum DuoVolumeIndicatorGeometry {
-    // Measurements from the stable all-active frame at 27.00 seconds,
-    // normalized to the 230 px reference outer-ring diameter.
-    static let referenceRingDiameter: CGFloat = 230
-    static let indicatorDiameterRatio: CGFloat = 21.5 / referenceRingDiameter
-    static let rowWidthRatio: CGFloat = 132 / referenceRingDiameter
-    static let rowHeightRatio: CGFloat = 35 / referenceRingDiameter
-    static let outerEdgeGapRatio: CGFloat = 14.25 / referenceRingDiameter
-    static let innerEdgeGapRatio: CGFloat = 17.5 / referenceRingDiameter
-    static let wifiToRowGapRatio: CGFloat = 33.25 / referenceRingDiameter
-    static let rowToRingBottomGapRatio: CGFloat = 25.75 / referenceRingDiameter
-    static let centerXOffsets: [CGFloat] = [-55.25, -19.5, 19.5, 55.25]
-        .map { $0 / referenceRingDiameter }
-    static let centerYOffsets: [CGFloat] = [-6.5, 6.5, 6.5, -6.5]
-        .map { $0 / referenceRingDiameter }
+    // Measured from Apple's iPhone Duo product photography (same fit as `DuoWiFiReferenceGeometry`).
+    // The four dots sit on the ring's own centre line, below the open end of the arc. All values are
+    // normalised to the outer ring diameter (D = 1) and measured from the centre of the ring.
+    static let indicatorDiameterRatio: CGFloat = 0.096502
+    static let centerRadiusRatio: CGFloat = 0.455450
+    static let innerAngleDegrees: Double = 10.813
+    static let outerAngleDegrees: Double = 32.273
+
+    /// Dot centres relative to the ring centre, left to right (y grows downward).
+    static let centerXOffsets: [CGFloat] = [
+        -offset(angleFromBottom: outerAngleDegrees).x,
+        -offset(angleFromBottom: innerAngleDegrees).x,
+        offset(angleFromBottom: innerAngleDegrees).x,
+        offset(angleFromBottom: outerAngleDegrees).x
+    ]
+    static let centerYOffsets: [CGFloat] = [
+        offset(angleFromBottom: outerAngleDegrees).y,
+        offset(angleFromBottom: innerAngleDegrees).y,
+        offset(angleFromBottom: innerAngleDegrees).y,
+        offset(angleFromBottom: outerAngleDegrees).y
+    ]
     static let activeOpacity = 1.0
     static let inactiveOpacity = 0.30
     static let unknownOpacity = 0.30
+
+    private static func offset(angleFromBottom degrees: Double) -> CGPoint {
+        let radians = degrees * .pi / 180
+        return CGPoint(
+            x: CGFloat(sin(radians)) * centerRadiusRatio,
+            y: CGFloat(cos(radians)) * centerRadiusRatio
+        )
+    }
 }
 
 private struct DuoChargingBolt: View {
