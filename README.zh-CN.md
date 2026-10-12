@@ -22,6 +22,35 @@ DuoBar 1.3.0（Build 6）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 </p>
 </p>
 
+🚧 DuoBar 1.3.1 即将到来
+
+这里安静了一段时间，但 DuoBar 一直在开发中。下个版本 1.3.1 已进入最终测试。
+
+新功能
+
+Wi-Fi，直接在弹出窗口中操作
+按需浏览附近的网络，当前连接的网络排在最前面
+加入开放网络和个人加密网络（密码输入使用系统原生安全输入框；DuoBar 不会保存或记录密码）
+手动刷新，无后台扫描
+企业网络会跳转到 macOS 无线局域网设置
+
+音频输出切换
+实时查看可用输出设备，当前设备排在最前面
+在内置扬声器、耳机、AirPods、蓝牙、USB 和显示器音频之间切换
+快速跳转到声音和蓝牙设置
+
+与 iPhone Duo 一致的图标
+Wi-Fi 标志、音量圆点和圆环已按 iPhone Duo 状态图标的几何形状重绘
+
+小改动
+点击其他菜单栏图标或任意空白处时，弹出窗口会自动关闭，和原生菜单栏一样
+自适应圆环不再显示屏幕亮度；仍会显示 CPU、内存和散热压力
+完整本地化：英语、简体中文、繁体中文、俄语、乌克兰语
+
+DuoBar 只使用 macOS 公开 API，支持 macOS 13 及更高版本，支持 Apple Silicon 和 Intel。
+
+感谢大家至今的反馈和 bug 报告。关注本仓库（仅 Releases）即可在 1.3.1 发布时收到通知。
+
 ## 📥 下载与安装教程
 
 ### 第一步：下载 DuoBar
@@ -57,7 +86,6 @@ DuoBar 1.3.0（Build 6）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 DuoBar 1.3.0 使用 Developer ID 签名并通过 Apple 公证。正常安装不需要关闭 Gatekeeper 或 SIP，也不需要 Terminal、`sudo` 或 `xattr`。
 
 DuoBar 是菜单栏应用，不会出现在 Dock 中。打开后，请查看屏幕最上方的 macOS 菜单栏，DuoBar 图标会在那里出现。
-
 
 ## 为什么会请求“位置”权限？
 
