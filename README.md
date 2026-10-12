@@ -8,48 +8,19 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md)
 
-[**Download DuoBar 1.3.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.0/DuoBar-1.3.0.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
+[**Download DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.1/DuoBar-1.3.1.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
 
-DuoBar 1.3.0 (Build 6) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
+DuoBar 1.3.1 (Build 7) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
 
 <br>
 
-<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 in the macOS menu bar" width="1340">
+<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.1 in the macOS menu bar" width="1340">
 
 </div>
 
   [![▶ Watch the release video](https://img.shields.io/badge/Watch_the_release_video-0969da?style=for-the-badge)](https://github.com/user-attachments/assets/3af8d3cf-230b-4073-932b-c54c4a1553e6)
 ▶ [watch the launch film of the latest version on YouTube](https://youtu.be/7KS9IhAcXhM)
 </p>
-
-🚧 DuoBar 1.3.1 is coming soon
-
-It's been quiet here for a while, but DuoBar is very much alive. The next update, 1.3.1, is in final testing.
-
-What's new
-
-Wi-Fi, right from the popover
-- Browse nearby networks on demand, with the current network listed first
-- Join open and personal secured networks (password entry uses a native secure field; DuoBar never stores or logs it)
-- Refresh manually, with no background scanning
-- Enterprise networks hand off to macOS Wi-Fi Settings
-
-Audio output switching
-- See available outputs live, with the current one first
-- Switch between built-in speakers, headphones, AirPods, Bluetooth, USB and display audio
-- Quick shortcuts to Sound and Bluetooth Settings
-
-A glyph that matches the iPhone Duo
-- The Wi-Fi mark, volume dots and ring were rebuilt to follow the iPhone Duo's status glyph geometry
-
-Smaller changes
-- The popover now closes when you click another menu bar icon or anywhere outside it, like native menu bar items
-- The Adaptive Ring no longer shows display brightness; it still surfaces CPU, memory and thermal pressure
-- Full localization: English, Simplified Chinese, Traditional Chinese, Russian, Ukrainian
-
-DuoBar uses public macOS APIs only, runs on macOS 13 or later, and supports Apple Silicon and Intel.
-
-Thanks for the feedback and bug reports so far. Watch this repo (Releases only) to get notified when 1.3.1 lands.
 
 ## One glyph, three live states
 
@@ -63,7 +34,7 @@ Persistent status stays monochrome and native-looking. When AirPods or another s
 p>
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.3.0 popover" width="480">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.3.1 popover" width="480">
 </p>
 
 ## Adaptive Ring and Battery Ring
@@ -72,7 +43,7 @@ On MacBooks, the outer Battery Ring shows live battery level, a dynamic charging
 
 ## DuoBar on macOS
 
-The current 1.3.0 release brings the Battery, Network, and Volume foundation together with MacBook Adaptive Ring behavior, refined controls, adjustable icon size, and installation polish.
+The current 1.3.1 release brings the Battery, Network, and Volume foundation together with MacBook Adaptive Ring behavior, refined controls, adjustable icon size, and installation polish.
 
 <p align="center">
 ## Features
@@ -102,14 +73,14 @@ The current 1.3.0 release brings the Battery, Network, and Volume foundation tog
 
 ## Installation
 
-1. Open the [DuoBar 1.3.0 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.0) and find **Assets**.
-2. Download **DuoBar-1.3.0.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
+1. Open the [DuoBar 1.3.1 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.1) and find **Assets**.
+2. Download **DuoBar-1.3.1.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
 3. Double-click the DMG and drag **DuoBar.app** to **Applications**.
 4. Open Applications and launch DuoBar. It is a menu-bar utility and normally does not appear in the Dock.
 
-DuoBar 1.3.0 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
+DuoBar 1.3.1 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
 
-SHA-256: `bd638b5fac84b7bc56ab71988e10d6d4a3188bea973584c77b1fe6979f243fb5`
+SHA-256: `b9bfb9dea85a4bd8d81121567427b23c1a8aca8d7f16ad7f7cfeb50e1937747f`
 
 Build and compatibility/reliability work was checked using Xcode 27 and the macOS 27 SDK while continuing to support macOS 13+. This does not claim macOS 27 hardware validation.
 
