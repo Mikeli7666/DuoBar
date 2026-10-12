@@ -10,54 +10,25 @@
 - 网络
 - 音量
 
-[**下载 DuoBar 1.3.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.0/DuoBar-1.3.0.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**下载 DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.1/DuoBar-1.3.1.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
-DuoBar 1.3.0（Build 6）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
+DuoBar 1.3.1（Build 7）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 菜单栏" width="1340">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.1 菜单栏" width="1340">
 
 <p align="center">
   <a href="https://github.com/user-attachments/assets/a5a82872-bb82-42fa-8849-2b4642d308d4">▶ 观看发布视频</a>
 </p>
 </p>
 
-🚧 DuoBar 1.3.1 即将到来
-
-这里安静了一段时间，但 DuoBar 一直在开发中。下个版本 1.3.1 已进入最终测试。
-
-新功能
-
-Wi-Fi，直接在弹出窗口中操作
-- 按需浏览附近的网络，当前连接的网络排在最前面
-- 加入开放网络和个人加密网络（密码输入使用系统原生安全输入框；DuoBar 不会保存或记录密码）
-- 手动刷新，无后台扫描
-- 企业网络会跳转到 macOS 无线局域网设置
-
-音频输出切换
-- 实时查看可用输出设备，当前设备排在最前面
-- 在内置扬声器、耳机、AirPods、蓝牙、USB 和显示器音频之间切换
-- 快速跳转到声音和蓝牙设置
-
-与 iPhone Duo 一致的图标
-- Wi-Fi 标志、音量圆点和圆环已按 iPhone Duo 状态图标的几何形状重绘
-
-小改动
-- 点击其他菜单栏图标或任意空白处时，弹出窗口会自动关闭，和原生菜单栏一样
-- 自适应圆环不再显示屏幕亮度；仍会显示 CPU、内存和散热压力
-- 完整本地化：英语、简体中文、繁体中文、俄语、乌克兰语
-
-DuoBar 只使用 macOS 公开 API，支持 macOS 13 及更高版本，支持 Apple Silicon 和 Intel。
-
-感谢大家至今的反馈和 bug 报告。关注本仓库（仅 Releases）即可在 1.3.1 发布时收到通知。
-
 ## 📥 下载与安装教程
 
 ### 第一步：下载 DuoBar
 
-点击页面上方的“下载 DuoBar 1.3.0”。浏览器会下载：
+点击页面上方的“下载 DuoBar 1.3.1”。浏览器会下载：
 
-`DuoBar-1.3.0.dmg`
+`DuoBar-1.3.1.dmg`
 
 普通用户只需要这个 DMG 文件。不要下载：
 
@@ -68,13 +39,13 @@ DuoBar 只使用 macOS 公开 API，支持 macOS 13 及更高版本，支持 App
 
 如果你是从 GitHub Releases 页面开始：
 
-1. 找到最新版本 **DuoBar 1.3.0**。
+1. 找到最新版本 **DuoBar 1.3.1**。
 2. 找到页面下方的 **Assets** 文件列表。
-3. 点击 **DuoBar-1.3.0.dmg**。
+3. 点击 **DuoBar-1.3.1.dmg**。
 
 ### 第二步：安装
 
-1. 双击 `DuoBar-1.3.0.dmg`。
+1. 双击 `DuoBar-1.3.1.dmg`。
 2. Finder 会打开一个磁盘映像窗口。
 3. 将 `DuoBar.app` 拖到 **Applications / 应用程序** 文件夹；窗口中提供了应用程序文件夹入口。
 4. 等待复制完成。
@@ -83,7 +54,7 @@ DuoBar 只使用 macOS 公开 API，支持 macOS 13 及更高版本，支持 App
 
 ### 第三步：第一次打开
 
-DuoBar 1.3.0 使用 Developer ID 签名并通过 Apple 公证。正常安装不需要关闭 Gatekeeper 或 SIP，也不需要 Terminal、`sudo` 或 `xattr`。
+DuoBar 1.3.1 使用 Developer ID 签名并通过 Apple 公证。正常安装不需要关闭 Gatekeeper 或 SIP，也不需要 Terminal、`sudo` 或 `xattr`。
 
 DuoBar 是菜单栏应用，不会出现在 Dock 中。打开后，请查看屏幕最上方的 macOS 菜单栏，DuoBar 图标会在那里出现。
 
@@ -122,7 +93,7 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 设置中还可以选择开启 **Open on Hover（悬停打开）**。
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.3.0 弹出面板" width="480">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.3.1 弹出面板" width="480">
 </p>
 
 ## 功能
@@ -152,7 +123,7 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 
 ## 安全与隐私
 
-DuoBar 1.3.0 使用 Apple Developer ID 签名并通过 Apple 公证。DuoBar 不通过 Mac App Store 分发。
+DuoBar 1.3.1 使用 Apple Developer ID 签名并通过 Apple 公证。DuoBar 不通过 Mac App Store 分发。
 
 系统状态在本机处理：
 
@@ -179,9 +150,9 @@ DuoBar 是独立项目，与 Apple Inc. 没有隶属、赞助或认可关系。
 
 ## 下载完整性
 
-官方 DuoBar 1.3.0 DMG 的 SHA-256：
+官方 DuoBar 1.3.1 DMG 的 SHA-256：
 
-`bd638b5fac84b7bc56ab71988e10d6d4a3188bea973584c77b1fe6979f243fb5`
+`b9bfb9dea85a4bd8d81121567427b23c1a8aca8d7f16ad7f7cfeb50e1937747f`
 
 普通用户不需要验证这一项。它主要用于希望确认下载文件完整性的用户。
 
