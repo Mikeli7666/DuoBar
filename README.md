@@ -24,30 +24,30 @@ DuoBar 1.3.0 (Build 6) · macOS 13+ · Apple Silicon or Intel · Universal 2 · 
 ▶ [watch the launch film of the latest version on YouTube](https://youtu.be/7KS9IhAcXhM)
 </p>
 
-## 🚧 DuoBar 1.3.1 is coming soon
+🚧 DuoBar 1.3.1 is coming soon
 
-It's been quiet here for a while, but DuoBar is very much alive. The next update, **1.3.1**, is in final testing.
+It's been quiet here for a while, but DuoBar is very much alive. The next update, 1.3.1, is in final testing.
 
-### What's new
+What's new
 
-**Wi-Fi, right from the popover**
-- Browse nearby networks on demand, with the current network listed first
-- Join open and personal secured networks (password entry uses a native secure field; DuoBar never stores or logs it)
-- Refresh manually, with no background scanning
-- Enterprise networks hand off to macOS Wi-Fi Settings
+Wi-Fi, right from the popover
+Browse nearby networks on demand, with the current network listed first
+Join open and personal secured networks (password entry uses a native secure field; DuoBar never stores or logs it)
+Refresh manually, with no background scanning
+Enterprise networks hand off to macOS Wi-Fi Settings
 
-**Audio output switching**
-- See available outputs live, with the current one first
-- Switch between built-in speakers, headphones, AirPods, Bluetooth, USB and display audio
-- Quick shortcuts to Sound and Bluetooth Settings
+Audio output switching
+See available outputs live, with the current one first
+Switch between built-in speakers, headphones, AirPods, Bluetooth, USB and display audio
+Quick shortcuts to Sound and Bluetooth Settings
 
-**A glyph that matches the iPhone Duo**
-- The Wi-Fi mark, volume dots and ring were rebuilt to follow the iPhone Duo's status glyph geometry
+A glyph that matches the iPhone Duo
+The Wi-Fi mark, volume dots and ring were rebuilt to follow the iPhone Duo's status glyph geometry
 
-**Smaller changes**
-- The popover now closes when you click another menu bar icon or anywhere outside it, like native menu bar items
-- The Adaptive Ring no longer shows display brightness; it still surfaces CPU, memory and thermal pressure
-- Full localization: English, Simplified Chinese, Traditional Chinese, Russian, Ukrainian
+Smaller changes
+The popover now closes when you click another menu bar icon or anywhere outside it, like native menu bar items
+The Adaptive Ring no longer shows display brightness; it still surfaces CPU, memory and thermal pressure
+Full localization: English, Simplified Chinese, Traditional Chinese, Russian, Ukrainian
 
 DuoBar uses public macOS APIs only, runs on macOS 13 or later, and supports Apple Silicon and Intel.
 
