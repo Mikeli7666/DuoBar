@@ -9,6 +9,10 @@
 DuoBar 1.3.1 (сборка 7) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
 
 <p align="center">
+  <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Поддержать DuoBar на Ko-fi"></a>
+</p>
+
+<p align="center">
   <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.1 в строке меню macOS" width="1340">
 </p>
 
