@@ -12,6 +12,8 @@
 
 DuoBar 1.3.1 (Build 7) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
 
+<a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Support DuoBar on Ko-fi"></a>
+
 <br>
 
 <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.1 in the macOS menu bar" width="1340">
