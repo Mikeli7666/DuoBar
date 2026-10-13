@@ -15,6 +15,10 @@
 DuoBar 1.3.1（Build 7）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
 
 <p align="center">
+  <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="在 Ko-fi 上支持 DuoBar"></a>
+</p>
+
+<p align="center">
   <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.1 菜单栏" width="1340">
 
 <p align="center">
