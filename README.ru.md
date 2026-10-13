@@ -1,6 +1,6 @@
 # DuoBar
 
-[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
 
 Индикатор в стиле iPhone Duo для строки меню macOS: батарея, сеть и громкость в одном значке.
 
