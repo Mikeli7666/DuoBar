@@ -6,6 +6,7 @@
 "Small" = "Малий";
 "Default" = "Типовий";
 "Large" = "Великий";
+"Extra Large" = "Дуже великий";
 "Adjust DuoBar to better match your menu bar." = "Підлаштуйте DuoBar під ваш рядок меню.";
 "Choose a preset or fine-tune DuoBar to better match your menu bar." = "Виберіть розмір або точно налаштуйте DuoBar під рядок меню.";
 "DuoBar is running from the disk image." = "DuoBar запущено з образу диска.";

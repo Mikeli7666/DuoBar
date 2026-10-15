@@ -27,7 +27,8 @@ struct SettingsView: View {
                     Picker(localized("Icon Size"), selection: resolvedMenuBarIconScale) {
                         Text(localized("Small")).tag(MenuBarIconSize.minimumScale)
                         Text(localized("Default")).tag(MenuBarIconSize.defaultScale)
-                        Text(localized("Large")).tag(MenuBarIconSize.maximumScale)
+                        Text(localized("Large")).tag(MenuBarIconSize.largeScale)
+                        Text(localized("Extra Large")).tag(MenuBarIconSize.extraLargeScale)
                     }
                     .pickerStyle(.segmented)
                     .accessibilityLabel(localized("Menu bar icon size"))
