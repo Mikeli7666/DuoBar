@@ -613,6 +613,8 @@ struct DuoCenterGlyph: View {
                     ringDiameter: ringDiameter,
                     verticalAdjustment: wifiVerticalAdjustment
                 )
+            } else if case .ethernet = state {
+                DuoEthernetGlyph(size: size, color: glyphColor)
             } else {
                 Image(systemName: Self.symbolName(for: state))
                     .font(.system(size: symbolSize, weight: .semibold))
