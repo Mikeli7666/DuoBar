@@ -225,6 +225,11 @@ final class SystemStatusStore: ObservableObject {
         return audioOutputService.setDefaultOutput(uid: uid)
     }
 
+    @discardableResult
+    func setDefaultInput(uid: String) -> Bool {
+        audioOutputService.setDefaultInput(uid: uid)
+    }
+
     private func mutate(_ update: (inout SystemStatus) -> Void) {
         let previous = status
         var next = status

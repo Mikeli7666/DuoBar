@@ -75,6 +75,22 @@ struct StatusPopoverView: View {
                 onOpenBluetoothSettings: { SystemSettingsOpener.open(.bluetooth) }
             )
 
+            AudioOutputRow(
+                symbol: audioInputSymbol,
+                title: localized("Audio Input"),
+                detail: audioInputDetail,
+                stateText: audioInputState,
+                outputs: statusStore.status.audio.selectableInputs,
+                selectedUID: statusStore.status.audio.defaultInput?.uid,
+                onSelect: { statusStore.setDefaultInput(uid: $0) },
+                onOpenSoundSettings: openSoundSettings,
+                onOpenBluetoothSettings: {},
+                emptyText: localized("No input devices"),
+                failureText: localized("Unable to Switch Input"),
+                hint: localized("Select audio input"),
+                showsBluetoothSettings: false
+            )
+
             #if DEBUG
             DebugStatusSimulatorView(statusStore: statusStore)
             #endif
@@ -241,6 +257,27 @@ struct StatusPopoverView: View {
 
     private var audioOutputDetail: String {
         statusStore.status.audio.defaultOutput?.name ?? localized("No output device")
+    }
+
+    private var audioInputSymbol: String {
+        statusStore.status.audio.defaultInput == nil ? "mic.slash" : "mic"
+    }
+
+    private var audioInputDetail: String {
+        statusStore.status.audio.defaultInput?.name ?? localized("No input device")
+    }
+
+    private var audioInputState: String {
+        guard let input = statusStore.status.audio.defaultInput else { return localized("Unavailable") }
+        switch input.transport {
+        case .builtIn: return localized("Built-in")
+        case .bluetooth, .bluetoothLE: return localized("Bluetooth")
+        case .usb: return localized("USB")
+        case .hdmi, .displayPort: return localized("Display")
+        case .airPlay: return localized("AirPlay")
+        case .virtual: return localized("Virtual")
+        case .other: return localized("Connected")
+        }
     }
 
     private var audioOutputState: String {

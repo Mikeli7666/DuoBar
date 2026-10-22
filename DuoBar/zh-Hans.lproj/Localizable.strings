@@ -6,7 +6,6 @@
 "Small" = "小";
 "Default" = "默认";
 "Large" = "大";
-"Extra Large" = "特大";
 "Adjust DuoBar to better match your menu bar." = "调整 DuoBar 以更好地匹配菜单栏。";
 "Choose a preset or fine-tune DuoBar to better match your menu bar." = "选择预设，或微调 DuoBar 以更好地匹配菜单栏。";
 "DuoBar is running from the disk image." = "DuoBar 正在从磁盘映像运行。";
@@ -122,3 +121,8 @@
 "Unable to Join" = "无法加入";
 "Location access is needed to show Wi-Fi network names." = "需要位置权限才能显示 Wi-Fi 网络名称。";
 "Open System Settings…" = "打开系统设置…";
+"Audio Input" = "音频输入";
+"No input device" = "没有输入设备";
+"No input devices" = "没有输入设备";
+"Unable to Switch Input" = "无法切换输入设备";
+"Select audio input" = "选择音频输入";

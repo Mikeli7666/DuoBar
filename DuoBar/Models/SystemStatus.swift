@@ -239,6 +239,8 @@ struct AudioStatus: Equatable, Sendable {
     var volume: OutputVolumeStatus
     var connectedBluetoothOutputs: [AudioDeviceStatus]
     var availableOutputs: [AudioDeviceStatus] = []
+    var defaultInput: AudioDeviceStatus? = nil
+    var availableInputs: [AudioDeviceStatus] = []
 
     static let unavailable = AudioStatus(
         isAvailable: false,
@@ -273,6 +275,27 @@ struct AudioStatus: Equatable, Sendable {
         }
 
         if let defaultOutput, let index = ordered.firstIndex(where: { $0.uid == defaultOutput.uid }) {
+            let current = ordered.remove(at: index)
+            ordered.insert(current, at: 0)
+        }
+        return ordered
+    }
+
+    var selectableInputs: [AudioDeviceStatus] {
+        var seen = Set<String>()
+        var ordered: [AudioDeviceStatus] = []
+
+        for device in availableInputs where device.isAlive {
+            if seen.insert(device.uid).inserted {
+                ordered.append(device)
+            }
+        }
+
+        if let defaultInput, defaultInput.isAlive, seen.insert(defaultInput.uid).inserted {
+            ordered.insert(defaultInput, at: 0)
+        }
+
+        if let defaultInput, let index = ordered.firstIndex(where: { $0.uid == defaultInput.uid }) {
             let current = ordered.remove(at: index)
             ordered.insert(current, at: 0)
         }

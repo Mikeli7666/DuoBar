@@ -10,12 +10,16 @@ struct AudioOutputRow: View {
     let onSelect: (String) -> Bool
     let onOpenSoundSettings: () -> Void
     let onOpenBluetoothSettings: () -> Void
+    var emptyText = localized("No output devices")
+    var failureText = localized("Unable to Switch Output")
+    var hint = localized("Select audio output")
+    var showsBluetoothSettings = true
     @State private var switchFailed = false
 
     var body: some View {
         Menu {
             if outputs.isEmpty {
-                Text(localized("No output devices"))
+                Text(emptyText)
             } else {
                 Picker(selection: selection) {
                     ForEach(outputs) { device in
@@ -32,11 +36,13 @@ struct AudioOutputRow: View {
                 Button(localized("Sound Settings…")) {
                     onOpenSoundSettings()
                 }
-                Button(localized("Bluetooth Settings…")) {
-                    onOpenBluetoothSettings()
+                if showsBluetoothSettings {
+                    Button(localized("Bluetooth Settings…")) {
+                        onOpenBluetoothSettings()
+                    }
                 }
                 if switchFailed {
-                    Text(localized("Unable to Switch Output"))
+                    Text(failureText)
                         .foregroundStyle(.secondary)
                 }
         } label: {
@@ -54,7 +60,7 @@ struct AudioOutputRow: View {
         .frame(maxWidth: .infinity)
         .accessibilityLabel(title)
         .accessibilityValue(detail)
-        .accessibilityHint(localized("Select audio output"))
+        .accessibilityHint(hint)
     }
 
     private var selection: Binding<String> {

@@ -6,7 +6,6 @@
 "Small" = "Маленький";
 "Default" = "По умолчанию";
 "Large" = "Большой";
-"Extra Large" = "Очень большой";
 "Adjust DuoBar to better match your menu bar." = "Подстройте DuoBar под вашу строку меню.";
 "Choose a preset or fine-tune DuoBar to better match your menu bar." = "Выберите размер или точно настройте DuoBar под строку меню.";
 "DuoBar is running from the disk image." = "DuoBar запущен с образа диска.";
@@ -122,3 +121,8 @@
 "Unable to Join" = "Не удалось подключиться";
 "Location access is needed to show Wi-Fi network names." = "Доступ к геопозиции нужен для отображения названий сетей Wi-Fi.";
 "Open System Settings…" = "Открыть Системные настройки…";
+"Audio Input" = "Аудиовход";
+"No input device" = "Нет устройства ввода";
+"No input devices" = "Нет устройств ввода";
+"Unable to Switch Input" = "Не удалось переключить вход";
+"Select audio input" = "Выбрать устройство ввода звука";

@@ -6,7 +6,6 @@
 "Small" = "Small";
 "Default" = "Default";
 "Large" = "Large";
-"Extra Large" = "Extra Large";
 "Adjust DuoBar to better match your menu bar." = "Adjust DuoBar to better match your menu bar.";
 "Choose a preset or fine-tune DuoBar to better match your menu bar." = "Choose a preset or fine-tune DuoBar to better match your menu bar.";
 "DuoBar is running from the disk image." = "DuoBar is running from the disk image.";
@@ -122,3 +121,8 @@
 "Unable to Join" = "Unable to Join";
 "Location access is needed to show Wi-Fi network names." = "Location access is needed to show Wi-Fi network names.";
 "Open System Settings…" = "Open System Settings…";
+"Audio Input" = "Audio Input";
+"No input device" = "No input device";
+"No input devices" = "No input devices";
+"Unable to Switch Input" = "Unable to Switch Input";
+"Select audio input" = "Select audio input";

@@ -31,6 +31,28 @@ final class PopoverControlsTests: XCTestCase {
         XCTAssertEqual(audio.selectableOutputs.map(\.uid), ["built-in"])
     }
 
+    func testSelectableInputsSkipDeadDevicesDeduplicateAndPutCurrentFirst() {
+        let builtIn = AudioDeviceStatus(uid: "built-in-mic", name: "MacBook Microphone", transport: .builtIn, isAlive: true)
+        let duplicate = AudioDeviceStatus(uid: "built-in-mic", name: "Copy", transport: .builtIn, isAlive: true)
+        let dead = AudioDeviceStatus(uid: "dead", name: "Old USB Mic", transport: .usb, isAlive: false)
+        let usb = AudioDeviceStatus(uid: "usb-mic", name: "USB Mic", transport: .usb, isAlive: true)
+
+        let audio = AudioStatus(
+            isAvailable: true,
+            defaultOutput: nil,
+            volume: .unavailable,
+            connectedBluetoothOutputs: [],
+            defaultInput: usb,
+            availableInputs: [builtIn, duplicate, dead, usb]
+        )
+
+        XCTAssertEqual(audio.selectableInputs.map(\.uid), ["usb-mic", "built-in-mic"])
+    }
+
+    func testSelectableInputsAreEmptyWithoutInputDevices() {
+        XCTAssertTrue(AudioStatus.unavailable.selectableInputs.isEmpty)
+    }
+
     func testNetworkSettingsPaneFollowsTransport() {
         XCTAssertEqual(SystemSettingsOpener.pane(for: wifiNetwork()), .wifi)
         XCTAssertEqual(SystemSettingsOpener.pane(for: ethernetNetwork()), .network)
