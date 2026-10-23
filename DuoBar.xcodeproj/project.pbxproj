@@ -180,6 +180,7 @@
 				ru,
 				uk,
 				Base,
+				th,
 			);
 			mainGroup = A10000000000000000000002;
 			preferredProjectObjectVersion = 77;

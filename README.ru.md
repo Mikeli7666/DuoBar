@@ -4,21 +4,25 @@
 
 Индикатор в стиле iPhone Duo для строки меню macOS: батарея, сеть и громкость в одном значке.
 
-[**Скачать DuoBar 1.3.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.0/DuoBar-1.3.0.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**Скачать DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.1/DuoBar-1.3.1.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
-DuoBar 1.3.0 (сборка 6) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
+DuoBar 1.3.1 (сборка 7) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 в строке меню macOS" width="1340">
+  <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Поддержать DuoBar на Ko-fi"></a>
+</p>
+
+<p align="center">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.1 в строке меню macOS" width="1340">
 </p>
 
 ## Скачивание и установка
 
 ### Шаг 1. Скачать DuoBar
 
-Нажмите «Скачать DuoBar 1.3.0» выше. Браузер загрузит файл:
+Нажмите «Скачать DuoBar 1.3.1» выше. Браузер загрузит файл:
 
-`DuoBar-1.3.0.dmg`
+`DuoBar-1.3.1.dmg`
 
 Обычному пользователю нужен только этот DMG. Не скачивайте:
 
@@ -29,13 +33,13 @@ DuoBar 1.3.0 (сборка 6) · macOS 13 Ventura или новее · Apple Sil
 
 Если вы открыли страницу [Releases](https://github.com/Mikeli7666/DuoBar/releases):
 
-1. Найдите последнюю версию **DuoBar 1.3.0**.
+1. Найдите последнюю версию **DuoBar 1.3.1**.
 2. Внизу страницы откройте список **Assets**.
-3. Скачайте **DuoBar-1.3.0.dmg**.
+3. Скачайте **DuoBar-1.3.1.dmg**.
 
 ### Шаг 2. Установить
 
-1. Дважды щёлкните `DuoBar-1.3.0.dmg`.
+1. Дважды щёлкните `DuoBar-1.3.1.dmg`.
 2. Finder откроет окно образа диска.
 3. Перетащите `DuoBar.app` в папку **Программы / Applications**.
 4. Дождитесь окончания копирования.
@@ -44,10 +48,9 @@ DuoBar 1.3.0 (сборка 6) · macOS 13 Ventura или новее · Apple Sil
 
 ### Шаг 3. Первый запуск
 
-DuoBar 1.3.0 подписан Developer ID и прошёл нотариальную проверку Apple. Для обычной установки не нужно отключать Gatekeeper или SIP, использовать Terminal, `sudo` или `xattr`.
+DuoBar 1.3.1 подписан Developer ID и прошёл нотариальную проверку Apple. Для обычной установки не нужно отключать Gatekeeper или SIP, использовать Terminal, `sudo` или `xattr`.
 
 DuoBar живёт в строке меню и **не появляется в Dock**. После запуска смотрите на верхний край экрана — значок DuoBar будет там.
-
 
 ## Зачем доступ к геолокации?
 
@@ -70,7 +73,7 @@ DuoBar постоянно в строке меню. Три части значк
 - **Четыре точки снизу** → громкость
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="Состояния DuoBar 1.3.0" width="800">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="Состояния DuoBar 1.3.1" width="800">
 </p>
 
 Нажмите на значок, чтобы открыть панель:
@@ -85,7 +88,7 @@ DuoBar постоянно в строке меню. Три части значк
 В настройках можно включить **Open on Hover** (открывать при наведении).
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="Панель DuoBar 1.3.0" width="480">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="Панель DuoBar 1.3.1" width="480">
 </p>
 
 ## Возможности
@@ -112,7 +115,7 @@ DuoBar постоянно в строке меню. Три части значк
 
 ## Безопасность и приватность
 
-DuoBar 1.3.0 подписан Apple Developer ID и прошёл нотариальную проверку Apple. Приложение не распространяется через Mac App Store.
+DuoBar 1.3.1 подписан Apple Developer ID и прошёл нотариальную проверку Apple. Приложение не распространяется через Mac App Store.
 
 Состояние системы обрабатывается локально:
 
@@ -139,9 +142,9 @@ DuoBar — независимый проект и не связан с Apple Inc
 
 ## Целостность загрузки
 
-SHA-256 официального DMG DuoBar 1.3.0:
+SHA-256 официального DMG DuoBar 1.3.1:
 
-`bd638b5fac84b7bc56ab71988e10d6d4a3188bea973584c77b1fe6979f243fb5`
+`b9bfb9dea85a4bd8d81121567427b23c1a8aca8d7f16ad7f7cfeb50e1937747f`
 
 Обычному пользователю это проверять не нужно. Строка для тех, кто хочет убедиться, что файл не подменили.
 
