@@ -8,15 +8,21 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md)
 
-[**Download DuoBar 1.3.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.0/DuoBar-1.3.0.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
+[**Download DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.1/DuoBar-1.3.1.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
 
-DuoBar 1.3.0 (Build 6) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
+DuoBar 1.3.1 (Build 7) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
+
+<a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Support DuoBar on Ko-fi"></a>
 
 <br>
 
-<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.0 in the macOS menu bar" width="1340">
+<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.1 in the macOS menu bar" width="1340">
 
 </div>
+
+  [![▶ Watch the release video](https://img.shields.io/badge/Watch_the_release_video-0969da?style=for-the-badge)](https://github.com/user-attachments/assets/3af8d3cf-230b-4073-932b-c54c4a1553e6)
+▶ [watch the launch film of the latest version on YouTube](https://youtu.be/7KS9IhAcXhM)
+</p>
 
 ## One glyph, three live states
 
@@ -26,14 +32,11 @@ DuoBar adapts the iPhone Duo-style three-in-one status concept for the Mac menu 
 - **Center** → the active network: Wi-Fi, Ethernet, or an offline/fallback state
 - **Four lower dots** → live output volume
 
-Persistent status stays monochrome and native-looking. When AirPods or another supported Bluetooth audio output becomes active, the center briefly transitions from Network → AirPods/headphones → Network. Disconnecting does not trigger an animation.
+Persistent status stays monochrome and native-looking. When AirPods or another supported Bluetooth audio output becomes active, the center briefly transitions from Network → AirPods/headphones → twork. Disconnecting does not trigger an animation.
+p>
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="DuoBar 1.3.0 visual states" width="800">
-</p>
-
-<p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.3.0 popover" width="480">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.3.1 popover" width="480">
 </p>
 
 ## Adaptive Ring and Battery Ring
@@ -42,8 +45,9 @@ On MacBooks, the outer Battery Ring shows live battery level, a dynamic charging
 
 ## DuoBar on macOS
 
-DuoBar 1.3.0 brings the Battery, Network, and Volume foundation together with MacBook Adaptive Ring behavior, refined controls, adjustable icon size, and installation polish.
+The current 1.3.1 release brings the Battery, Network, and Volume foundation together with MacBook Adaptive Ring behavior, refined controls, adjustable icon size, and installation polish.
 
+<p align="center">
 ## Features
 
 - Battery Ring with live level, dynamic charging bolt, low-battery state, and optional Battery Color Coding
@@ -71,14 +75,14 @@ DuoBar 1.3.0 brings the Battery, Network, and Volume foundation together with Ma
 
 ## Installation
 
-1. Open the [DuoBar 1.3.0 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.0) and find **Assets**.
-2. Download **DuoBar-1.3.0.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
+1. Open the [DuoBar 1.3.1 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.1) and find **Assets**.
+2. Download **DuoBar-1.3.1.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
 3. Double-click the DMG and drag **DuoBar.app** to **Applications**.
 4. Open Applications and launch DuoBar. It is a menu-bar utility and normally does not appear in the Dock.
 
-DuoBar 1.3.0 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
+DuoBar 1.3.1 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
 
-SHA-256: `bd638b5fac84b7bc56ab71988e10d6d4a3188bea973584c77b1fe6979f243fb5`
+SHA-256: `b9bfb9dea85a4bd8d81121567427b23c1a8aca8d7f16ad7f7cfeb50e1937747f`
 
 Build and compatibility/reliability work was checked using Xcode 27 and the macOS 27 SDK while continuing to support macOS 13+. This does not claim macOS 27 hardware validation.
 
