@@ -26,16 +26,19 @@ struct DuoGlyphView: View {
     var ringTransitionAnimation: Animation?
     var usesCustomRingTransition = false
     var ringColorOverride: Color?
-    var batteryColorCodingEnabled = false
+    var batteryColorCodingEnabled = false; var showBatteryPercentage = false
     var chargingBoltProgressOverride: CGFloat?
     var chargingTrackProgressOverride: CGFloat?
     var chargingColorMixOverride: CGFloat?
+    var chargingGapProgressOverride: CGFloat?
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var centerPulseScale: CGFloat = 1
     @State private var chargingBoltProgress: CGFloat
     @State private var chargingTrackProgress: CGFloat
     @State private var chargingColorMix: CGFloat
+    @State private var chargingGapProgress: CGFloat
+    @State private var chargingBoltDim: CGFloat
 
     init(
         status: SystemStatus,
@@ -50,8 +53,11 @@ struct DuoGlyphView: View {
         batteryColorCodingEnabled: Bool = false,
         chargingBoltProgressOverride: CGFloat? = nil,
         chargingTrackProgressOverride: CGFloat? = nil,
-        chargingColorMixOverride: CGFloat? = nil
+        chargingColorMixOverride: CGFloat? = nil,
+        chargingGapProgressOverride: CGFloat? = nil,
+        showBatteryPercentage: Bool = false
     ) {
+        self.chargingGapProgressOverride = chargingGapProgressOverride
         self.status = status
         self.presentation = presentation
         self.metrics = metrics
@@ -62,6 +68,7 @@ struct DuoGlyphView: View {
         self.usesCustomRingTransition = usesCustomRingTransition
         self.ringColorOverride = ringColorOverride
         self.batteryColorCodingEnabled = batteryColorCodingEnabled
+        self.showBatteryPercentage = showBatteryPercentage
         self.chargingBoltProgressOverride = chargingBoltProgressOverride
         self.chargingTrackProgressOverride = chargingTrackProgressOverride
         self.chargingColorMixOverride = chargingColorMixOverride
@@ -75,7 +82,10 @@ struct DuoGlyphView: View {
         )
         let usesPowerPresentation = state.batteryPresentation.boltPlacement != .none
         _chargingBoltProgress = State(initialValue: usesPowerPresentation ? 1 : 0)
-        _chargingTrackProgress = State(initialValue: usesPowerPresentation ? 1 : 0)
+        // The track is part of the ring itself: it is visible whenever the arc is not full.
+        _chargingTrackProgress = State(initialValue: 1)
+        _chargingGapProgress = State(initialValue: usesPowerPresentation ? 1 : 0)
+        _chargingBoltDim = State(initialValue: state.batteryPresentation.boltDimmed ? 1 : 0)
         _chargingColorMix = State(initialValue: state.batteryPresentation.colorRole == .charging ? 1 : 0)
     }
 
@@ -107,39 +117,58 @@ struct DuoGlyphView: View {
                     .transition(.opacity)
                 } else {
                     ZStack {
-                        DuoArcShape(
-                            startDegrees: metrics.arcStartDegrees,
-                            endDegrees: metrics.arcEndDegrees,
-                            progress: 1
-                        )
-                        .stroke(batteryArcColor, style: ringStrokeStyle)
-                        .frame(width: metrics.ringPathDiameter, height: metrics.ringPathDiameter)
-                        .offset(y: metrics.ringYOffset)
-                        .opacity(
-                            glyphState.batteryArcOpacity
-                                * DuoNativeVisualConstants.chargingTrackOpacity
-                                * Double(chargingTrackProgressOverride ?? chargingTrackProgress)
-                        )
+                        ZStack {
+                            DuoArcShape(
+                                startDegrees: metrics.arcStartDegrees,
+                                endDegrees: metrics.arcEndDegrees,
+                                progress: 1
+                            )
+                            .stroke(batteryArcColor, style: ringStrokeStyle)
+                            .frame(width: metrics.ringPathDiameter, height: metrics.ringPathDiameter)
+                            .offset(y: metrics.ringYOffset)
+                            .opacity(
+                                glyphState.batteryArcOpacity
+                                    * DuoNativeVisualConstants.chargingTrackOpacity
+                                    * Double(chargingTrackProgressOverride ?? chargingTrackProgress)
+                            )
+                            .animation(batteryColorFadeAnimation, value: nonChargingBatteryColorRole)
 
-                        DuoArcShape(
-                            startDegrees: metrics.arcStartDegrees,
-                            endDegrees: metrics.arcEndDegrees,
-                            progress: CGFloat(glyphState.batteryProgress)
-                        )
-                        .stroke(batteryArcColor, style: ringStrokeStyle)
-                        .frame(width: metrics.ringPathDiameter, height: metrics.ringPathDiameter)
-                        .offset(y: metrics.ringYOffset)
-                        .opacity(glyphState.batteryArcOpacity)
-                        .animation(arcAnimation, value: glyphState.batteryProgress)
-                        .animation(arcOpacityAnimation, value: glyphState.batteryArcOpacity)
+                            DuoArcShape(
+                                startDegrees: metrics.arcStartDegrees,
+                                endDegrees: metrics.arcEndDegrees,
+                                progress: CGFloat(glyphState.batteryProgress)
+                            )
+                            .stroke(batteryArcColor, style: ringStrokeStyle)
+                            .frame(width: metrics.ringPathDiameter, height: metrics.ringPathDiameter)
+                            .offset(y: metrics.ringYOffset)
+                            .opacity(glyphState.batteryArcOpacity)
+                            .animation(arcAnimation, value: glyphState.batteryProgress)
+                            .animation(arcOpacityAnimation, value: glyphState.batteryArcOpacity)
+                            .animation(batteryColorFadeAnimation, value: nonChargingBatteryColorRole)
+                        }
+                        .mask {
+                            DuoChargingGapMask(
+                                progress: showBatteryPercentage ? 0 : (chargingGapProgressOverride ?? chargingGapProgress),
+                                size: chargingBoltSize,
+                                offset: chargingBoltOffset,
+                                dilation: metrics.ringDiameter * BatteryChargingAnimationProfile.boltGapDilationRatio,
+                                numberGapVisible: showBatteryPercentage && glyphState.ringPresentation.mode != .adaptive && status.battery.percentage != nil
+                            )
+                            // The arc frame spans only the path diameter, but the centered
+                            // stroke extends half a stroke width beyond it on every side.
+                            // Expand the mask so the outer half of the stroke isn't clipped.
+                            .padding(-metrics.arcLineWidth)
+                        }
 
-                        DuoChargingBolt(
-                            progress: chargingBoltProgressOverride ?? chargingBoltProgress,
-                            size: chargingBoltSize,
-                            offset: chargingBoltOffset,
-                            color: .primary,
-                            opacity: chargingBoltOpacity
-                        )
+                        if !showBatteryPercentage {
+                            DuoChargingBolt(
+                                progress: chargingBoltProgressOverride ?? chargingBoltProgress,
+                                size: chargingBoltSize,
+                                offset: chargingBoltOffset,
+                                color: .primary,
+                                opacity: chargingBoltOpacity
+                            )
+                        }
                     }
                     .frame(width: DuoGlyphMetrics.canvasSize, height: DuoGlyphMetrics.canvasSize)
                     .transition(.opacity)
@@ -166,6 +195,15 @@ struct DuoGlyphView: View {
                 rowCenterYOffset: metrics.ringYOffset,
                 animationsEnabled: motionAllowed
             )
+            
+            if showBatteryPercentage,
+               glyphState.ringPresentation.mode != .adaptive,
+               let pct = status.battery.percentage {
+                Text(verbatim: "\(pct)")
+                    .font(.system(size: 8, weight: .bold))
+                    .foregroundStyle(.primary)
+                    .offset(y: -11)
+            }
         }
         .frame(width: DuoGlyphMetrics.canvasSize, height: DuoGlyphMetrics.canvasSize)
         .scaleEffect(metrics.overallSize / DuoGlyphMetrics.canvasSize)
@@ -195,10 +233,16 @@ struct DuoGlyphView: View {
                     $chargingBoltProgress.wrappedValue = target
                 }
             }
-            if chargingTrackProgressOverride == nil {
-                withAnimation(trackAnimation(showing: showing)) {
-                    $chargingTrackProgress.wrappedValue = target
+            if chargingGapProgressOverride == nil {
+                withAnimation(gapAnimation(showing: showing)) {
+                    $chargingGapProgress.wrappedValue = target
                 }
+            }
+        }
+        .onChange(of: glyphState.batteryPresentation.boltDimmed) { dimmed in
+            let target: CGFloat = dimmed ? 1 : 0
+            withAnimation(boltDimAnimation) {
+                $chargingBoltDim.wrappedValue = target
             }
         }
         .task(id: chargingColorTarget) {
@@ -293,7 +337,34 @@ struct DuoGlyphView: View {
     }
 
     private var chargingBoltOpacity: Double {
-        BatteryBoltPresentationConstants.opacity
+        let dimDepth = 1 - BatteryChargingAnimationProfile.fullChargeBoltOpacity
+        return BatteryBoltPresentationConstants.opacity * (1 - dimDepth * Double(chargingBoltDim))
+    }
+
+    private var batteryColorFadeAnimation: Animation? {
+        motionAllowed
+            ? .easeOut(duration: BatteryChargingAnimationProfile.lowBatteryColorFadeDuration)
+            : nil
+    }
+
+    private var boltDimAnimation: Animation? {
+        guard motionAllowed else { return nil }
+        return .timingCurve(
+            0.2, 0.3, 0.2, 1,
+            duration: BatteryChargingAnimationProfile.fullChargeDimDuration
+        )
+    }
+
+    private func gapAnimation(showing: Bool) -> Animation? {
+        guard motionAllowed else { return nil }
+        if showing {
+            return .timingCurve(
+                0.33, 1, 0.68, 1,
+                duration: BatteryChargingAnimationProfile.boltGapEntranceDuration
+            )
+            .delay(BatteryChargingAnimationProfile.boltGapDelay)
+        }
+        return .timingCurve(0.4, 0, 0.2, 1, duration: BatteryChargingAnimationProfile.boltGapExitDuration)
     }
 
     private var chargingPresentationTarget: CGFloat {
@@ -894,5 +965,53 @@ private struct DuoChargingBolt: View {
                 BatteryBoltPresentationConstants.hiddenScale
                     + (1 - BatteryBoltPresentationConstants.hiddenScale) * progress
             )
+    }
+}
+
+
+/// Knocks the ring out around the charging bolt: the bolt silhouette grown by `dilation`,
+/// built from copies of the bolt shifted around a circle so it matches the symbol exactly.
+private struct DuoChargingGapMask: View {
+    let progress: CGFloat
+    let size: CGFloat
+    let offset: CGSize
+    let dilation: CGFloat
+    var numberGapVisible: Bool = false
+
+
+    private static let sampleCount = 16
+
+    var body: some View {
+        ZStack {
+            Color.white
+            ZStack {
+                ForEach(0..<Self.sampleCount, id: \.self) { index in
+                    let angle = Double(index) / Double(Self.sampleCount) * 2 * Double.pi
+                    bolt
+                        .offset(
+                            x: CGFloat(cos(angle)) * dilation,
+                            y: CGFloat(sin(angle)) * dilation
+                        )
+                }
+                bolt
+            }
+            .opacity(Double(progress))
+            .blendMode(.destinationOut)
+
+            if numberGapVisible {
+                RoundedRectangle(cornerRadius: 3)
+                    .frame(width: 16, height: 7)
+                    .offset(y: -10.5)
+                    .blendMode(.destinationOut)
+            }
+        }
+        .compositingGroup()
+    }
+
+    private var bolt: some View {
+        Image(systemName: "bolt.fill")
+            .font(.system(size: size, weight: .bold))
+            .symbolRenderingMode(.monochrome)
+            .offset(offset)
     }
 }

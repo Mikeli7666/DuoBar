@@ -8,6 +8,7 @@ struct DuoStatusView: View {
     @AppStorage(PreferenceKeys.menuBarIconScale) private var menuBarIconScale = MenuBarIconSize.defaultScale
     @AppStorage(PreferenceKeys.batteryColorCoding) private var batteryColorCoding = false
     @AppStorage(PreferenceKeys.adaptiveRingColorCoding) private var adaptiveRingColorCoding = false
+    @AppStorage(PreferenceKeys.showBatteryPercentageInMenuBar) private var showBatteryPercentageInMenuBar = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var adaptiveRingOwner = UUID()
     @State private var temporaryAdaptiveSource: AdaptiveRingSourceIdentity?
@@ -73,7 +74,8 @@ struct DuoStatusView: View {
             ringTransitionAnimation: adaptiveRingAnimation,
             usesCustomRingTransition: usesAdaptiveRing,
             ringColorOverride: adaptiveRingColor,
-            batteryColorCodingEnabled: batteryColorCoding
+            batteryColorCodingEnabled: batteryColorCoding,
+            showBatteryPercentage: showBatteryPercentageInMenuBar
         )
         .offset(y: DuoGlyphMetrics.menuBarVerticalOffset)
         .frame(width: targetWidth, height: 22)

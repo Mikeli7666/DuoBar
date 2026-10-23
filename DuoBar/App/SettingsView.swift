@@ -9,6 +9,7 @@ struct SettingsView: View {
     @AppStorage(PreferenceKeys.adaptiveRingPriority) private var adaptiveRingPriorityRaw = PerformancePreference.automatic.rawValue
     @AppStorage(PreferenceKeys.adaptiveRingColorCoding) private var adaptiveRingColorCoding = false
     @AppStorage(PreferenceKeys.openOnHover) private var openOnHover = false
+    @AppStorage(PreferenceKeys.showBatteryPercentageInMenuBar) private var showBatteryPercentageInMenuBar = false
     @StateObject private var launchAtLogin = LaunchAtLoginService()
     @ObservedObject private var adaptiveRingMonitor = AdaptiveRingMonitor.shared
     private let deviceContextService = DeviceContextService()
@@ -20,6 +21,7 @@ struct SettingsView: View {
         Form {
             Section(localized("Menu Bar")) {
                 Toggle(localized("Show battery percentage in popover"), isOn: $showBatteryPercentage)
+                Toggle(localized("Battery Percentage"), isOn: $showBatteryPercentageInMenuBar)
                 Toggle(localized("Enable animations"), isOn: $animationsEnabled)
 
                 VStack(alignment: .leading, spacing: 6) {

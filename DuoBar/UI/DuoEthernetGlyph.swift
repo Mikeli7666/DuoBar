@@ -1,50 +1,49 @@
 import SwiftUI
 
-/// Classic wired-network symbol: one node on top, a bus below it, and two nodes underneath.
-/// Everything is expressed as ratios of the glyph width so it scales with the menu bar icon size.
-struct DuoEthernetShape: Shape {
-    static let aspect: CGFloat = 0.92
-    static let nodeSideRatio: CGFloat = 0.28
-    static let nodeCornerRatio: CGFloat = 0.045
-
-    func path(in rect: CGRect) -> Path {
-        let side = rect.width * Self.nodeSideRatio
-        let corner = CGSize(
-            width: rect.width * Self.nodeCornerRatio,
-            height: rect.width * Self.nodeCornerRatio
-        )
-        let top = CGRect(x: rect.midX - side / 2, y: rect.minY, width: side, height: side)
-        let left = CGRect(x: rect.minX, y: rect.maxY - side, width: side, height: side)
-        let right = CGRect(x: rect.maxX - side, y: rect.maxY - side, width: side, height: side)
-        let busY = (top.maxY + left.minY) / 2
-
-        var path = Path()
-        for node in [top, left, right] {
-            path.addRoundedRect(in: node, cornerSize: corner)
-        }
-        path.move(to: CGPoint(x: top.midX, y: top.maxY))
-        path.addLine(to: CGPoint(x: top.midX, y: busY))
-        path.move(to: CGPoint(x: left.midX, y: busY))
-        path.addLine(to: CGPoint(x: right.midX, y: busY))
-        path.move(to: CGPoint(x: left.midX, y: busY))
-        path.addLine(to: CGPoint(x: left.midX, y: left.minY))
-        path.move(to: CGPoint(x: right.midX, y: busY))
-        path.addLine(to: CGPoint(x: right.midX, y: right.minY))
-        return path
-    }
-}
-
+// macOS 经典以太网图标：< ●●● >
 struct DuoEthernetGlyph: View {
     let size: CGFloat
     let color: Color
 
-    private var overallWidth: CGFloat { size * 0.92 }
-    private var lineWidth: CGFloat { overallWidth * 0.09 }
-    private var centerlineWidth: CGFloat { overallWidth - lineWidth }
-
     var body: some View {
-        DuoEthernetShape()
+        let w = size * 1.65
+        let h = size * 1.4
+        let cx = w / 2
+        let cy = h / 2
+
+        ZStack {
+            // 左 <
+            Path { p in
+                p.move(to: CGPoint(x: cx - outerX, y: cy - halfH))
+                p.addLine(to: CGPoint(x: cx - tipX, y: cy))
+                p.addLine(to: CGPoint(x: cx - outerX, y: cy + halfH))
+            }
             .stroke(color, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
-            .frame(width: centerlineWidth, height: centerlineWidth * DuoEthernetShape.aspect)
+
+            // 右 >
+            Path { p in
+                p.move(to: CGPoint(x: cx + outerX, y: cy - halfH))
+                p.addLine(to: CGPoint(x: cx + tipX, y: cy))
+                p.addLine(to: CGPoint(x: cx + outerX, y: cy + halfH))
+            }
+            .stroke(color, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+
+            // 中间三点
+            HStack(spacing: dotSpacing) {
+                ForEach(0..<3, id: \.self) { _ in
+                    Circle()
+                        .fill(color)
+                        .frame(width: dotDiameter, height: dotDiameter)
+                }
+            }
+        }
+        .frame(width: w, height: h)
     }
+
+    private var lineWidth: CGFloat { size * 0.148 }
+    private var halfH: CGFloat { size * 0.483 }
+    private var outerX: CGFloat { size * 0.248 }
+    private var tipX: CGFloat { size * 0.578 }
+    private var dotDiameter: CGFloat { size * 0.157 }
+    private var dotSpacing: CGFloat { size * 0.107 }
 }
