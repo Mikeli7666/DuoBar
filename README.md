@@ -8,17 +8,20 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md)
 
-[**Download DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.1/DuoBar-1.3.1.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
+[**Download DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.2/DuoBar-1.3.2.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
 
-DuoBar 1.3.1 (Build 7) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
+DuoBar 1.3.2 (Build 8) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
 
 <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Support DuoBar on Ko-fi"></a>
 
 <br>
 
-<img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.1 in the macOS menu bar" width="1340">
+<img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.png" alt="DuoBar 1.3.2 in the macOS menu bar" width="1340">
 
 </div>
+
+> ⚠️ **Note:** The 1.3.2 download is not notarized yet due to an Apple Developer account issue — macOS may show a Gatekeeper warning on first launch. [Here's how to open it anyway](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.2). We're working on getting it notarized.
+
 
   [![▶ Watch the release video](https://img.shields.io/badge/Watch_the_release_video-0969da?style=for-the-badge)](https://github.com/user-attachments/assets/3af8d3cf-230b-4073-932b-c54c4a1553e6)
 ▶ [watch the launch film of the latest version on YouTube](https://youtu.be/7KS9IhAcXhM)
@@ -36,7 +39,7 @@ Persistent status stays monochrome and native-looking. When AirPods or another s
 p>
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.3.1 popover" width="480">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.png" alt="DuoBar 1.3.2 popover" width="480">
 </p>
 
 ## Adaptive Ring and Battery Ring
@@ -45,7 +48,7 @@ On MacBooks, the outer Battery Ring shows live battery level, a dynamic charging
 
 ## DuoBar on macOS
 
-The current 1.3.1 release brings the Battery, Network, and Volume foundation together with MacBook Adaptive Ring behavior, refined controls, adjustable icon size, and installation polish.
+The current 1.3.2 release brings the Battery, Network, and Volume foundation together with MacBook Adaptive Ring behavior, refined controls, adjustable icon size, and installation polish.
 
 <p align="center">
 ## Features
@@ -75,8 +78,8 @@ The current 1.3.1 release brings the Battery, Network, and Volume foundation tog
 
 ## Installation
 
-1. Open the [DuoBar 1.3.1 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.1) and find **Assets**.
-2. Download **DuoBar-1.3.1.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
+1. Open the [DuoBar 1.3.1 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.2) and find **Assets**.
+2. Download **DuoBar-1.3.2.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
 3. Double-click the DMG and drag **DuoBar.app** to **Applications**.
 4. Open Applications and launch DuoBar. It is a menu-bar utility and normally does not appear in the Dock.
 
