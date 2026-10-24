@@ -10,7 +10,7 @@
 - 网络
 - 音量
 
-[**下载 DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.2/DuoBar-1.3.2.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**下载 DuoBar 1.3.2**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.2/DuoBar-1.3.2.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
 DuoBar 1.3.2（Build 8）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
 
@@ -30,7 +30,7 @@ DuoBar 1.3.2（Build 8）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 ### 第一步：下载 DuoBar
 
-点击页面上方的“下载 DuoBar 1.3.1”。浏览器会下载：
+点击页面上方的“下载 DuoBar 1.3.2”。浏览器会下载：
 
 `DuoBar-1.3.2.dmg`
 
