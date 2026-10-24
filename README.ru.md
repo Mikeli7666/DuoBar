@@ -4,16 +4,16 @@
 
 Индикатор в стиле iPhone Duo для строки меню macOS: батарея, сеть и громкость в одном значке.
 
-[**Скачать DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.1/DuoBar-1.3.1.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**Скачать DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.2/DuoBar-1.3.2.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
-DuoBar 1.3.1 (сборка 7) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
+DuoBar 1.3.2 (сборка 8) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
 
 <p align="center">
   <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Поддержать DuoBar на Ko-fi"></a>
 </p>
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.1 в строке меню macOS" width="1340">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.png" alt="DuoBar 1.3.2 в строке меню macOS" width="1340">
 </p>
 
 ## Скачивание и установка
@@ -22,7 +22,7 @@ DuoBar 1.3.1 (сборка 7) · macOS 13 Ventura или новее · Apple Sil
 
 Нажмите «Скачать DuoBar 1.3.1» выше. Браузер загрузит файл:
 
-`DuoBar-1.3.1.dmg`
+`DuoBar-1.3.2.dmg`
 
 Обычному пользователю нужен только этот DMG. Не скачивайте:
 
@@ -33,13 +33,13 @@ DuoBar 1.3.1 (сборка 7) · macOS 13 Ventura или новее · Apple Sil
 
 Если вы открыли страницу [Releases](https://github.com/Mikeli7666/DuoBar/releases):
 
-1. Найдите последнюю версию **DuoBar 1.3.1**.
+1. Найдите последнюю версию **DuoBar 1.3.2**.
 2. Внизу страницы откройте список **Assets**.
-3. Скачайте **DuoBar-1.3.1.dmg**.
+3. Скачайте **DuoBar-1.3.2.dmg**.
 
 ### Шаг 2. Установить
 
-1. Дважды щёлкните `DuoBar-1.3.1.dmg`.
+1. Дважды щёлкните `DuoBar-1.3.2.dmg`.
 2. Finder откроет окно образа диска.
 3. Перетащите `DuoBar.app` в папку **Программы / Applications**.
 4. Дождитесь окончания копирования.
@@ -73,7 +73,7 @@ DuoBar постоянно в строке меню. Три части значк
 - **Четыре точки снизу** → громкость
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="Состояния DuoBar 1.3.1" width="800">
+  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="Состояния DuoBar 1.3.2" width="800">
 </p>
 
 Нажмите на значок, чтобы открыть панель:
@@ -88,7 +88,7 @@ DuoBar постоянно в строке меню. Три части значк
 В настройках можно включить **Open on Hover** (открывать при наведении).
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="Панель DuoBar 1.3.1" width="480">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.png" alt="Панель DuoBar 1.3.2" width="480">
 </p>
 
 ## Возможности
