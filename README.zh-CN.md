@@ -10,16 +10,16 @@
 - 网络
 - 音量
 
-[**下载 DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.1/DuoBar-1.3.1.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**下载 DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.2/DuoBar-1.3.2.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
-DuoBar 1.3.1（Build 7）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
+DuoBar 1.3.2（Build 8）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
 
 <p align="center">
   <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="在 Ko-fi 上支持 DuoBar"></a>
 </p>
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-menubar.png" alt="DuoBar 1.3.1 菜单栏" width="1340">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.png" alt="DuoBar 1.3.2 菜单栏" width="1340">
 
 <p align="center">
   <a href="https://github.com/user-attachments/assets/a5a82872-bb82-42fa-8849-2b4642d308d4">▶ 观看发布视频</a>
@@ -32,7 +32,7 @@ DuoBar 1.3.1（Build 7）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 点击页面上方的“下载 DuoBar 1.3.1”。浏览器会下载：
 
-`DuoBar-1.3.1.dmg`
+`DuoBar-1.3.2.dmg`
 
 普通用户只需要这个 DMG 文件。不要下载：
 
@@ -43,13 +43,13 @@ DuoBar 1.3.1（Build 7）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 如果你是从 GitHub Releases 页面开始：
 
-1. 找到最新版本 **DuoBar 1.3.1**。
+1. 找到最新版本 **DuoBar 1.3.2**。
 2. 找到页面下方的 **Assets** 文件列表。
-3. 点击 **DuoBar-1.3.1.dmg**。
+3. 点击 **DuoBar-1.3.2.dmg**。
 
 ### 第二步：安装
 
-1. 双击 `DuoBar-1.3.1.dmg`。
+1. 双击 `DuoBar-1.3.2.dmg`。
 2. Finder 会打开一个磁盘映像窗口。
 3. 将 `DuoBar.app` 拖到 **Applications / 应用程序** 文件夹；窗口中提供了应用程序文件夹入口。
 4. 等待复制完成。
@@ -97,7 +97,7 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 设置中还可以选择开启 **Open on Hover（悬停打开）**。
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-popover.png" alt="DuoBar 1.3.1 弹出面板" width="480">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.png" alt="DuoBar 1.3.2 弹出面板" width="480">
 </p>
 
 ## 功能
