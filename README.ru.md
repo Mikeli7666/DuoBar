@@ -13,7 +13,7 @@ DuoBar 1.3.2 (сборка 8) · macOS 13 Ventura или новее · Apple Sil
 </p>
 
 <p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.png" alt="DuoBar 1.3.2 в строке меню macOS" width="1340">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.jpg" alt="DuoBar 1.3.2 в строке меню macOS" width="1340">
 </p>
 
 ## Скачивание и установка
@@ -88,7 +88,7 @@ DuoBar постоянно в строке меню. Три части значк
 В настройках можно включить **Open on Hover** (открывать при наведении).
 
 <p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.png" alt="Панель DuoBar 1.3.2" width="480">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.jpg" alt="Панель DuoBar 1.3.2" width="480">
 </p>
 
 ## Возможности
