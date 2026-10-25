@@ -24,7 +24,7 @@ DuoBar 1.3.2 (Build 8) · macOS 13+ · Apple Silicon or Intel · Universal 2 · 
 
 
   [![▶ Watch the release video](https://img.shields.io/badge/Watch_the_release_video-0969da?style=for-the-badge)](https://github.com/user-attachments/assets/3af8d3cf-230b-4073-932b-c54c4a1553e6)
-▶ [watch the launch film of the latest version on YouTube](https://youtu.be/7KS9IhAcXhM)
+▶ [watch the launch film of the latest version on YouTube](https://youtube.com/shorts/-4Y8rq3SGGg)
 </p>
 
 ## One glyph, three live states
