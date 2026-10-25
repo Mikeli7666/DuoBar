@@ -20,7 +20,6 @@ DuoBar 1.3.2 (Build 8) · macOS 13+ · Apple Silicon or Intel · Universal 2 · 
 
 </div>
 
-> ⚠️ **Note:** The 1.3.2 download is not notarized yet due to an Apple Developer account issue — macOS may show a Gatekeeper warning on first launch. [Here's how to open it anyway](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.2). We're working on getting it notarized.
 
 
   [![▶ Watch the release video](https://img.shields.io/badge/Watch_the_release_video-0969da?style=for-the-badge)](https://github.com/user-attachments/assets/3af8d3cf-230b-4073-932b-c54c4a1553e6)
@@ -78,14 +77,14 @@ The current 1.3.2 release brings the Battery, Network, and Volume foundation tog
 
 ## Installation
 
-1. Open the [DuoBar 1.3.1 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.2) and find **Assets**.
+1. Open the [DuoBar 1.3.2 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.2) and find **Assets**.
 2. Download **DuoBar-1.3.2.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
 3. Double-click the DMG and drag **DuoBar.app** to **Applications**.
 4. Open Applications and launch DuoBar. It is a menu-bar utility and normally does not appear in the Dock.
 
-DuoBar 1.3.1 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
+DuoBar 1.3.2 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
 
-SHA-256: `b9bfb9dea85a4bd8d81121567427b23c1a8aca8d7f16ad7f7cfeb50e1937747f`
+SHA-256: `18b878391eeab47a53c4ae0b51d10ae0468a8d7d489b5ae056f6cd5281053bae`
 
 Build and compatibility/reliability work was checked using Xcode 27 and the macOS 27 SDK while continuing to support macOS 13+. This does not claim macOS 27 hardware validation.
 
