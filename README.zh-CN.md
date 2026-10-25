@@ -58,7 +58,7 @@ DuoBar 1.3.2（Build 8）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 ### 第三步：第一次打开
 
-DuoBar 1.3.1 使用 Developer ID 签名并通过 Apple 公证。正常安装不需要关闭 Gatekeeper 或 SIP，也不需要 Terminal、`sudo` 或 `xattr`。
+DuoBar 1.3.2 使用 Developer ID 签名并通过 Apple 公证。正常安装不需要关闭 Gatekeeper 或 SIP，也不需要 Terminal、`sudo` 或 `xattr`。
 
 DuoBar 是菜单栏应用，不会出现在 Dock 中。打开后，请查看屏幕最上方的 macOS 菜单栏，DuoBar 图标会在那里出现。
 
@@ -127,7 +127,7 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 
 ## 安全与隐私
 
-DuoBar 1.3.1 使用 Apple Developer ID 签名并通过 Apple 公证。DuoBar 不通过 Mac App Store 分发。
+DuoBar 1.3.2 使用 Apple Developer ID 签名并通过 Apple 公证。DuoBar 不通过 Mac App Store 分发。
 
 系统状态在本机处理：
 
@@ -154,9 +154,9 @@ DuoBar 是独立项目，与 Apple Inc. 没有隶属、赞助或认可关系。
 
 ## 下载完整性
 
-官方 DuoBar 1.3.1 DMG 的 SHA-256：
+官方 DuoBar 1.3.2 DMG 的 SHA-256：
 
-`b9bfb9dea85a4bd8d81121567427b23c1a8aca8d7f16ad7f7cfeb50e1937747f`
+`18b878391eeab47a53c4ae0b51d10ae0468a8d7d489b5ae056f6cd5281053bae`
 
 普通用户不需要验证这一项。它主要用于希望确认下载文件完整性的用户。
 
