@@ -16,7 +16,7 @@ DuoBar 1.3.2 (Build 8) · macOS 13+ · Apple Silicon or Intel · Universal 2 · 
 
 <br>
 
-<img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.png" alt="DuoBar 1.3.2 in the macOS menu bar" width="1340">
+<img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.jpg" alt="DuoBar 1.3.2 in the macOS menu bar" width="1340">
 
 </div>
 
@@ -38,7 +38,7 @@ Persistent status stays monochrome and native-looking. When AirPods or another s
 p>
 
 <p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.png" alt="DuoBar 1.3.2 popover" width="480">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.jpg" alt="DuoBar 1.3.2 popover" width="480">
 </p>
 
 ## Adaptive Ring and Battery Ring
