@@ -4,7 +4,7 @@
 
 Индикатор в стиле iPhone Duo для строки меню macOS: батарея, сеть и громкость в одном значке.
 
-[**Скачать DuoBar 1.3.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.2/DuoBar-1.3.2.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**Скачать DuoBar 1.3.2**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.2/DuoBar-1.3.2.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
 DuoBar 1.3.2 (сборка 8) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
 
@@ -20,7 +20,7 @@ DuoBar 1.3.2 (сборка 8) · macOS 13 Ventura или новее · Apple Sil
 
 ### Шаг 1. Скачать DuoBar
 
-Нажмите «Скачать DuoBar 1.3.1» выше. Браузер загрузит файл:
+Нажмите «Скачать DuoBar 1.3.2» выше. Браузер загрузит файл:
 
 `DuoBar-1.3.2.dmg`
 
@@ -48,7 +48,7 @@ DuoBar 1.3.2 (сборка 8) · macOS 13 Ventura или новее · Apple Sil
 
 ### Шаг 3. Первый запуск
 
-DuoBar 1.3.1 подписан Developer ID и прошёл нотариальную проверку Apple. Для обычной установки не нужно отключать Gatekeeper или SIP, использовать Terminal, `sudo` или `xattr`.
+DuoBar 1.3.2 подписан Developer ID и прошёл нотариальную проверку Apple. Для обычной установки не нужно отключать Gatekeeper или SIP, использовать Terminal, `sudo` или `xattr`.
 
 DuoBar живёт в строке меню и **не появляется в Dock**. После запуска смотрите на верхний край экрана — значок DuoBar будет там.
 
@@ -115,7 +115,7 @@ DuoBar постоянно в строке меню. Три части значк
 
 ## Безопасность и приватность
 
-DuoBar 1.3.1 подписан Apple Developer ID и прошёл нотариальную проверку Apple. Приложение не распространяется через Mac App Store.
+DuoBar 1.3.2 подписан Apple Developer ID и прошёл нотариальную проверку Apple. Приложение не распространяется через Mac App Store.
 
 Состояние системы обрабатывается локально:
 
@@ -142,9 +142,9 @@ DuoBar — независимый проект и не связан с Apple Inc
 
 ## Целостность загрузки
 
-SHA-256 официального DMG DuoBar 1.3.1:
+SHA-256 официального DMG DuoBar 1.3.2:
 
-`b9bfb9dea85a4bd8d81121567427b23c1a8aca8d7f16ad7f7cfeb50e1937747f`
+`18b878391eeab47a53c4ae0b51d10ae0468a8d7d489b5ae056f6cd5281053bae`
 
 Обычному пользователю это проверять не нужно. Строка для тех, кто хочет убедиться, что файл не подменили.
 
