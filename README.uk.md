@@ -13,7 +13,7 @@ DuoBar 1.3.2 (збірка 8) · macOS 13+ · Apple Silicon та Intel · Univer
 </p>
 
 <p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.png" alt="DuoBar 1.3.2 у рядку меню macOS" width="1340">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.jpg" alt="DuoBar 1.3.2 у рядку меню macOS" width="1340">
 </p>
 
 ## 📥 Встановлення для початківців
@@ -44,7 +44,7 @@ DuoBar 1.3.2 підписано Developer ID та нотаризовано Apple
 </p>
 
 <p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.png" alt="Спливаюча панель DuoBar 1.3.2" width="480">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.jpg" alt="Спливаюча панель DuoBar 1.3.2" width="480">
 </p>
 
 ## Системні вимоги та сумісність
