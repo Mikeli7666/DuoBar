@@ -19,7 +19,7 @@ DuoBar 1.3.2（Build 8）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 </p>
 
 <p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.png" alt="DuoBar 1.3.2 菜单栏" width="1340">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.jpg" alt="DuoBar 1.3.2 菜单栏" width="1340">
 
 <p align="center">
   <a href="https://github.com/user-attachments/assets/a5a82872-bb82-42fa-8849-2b4642d308d4">▶ 观看发布视频</a>
@@ -97,7 +97,7 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 设置中还可以选择开启 **Open on Hover（悬停打开）**。
 
 <p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.png" alt="DuoBar 1.3.2 弹出面板" width="480">
+  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.jpg" alt="DuoBar 1.3.2 弹出面板" width="480">
 </p>
 
 ## 功能
