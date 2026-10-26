@@ -26,6 +26,16 @@ final class PopoverRenderTests: XCTestCase {
         XCTAssertNil(hidden.trailingValue)
     }
 
+    func testAuthoritativeFullBatteryUsesFullDetailAndNeverShowsChargingBoltSymbol() {
+        let row = BatteryStatusRow(
+            battery: BatteryStatus(percentage: 100, isCharging: true, isPluggedIn: true, isFullyCharged: true, isAvailable: true),
+            showPercentage: true
+        )
+
+        XCTAssertEqual(row.detail, localized("Fully charged"))
+        XCTAssertEqual(row.symbol, "battery.100percent")
+    }
+
     @MainActor
     func testRenderActualBatteryStatusRowWithTrailingPercentage() throws {
         let view = BatteryStatusRow(

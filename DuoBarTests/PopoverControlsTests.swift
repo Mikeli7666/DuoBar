@@ -31,6 +31,28 @@ final class PopoverControlsTests: XCTestCase {
         XCTAssertEqual(audio.selectableOutputs.map(\.uid), ["built-in"])
     }
 
+    func testSelectableInputsSkipDeadDevicesDeduplicateAndPutCurrentFirst() {
+        let builtIn = AudioDeviceStatus(uid: "built-in-mic", name: "MacBook Microphone", transport: .builtIn, isAlive: true)
+        let duplicate = AudioDeviceStatus(uid: "built-in-mic", name: "Copy", transport: .builtIn, isAlive: true)
+        let dead = AudioDeviceStatus(uid: "dead", name: "Old USB Mic", transport: .usb, isAlive: false)
+        let usb = AudioDeviceStatus(uid: "usb-mic", name: "USB Mic", transport: .usb, isAlive: true)
+
+        let audio = AudioStatus(
+            isAvailable: true,
+            defaultOutput: nil,
+            volume: .unavailable,
+            connectedBluetoothOutputs: [],
+            defaultInput: usb,
+            availableInputs: [builtIn, duplicate, dead, usb]
+        )
+
+        XCTAssertEqual(audio.selectableInputs.map(\.uid), ["usb-mic", "built-in-mic"])
+    }
+
+    func testSelectableInputsAreEmptyWithoutInputDevices() {
+        XCTAssertTrue(AudioStatus.unavailable.selectableInputs.isEmpty)
+    }
+
     func testNetworkSettingsPaneFollowsTransport() {
         XCTAssertEqual(SystemSettingsOpener.pane(for: wifiNetwork()), .wifi)
         XCTAssertEqual(SystemSettingsOpener.pane(for: ethernetNetwork()), .network)
@@ -38,7 +60,7 @@ final class PopoverControlsTests: XCTestCase {
     }
 
     func testSystemSettingsURLsAreWellFormed() {
-        for pane in [SystemSettingsOpener.Pane.wifi, .network, .battery, .sound] {
+        for pane in [SystemSettingsOpener.Pane.wifi, .network, .battery, .sound, .bluetooth] {
             let urls = SystemSettingsOpener.urlStrings(for: pane)
             XCTAssertFalse(urls.isEmpty, "Missing URLs for \(pane)")
             for string in urls {
@@ -46,14 +68,15 @@ final class PopoverControlsTests: XCTestCase {
                 XCTAssertTrue(string.hasPrefix("x-apple.systempreferences:"), string)
             }
         }
+        XCTAssertEqual(SystemSettingsOpener.urlStrings(for: .privacy), [])
     }
 
     func testDebugAudioPickerExposesMultipleOutputs() {
         let audio = DebugAudioDeviceState.airPods.status
         XCTAssertEqual(audio.defaultOutput?.uid, "debug-AirPods Pro")
         XCTAssertEqual(audio.selectableOutputs.map(\.uid), [
-            "debug-MacBook Speakers",
             "debug-AirPods Pro",
+            "debug-MacBook Speakers",
             "debug-Bluetooth Headphones"
         ])
     }

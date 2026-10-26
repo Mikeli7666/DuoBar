@@ -9,6 +9,7 @@ struct SettingsView: View {
     @AppStorage(PreferenceKeys.adaptiveRingPriority) private var adaptiveRingPriorityRaw = PerformancePreference.automatic.rawValue
     @AppStorage(PreferenceKeys.adaptiveRingColorCoding) private var adaptiveRingColorCoding = false
     @AppStorage(PreferenceKeys.openOnHover) private var openOnHover = false
+    @AppStorage(PreferenceKeys.showBatteryPercentageInMenuBar) private var showBatteryPercentageInMenuBar = false
     @StateObject private var launchAtLogin = LaunchAtLoginService()
     @ObservedObject private var adaptiveRingMonitor = AdaptiveRingMonitor.shared
     private let deviceContextService = DeviceContextService()
@@ -20,10 +21,19 @@ struct SettingsView: View {
         Form {
             Section(localized("Menu Bar")) {
                 Toggle(localized("Show battery percentage in popover"), isOn: $showBatteryPercentage)
+                Toggle(localized("Battery Percentage"), isOn: $showBatteryPercentageInMenuBar)
                 Toggle(localized("Enable animations"), isOn: $animationsEnabled)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text(localized("Icon Size"))
+                    Picker(localized("Icon Size"), selection: resolvedMenuBarIconScale) {
+                        Text(localized("Small")).tag(MenuBarIconSize.minimumScale)
+                        Text(localized("Default")).tag(MenuBarIconSize.defaultScale)
+                        Text(localized("Large")).tag(MenuBarIconSize.largeScale)
+                        Text(localized("Extra Large")).tag(MenuBarIconSize.extraLargeScale)
+                    }
+                    .pickerStyle(.segmented)
+                    .accessibilityLabel(localized("Menu bar icon size"))
                     HStack(spacing: 10) {
                         Text(localized("Small"))
                             .font(.caption)
@@ -39,7 +49,7 @@ struct SettingsView: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-                    Text(localized("Adjust DuoBar to better match your menu bar."))
+                    Text(localized("Choose a preset or fine-tune DuoBar to better match your menu bar."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

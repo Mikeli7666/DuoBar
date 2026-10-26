@@ -2,7 +2,7 @@ import Foundation
 
 enum AdaptiveRingSettingsEligibility {
     static func isEligible(for context: DeviceContext) -> Bool {
-        context.ringBehavior == .adaptiveRing
+        context.ringBehavior == .adaptiveRing || context.hasInternalBattery
     }
 
     #if DEBUG

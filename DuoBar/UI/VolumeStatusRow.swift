@@ -93,21 +93,24 @@ struct VolumeStatusRow: View {
 
     private func handleUserVolumeChange(_ level: Double) {
         beginSliderInteractionIfNeeded()
+        var interaction = feedbackInteraction
         guard feedbackInteraction.allowsVolumeUpdates else {
-            feedbackInteraction.recordVolumeUpdate(
+            interaction.recordVolumeUpdate(
                 previousStatus: volume,
                 requestedLevel: level,
                 writeSucceeded: false
             )
+            $feedbackInteraction.wrappedValue = interaction
             return
         }
 
         let writeSucceeded = onSetVolume(level)
-        feedbackInteraction.recordVolumeUpdate(
+        interaction.recordVolumeUpdate(
             previousStatus: volume,
             requestedLevel: level,
             writeSucceeded: writeSucceeded
         )
+        $feedbackInteraction.wrappedValue = interaction
     }
 
     private func handleSliderEditingChanged(_ isEditing: Bool) {
@@ -115,22 +118,34 @@ struct VolumeStatusRow: View {
             beginSliderInteractionIfNeeded()
             return
         }
-        guard feedbackInteraction.endEditing() else { return }
+        var interaction = feedbackInteraction
+        guard interaction.endEditing() else {
+            $feedbackInteraction.wrappedValue = interaction
+            return
+        }
+        $feedbackInteraction.wrappedValue = interaction
         VolumeFeedbackSound.play(on: playbackDeviceIdentifier)
     }
 
     private func beginSliderInteractionIfNeeded() {
-        feedbackInteraction.beginEditing(previousStatus: volume) {
+        var interaction = feedbackInteraction
+        interaction.beginEditing(previousStatus: volume) {
             onSetMuted(false)
         }
+        $feedbackInteraction.wrappedValue = interaction
     }
 
     private func handleUserMuteChange() {
         let writeSucceeded = onSetMuted(!volume.isMuted)
-        guard feedbackInteraction.shouldPlayForUnmute(
+        var interaction = feedbackInteraction
+        guard interaction.shouldPlayForUnmute(
             previousStatus: volume,
             writeSucceeded: writeSucceeded
-        ) else { return }
+        ) else {
+            $feedbackInteraction.wrappedValue = interaction
+            return
+        }
+        $feedbackInteraction.wrappedValue = interaction
 
         VolumeFeedbackSound.play(on: playbackDeviceIdentifier)
     }

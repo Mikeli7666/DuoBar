@@ -34,6 +34,30 @@ final class LaptopRingModeControllerTests: XCTestCase {
         assertTarget(start: 55, target: 85)
     }
 
+    func testReleasedChargingSessionTargetsCoverAll1_3Boundaries() {
+        let immediateTargets: [(start: Int, target: Int)] = [
+            (49, 99), (50, 80), (60, 90), (69, 99)
+        ]
+        for item in immediateTargets {
+            let controller = makeController()
+            controller.update(with: battery(item.start, charging: true, plugged: true))
+            XCTAssertEqual(controller.state.targetPercentage, item.target, "start \(item.start)")
+            controller.update(with: battery(item.target, charging: true, plugged: true))
+            XCTAssertEqual(controller.state.mode, .adaptive, "target \(item.target)")
+        }
+
+        for start in [70, 80, 100] {
+            let controller = makeController()
+            controller.update(with: battery(start, charging: true, plugged: true))
+            XCTAssertEqual(controller.state.targetPercentage, 100, "start \(start)")
+            controller.update(with: battery(100, charging: true, plugged: true))
+            XCTAssertEqual(controller.state.mode, .battery, "displayed 100 must not unlock start \(start)")
+            XCTAssertFalse(controller.state.isWaitingForFullChargeDelay)
+            controller.update(with: battery(100, plugged: true, full: true))
+            XCTAssertTrue(controller.state.isWaitingForFullChargeDelay, "authoritative full starts delay start \(start)")
+        }
+    }
+
     func testSixtyFiveTargetsNinetyFive() {
         assertTarget(start: 65, target: 95)
     }
@@ -45,6 +69,17 @@ final class LaptopRingModeControllerTests: XCTestCase {
 
         XCTAssertEqual(controller.state.targetPercentage, 100)
         XCTAssertEqual(controller.state.mode, .battery)
+        XCTAssertFalse(controller.state.isWaitingForFullChargeDelay)
+    }
+
+    func testBelowOneHundredTargetActivatesWhenAFullSnapshotSkipsExactTarget() {
+        let controller = makeController()
+        controller.update(with: battery(49, charging: true, plugged: true))
+        XCTAssertEqual(controller.state.targetPercentage, 99)
+
+        controller.update(with: battery(100, charging: true, plugged: true, full: true))
+
+        XCTAssertEqual(controller.state.mode, .adaptive)
         XCTAssertFalse(controller.state.isWaitingForFullChargeDelay)
     }
 
@@ -92,6 +127,12 @@ final class LaptopRingModeControllerTests: XCTestCase {
         XCTAssertEqual(LaptopAdaptiveFullChargeDelay.default, .fifteenMinutes)
         XCTAssertEqual(LaptopAdaptiveFullChargeDelay.default.timeInterval, 15 * 60)
     }
+
+    #if DEBUG
+    func testTemporaryDevelopmentHardwareQADelayIsOneMinute() {
+        XCTAssertEqual(LaptopAdaptiveFullChargeDelay.oneMinute.timeInterval, 60)
+    }
+    #endif
 
     func testImmediateFullChargeDelayActivatesImmediately() {
         let controller = makeController(delay: .immediately)

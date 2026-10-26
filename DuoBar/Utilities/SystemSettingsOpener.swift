@@ -7,6 +7,8 @@ enum SystemSettingsOpener {
         case network
         case battery
         case sound
+        case bluetooth
+        case privacy
     }
 
     static func pane(for network: NetworkStatus) -> Pane {
@@ -38,6 +40,13 @@ enum SystemSettingsOpener {
             [
                 "x-apple.systempreferences:com.apple.Sound-Settings.extension",
             ]
+        case .bluetooth:
+            [
+                "x-apple.systempreferences:com.apple.BluetoothSettings",
+                "x-apple.systempreferences:com.apple.BluetoothSettings.extension",
+            ]
+        case .privacy:
+            []
         }
     }
 

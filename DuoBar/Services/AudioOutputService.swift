@@ -29,6 +29,7 @@ final class AudioOutputService {
         isStarted = true
 
         registerSystemListener(selector: kAudioHardwarePropertyDefaultOutputDevice)
+        registerSystemListener(selector: kAudioHardwarePropertyDefaultInputDevice)
         registerSystemListener(selector: kAudioHardwarePropertyDevices)
         refresh(rebindDeviceListeners: true)
     }
@@ -129,6 +130,40 @@ final class AudioOutputService {
         return result == noErr && currentDefaultDeviceID == deviceID
     }
 
+    /// Switches the system default input device. Reading and switching the
+    /// default input only touches Core Audio device properties; it never opens
+    /// a capture stream, so it does not trigger the microphone permission prompt.
+    @discardableResult
+    func setDefaultInput(uid: String) -> Bool {
+        guard let deviceID = deviceID(forUID: uid), deviceID != kAudioObjectUnknown else {
+            return false
+        }
+        if deviceID == readDefaultInputDeviceID() {
+            return true
+        }
+
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyDefaultInputDevice,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        guard isSettable(objectID: Self.systemObject, address: address) else {
+            return false
+        }
+
+        var value = deviceID
+        let result = AudioObjectSetPropertyData(
+            Self.systemObject,
+            &address,
+            0,
+            nil,
+            UInt32(MemoryLayout<AudioDeviceID>.size),
+            &value
+        )
+        refresh()
+        return result == noErr && readDefaultInputDeviceID() == deviceID
+    }
+
     private func refresh(rebindDeviceListeners: Bool) {
         let defaultDeviceID = readDefaultOutputDeviceID()
         if rebindDeviceListeners || defaultDeviceID != currentDefaultDeviceID {
@@ -144,13 +179,19 @@ final class AudioOutputService {
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 
         let volume = readVolumeStatus(deviceID: defaultDeviceID)
+        let inputDevices = selectableInputDevices()
+        let defaultInputID = readDefaultInputDeviceID()
+        let defaultInputUID = makeDeviceStatus(defaultInputID)?.uid
+        let defaultInput = inputDevices.first { $0.uid == defaultInputUID }
         publish(
             AudioStatus(
                 isAvailable: defaultOutput != nil || !outputDevices.isEmpty,
                 defaultOutput: defaultOutput,
                 volume: volume,
                 connectedBluetoothOutputs: bluetoothOutputs,
-                availableOutputs: outputDevices
+                availableOutputs: outputDevices,
+                defaultInput: defaultInput,
+                availableInputs: inputDevices
             )
         )
     }
@@ -211,6 +252,15 @@ final class AudioOutputService {
         return readUInt32(objectID: Self.systemObject, address: &address) ?? kAudioObjectUnknown
     }
 
+    private func readDefaultInputDeviceID() -> AudioDeviceID {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyDefaultInputDevice,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        return readUInt32(objectID: Self.systemObject, address: &address) ?? kAudioObjectUnknown
+    }
+
     private func readAudioDeviceIDs() -> [AudioDeviceID] {
         var address = AudioObjectPropertyAddress(
             mSelector: kAudioHardwarePropertyDevices,
@@ -241,6 +291,38 @@ final class AudioOutputService {
             .filter(\.isAlive)
             .filter { seen.insert($0.uid).inserted }
             .sorted(by: Self.compareForPicker)
+    }
+
+    private func selectableInputDevices() -> [AudioDeviceStatus] {
+        var seen = Set<String>()
+        return readAudioDeviceIDs()
+            .filter(isInputDevice)
+            .filter { !isHidden($0) }
+            .filter(canBeDefaultInput)
+            .compactMap(makeDeviceStatus)
+            .filter(\.isAlive)
+            .filter { seen.insert($0.uid).inserted }
+            .sorted(by: Self.compareForPicker)
+    }
+
+    private func isInputDevice(_ deviceID: AudioDeviceID) -> Bool {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyStreams,
+            mScope: kAudioDevicePropertyScopeInput,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        var dataSize: UInt32 = 0
+        return AudioObjectGetPropertyDataSize(deviceID, &address, 0, nil, &dataSize) == noErr
+            && dataSize >= MemoryLayout<AudioStreamID>.size
+    }
+
+    private func canBeDefaultInput(_ deviceID: AudioDeviceID) -> Bool {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyDeviceCanBeDefaultDevice,
+            mScope: kAudioDevicePropertyScopeInput,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        return readUInt32(objectID: deviceID, address: &address).map { $0 != 0 } ?? true
     }
 
     private func deviceID(forUID uid: String) -> AudioDeviceID? {

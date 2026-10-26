@@ -9,11 +9,17 @@ struct AudioOutputRow: View {
     let selectedUID: String?
     let onSelect: (String) -> Bool
     let onOpenSoundSettings: () -> Void
+    let onOpenBluetoothSettings: () -> Void
+    var emptyText = localized("No output devices")
+    var failureText = localized("Unable to Switch Output")
+    var hint = localized("Select audio output")
+    var showsBluetoothSettings = true
+    @State private var switchFailed = false
 
     var body: some View {
         Menu {
             if outputs.isEmpty {
-                Text(localized("No output devices"))
+                Text(emptyText)
             } else {
                 Picker(selection: selection) {
                     ForEach(outputs) { device in
@@ -27,9 +33,18 @@ struct AudioOutputRow: View {
 
             Divider()
 
-            Button(localized("Sound Settings…")) {
-                onOpenSoundSettings()
-            }
+                Button(localized("Sound Settings…")) {
+                    onOpenSoundSettings()
+                }
+                if showsBluetoothSettings {
+                    Button(localized("Bluetooth Settings…")) {
+                        onOpenBluetoothSettings()
+                    }
+                }
+                if switchFailed {
+                    Text(failureText)
+                        .foregroundStyle(.secondary)
+                }
         } label: {
             StatusRow(
                 symbol: symbol,
@@ -45,15 +60,15 @@ struct AudioOutputRow: View {
         .frame(maxWidth: .infinity)
         .accessibilityLabel(title)
         .accessibilityValue(detail)
-        .accessibilityHint(localized("Select audio output"))
+        .accessibilityHint(hint)
     }
 
     private var selection: Binding<String> {
         Binding(
             get: { selectedUID ?? "" },
             set: { uid in
-                guard !uid.isEmpty else { return }
-                _ = onSelect(uid)
+                guard !uid.isEmpty, uid != selectedUID else { return }
+                switchFailed = !onSelect(uid)
             }
         )
     }

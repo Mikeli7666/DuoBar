@@ -20,6 +20,45 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
         XCTAssertEqual(DuoGlyphState(status: store.status).batteryProgress, 0.43, accuracy: 0.0001)
     }
 
+    func testDebugSimulationSequenceResetsFullTargetSessionBeforeEnteringAdaptive() {
+        let (store, _) = makeLaptopStore()
+
+        store.applyDebugBatteryStatus(battery(100))
+        store.applyDebugAdaptiveBatteryBaseline()
+        XCTAssertEqual(store.status.battery, battery(100))
+        XCTAssertEqual(store.laptopRingModeState, .battery)
+        XCTAssertFalse(store.usesReleasedAdaptiveRing)
+
+        // The DEBUG helpers drive the hidden 50% unplug -> charging controller
+        // setup without replacing the 100% value visible in the glyph.
+        store.applyDebugAdaptiveChargingBaseline()
+        XCTAssertEqual(store.status.battery, battery(100, charging: true, plugged: true))
+        XCTAssertEqual(store.laptopRingModeState.mode, .battery)
+        XCTAssertEqual(store.laptopRingModeState.sessionStartPercentage, 50)
+        XCTAssertEqual(store.laptopRingModeState.targetPercentage, 80)
+        store.reachDebugAdaptiveTarget()
+
+        XCTAssertEqual(store.laptopRingModeState.mode, .adaptive)
+        XCTAssertEqual(store.laptopRingModeState.sessionStartPercentage, 50)
+        XCTAssertEqual(store.laptopRingModeState.targetPercentage, 80)
+        XCTAssertTrue(store.usesReleasedAdaptiveRing)
+        XCTAssertEqual(store.status.battery, battery(100, charging: true, plugged: true))
+
+        let presentation = DuoPersistentRingPresentationResolver.resolve(
+            mode: .adaptive,
+            battery: store.status.battery,
+            adaptiveProgress: AdaptiveRingVisualTarget.neutralBaseline,
+            batteryColorCodingEnabled: true
+        )
+        XCTAssertEqual(presentation.mode, .adaptive)
+        XCTAssertEqual(presentation.batteryPresentation.boltPlacement, .none)
+        XCTAssertEqual(presentation.batteryPresentation.colorRole, .monochrome)
+
+        store.applyDebugBatteryStatus(battery(80))
+        XCTAssertEqual(store.laptopRingModeState, .battery)
+        XCTAssertFalse(store.usesReleasedAdaptiveRing)
+    }
+
     func testPluggedChargingPauseWaitsForActualChargingBaselineAndPreservesItAfterward() {
         let (store, _) = makeLaptopStore()
         store.applyDebugBatteryStatus(battery(55, plugged: true))
@@ -130,6 +169,14 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
                 decision: .idle,
                 colorCodingEnabled: true
             ).role,
+            .brightness
+        )
+        XCTAssertEqual(
+            AdaptiveRingColorResolver.resolve(
+                state: .brightness(0.7),
+                decision: .idle,
+                colorCodingEnabled: false
+            ).role,
             .monochrome
         )
     }
@@ -137,7 +184,7 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
     func testAdaptivePipelineUsesExistingBrightnessCPUAndReleaseBehavior() {
         let brightness = DisplayBrightnessSnapshot(mainDisplay: integrationDisplay, availability: .available(0.64), sampledAt: 10)
         let coordinator = AdaptiveRingCoordinator()
-        XCTAssertEqual(coordinator.resolve(brightness: brightness, performance: .idle, at: 10), .brightness(0.64))
+        XCTAssertEqual(coordinator.resolve(brightness: brightness, performance: .idle, at: 10), .neutral)
 
         var engine = PerformanceDecisionEngine()
         _ = engine.update(with: snapshot(at: 0, cpu: 0.86))
@@ -151,7 +198,7 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
             availability: .available(0.64),
             sampledAt: 18
         )
-        XCTAssertEqual(coordinator.resolve(brightness: refreshedBrightness, performance: released, at: 18), .brightness(0.64))
+        XCTAssertEqual(coordinator.resolve(brightness: refreshedBrightness, performance: released, at: 18), .neutral)
     }
 
     func testExistingMemoryThermalAndNeutralAdaptiveStatesRemainAvailable() {
@@ -198,7 +245,7 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
         XCTAssertEqual(store.laptopRingModeState, .battery)
     }
 
-    func testReleasePresentationKeepsMacBookBatteryRingWhenLaptopControllerIsAdaptive() {
+    func testReleasePresentationUsesLaptopAdaptiveModeWhenControllerIsAdaptive() {
         let controller = LaptopRingModeController(hasInternalBattery: true, fullChargeDelay: .immediately)
         let store = SystemStatusStore(
             startServices: false,
@@ -208,7 +255,43 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
         store.applyDebugBatteryStatus(battery(80, charging: true, plugged: true))
         store.applyDebugBatteryStatus(battery(100, charging: true, plugged: true, full: true))
         XCTAssertEqual(store.laptopRingModeState.mode, .adaptive)
-        XCTAssertFalse(store.usesReleasedAdaptiveRing)
+        XCTAssertTrue(store.usesReleasedAdaptiveRing)
+    }
+
+    func testChargingToAdaptiveKeepsPriorityControllerIndependentAndRestoresLiveNetwork() {
+        let controller = LaptopRingModeController(hasInternalBattery: true)
+        let store = SystemStatusStore(
+            startServices: false,
+            deviceContext: DeviceContext(hasInternalBattery: true),
+            laptopRingModeController: controller
+        )
+        store.applyDebugNetworkState(.strong)
+        store.applyDebugBatteryStatus(battery(50))
+        store.applyDebugBatteryStatus(battery(50, charging: true, plugged: true))
+        XCTAssertEqual(store.priorityController.presentation.event?.kind, .charging)
+
+        store.applyDebugBatteryStatus(battery(80, charging: true, plugged: true))
+        XCTAssertEqual(store.laptopRingModeState.mode, .adaptive)
+        XCTAssertEqual(store.priorityController.presentation.event?.kind, .charging)
+
+        let entry = DuoGlyphState(
+            status: store.status,
+            presentation: store.priorityController.presentation,
+            ringPresentation: .adaptive(progress: AdaptiveRingVisualTarget.neutralBaseline),
+            centerStateOverride: .adaptiveEntry
+        )
+        XCTAssertEqual(entry.centerState, .adaptiveEntry)
+        XCTAssertEqual(entry.batteryProgress, 0.25)
+        XCTAssertEqual(entry.batteryPresentation.boltPlacement, .none)
+        XCTAssertEqual(entry.batteryPresentation.colorRole, .monochrome)
+
+        store.applyDebugNetworkState(.weak)
+        let restored = DuoGlyphState(
+            status: store.status,
+            presentation: store.priorityController.presentation,
+            ringPresentation: .adaptive(progress: AdaptiveRingVisualTarget.neutralBaseline)
+        )
+        XCTAssertEqual(restored.centerState, .wifi(.weak))
     }
 
     func testReleasePresentationStillUsesAdaptiveRingForDesktop() {
@@ -249,13 +332,13 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
         monitor.resetForNewMonitoringSession()
         monitor.acquire(owner: owner)
         XCTAssertTrue(monitor.isMonitoring)
-        XCTAssertEqual(monitor.state, .brightness(0.20))
+        XCTAssertEqual(monitor.state, .neutral)
 
         reader.value = 0.80
         monitor.refresh(at: 1)
         XCTAssertEqual(monitor.brightnessSnapshot?.availability, .available(0.80))
-        XCTAssertEqual(monitor.state, .brightness(0.80))
-        XCTAssertEqual(AdaptiveRingVisualTarget(state: monitor.state).progress, 0.80, accuracy: 0.0001)
+        XCTAssertEqual(monitor.state, .neutral)
+        XCTAssertEqual(AdaptiveRingVisualTarget(state: monitor.state).progress, 0.25, accuracy: 0.0001)
 
         store.applyDebugBatteryStatus(battery(43))
         XCTAssertFalse(store.usesAdaptiveRing)
@@ -267,7 +350,7 @@ final class LaptopAdaptiveRingIntegrationTests: XCTestCase {
         store.applyDebugBatteryStatus(battery(70, charging: true, plugged: true))
         monitor.resetForNewMonitoringSession()
         monitor.acquire(owner: owner)
-        XCTAssertEqual(monitor.state, .brightness(0.35))
+        XCTAssertEqual(monitor.state, .neutral)
         monitor.release(owner: owner)
     }
 

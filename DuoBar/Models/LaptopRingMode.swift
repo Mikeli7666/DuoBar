@@ -11,6 +11,10 @@ enum LaptopRingMode: Equatable, Sendable {
 /// Settings can persist this typed value in a later phase.
 enum LaptopAdaptiveFullChargeDelay: String, CaseIterable, Equatable, Sendable {
     case immediately
+    #if DEBUG
+    /// Temporary real-hardware QA duration. Do not use for production release.
+    case oneMinute
+    #endif
     case fiveMinutes
     case fifteenMinutes
     case thirtyMinutes
@@ -21,6 +25,9 @@ enum LaptopAdaptiveFullChargeDelay: String, CaseIterable, Equatable, Sendable {
     var timeInterval: TimeInterval {
         switch self {
         case .immediately: 0
+        #if DEBUG
+        case .oneMinute: 60
+        #endif
         case .fiveMinutes: 5 * 60
         case .fifteenMinutes: 15 * 60
         case .thirtyMinutes: 30 * 60

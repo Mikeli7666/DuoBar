@@ -6,10 +6,12 @@ final class SystemStatusStore: ObservableObject {
     @Published private(set) var status: SystemStatus = .unavailable
     @Published private(set) var laptopRingModeState: LaptopRingModeState
     @Published private(set) var wifiPowerControlError: String?
+    @Published private(set) var wifiSSIDAuthorization: SSIDAuthorizationState = .notDetermined
 
     let priorityController = StatusPriorityController()
     let deviceContext: DeviceContext
     let laptopRingModeController: LaptopRingModeController
+    let nearbyWiFiController: NearbyWiFiController
 
     private let batteryService: BatteryService
     private let networkService: NetworkService
@@ -26,7 +28,8 @@ final class SystemStatusStore: ObservableObject {
     init(
         startServices: Bool = true,
         deviceContext: DeviceContext? = nil,
-        laptopRingModeController: LaptopRingModeController? = nil
+        laptopRingModeController: LaptopRingModeController? = nil,
+        nearbyWiFiProvider: (any NearbyWiFiProviding)? = nil
     ) {
         batteryService = BatteryService()
         networkService = NetworkService()
@@ -35,13 +38,29 @@ final class SystemStatusStore: ObservableObject {
         let resolvedDeviceContext = deviceContext ?? DeviceContextService().current()
         self.deviceContext = resolvedDeviceContext
         let resolvedLaptopRingModeController = laptopRingModeController ?? LaptopRingModeController(
-            hasInternalBattery: resolvedDeviceContext.hasInternalBattery
+            hasInternalBattery: resolvedDeviceContext.hasInternalBattery,
+            fullChargeDelay: Self.developmentFullChargeDelay
         )
         self.laptopRingModeController = resolvedLaptopRingModeController
+        nearbyWiFiController = NearbyWiFiController(
+            provider: nearbyWiFiProvider ?? CoreWLANNearbyWiFiProvider()
+        )
+        wifiSSIDAuthorization = networkService.currentSSIDAuthorization
         laptopRingModeState = resolvedLaptopRingModeController.state
 
         resolvedLaptopRingModeController.onStateChange = { [weak self] state in
-            self?.laptopRingModeState = state
+            guard let self else { return }
+            let previous = self.laptopRingModeState
+            #if DEBUG
+            NSLog(
+                "%@",
+                "[DuoBar Adaptive QA] LaptopRingMode \(previous.mode) -> \(state.mode); "
+                    + "session=\(state.sessionStartPercentage.map(String.init) ?? "nil") "
+                    + "target=\(state.targetPercentage.map(String.init) ?? "nil") "
+                    + "waiting=\(state.isWaitingForFullChargeDelay)"
+            )
+            #endif
+            self.laptopRingModeState = state
         }
 
         batteryService.onStatusChange = { [weak self] value in
@@ -57,6 +76,13 @@ final class SystemStatusStore: ObservableObject {
             guard self?.debugNetworkOverride == nil else { return }
             #endif
             self?.mutate { $0.network = value }
+        }
+        networkService.onSSIDAuthorizationChange = { [weak self] authorization in
+            guard let self else { return }
+            self.wifiSSIDAuthorization = authorization
+            if authorization == .authorized, self.nearbyWiFiController.hasRequestedScan {
+                self.nearbyWiFiController.refreshAfterCurrentRequest()
+            }
         }
         audioOutputService.onStatusChange = { [weak self] value in
             #if DEBUG
@@ -78,6 +104,16 @@ final class SystemStatusStore: ObservableObject {
             bluetoothService.start()
         }
     }
+
+    private static let developmentFullChargeDelay: LaptopAdaptiveFullChargeDelay = {
+        #if DEBUG
+        // TEMPORARY: real-hardware MacBook Adaptive Ring QA. Restore `.default`
+        // after the physical full-charge-delay path has been validated.
+        return .oneMinute
+        #else
+        return .default
+        #endif
+    }()
 
     func refresh() {
         batteryService.refresh()
@@ -109,15 +145,34 @@ final class SystemStatusStore: ObservableObject {
         }
     }
 
+    func scanNearbyWiFiIfNeeded() async {
+        requestWiFiSSIDAccess(trigger: .popoverOpened)
+        await nearbyWiFiController.scanIfNeeded()
+    }
+
+    func refreshNearbyWiFi() async {
+        requestWiFiSSIDAccess(trigger: .popoverOpened)
+        await nearbyWiFiController.refresh()
+    }
+
+    @discardableResult
+    func joinNearbyWiFi(_ network: NearbyWiFiNetwork, password: String?) async -> Bool {
+        let joined = await nearbyWiFiController.join(network, password: password)
+        guard joined else { return false }
+        networkService.refresh()
+        await nearbyWiFiController.refresh()
+        return true
+    }
+
     var usesAdaptiveRing: Bool {
         deviceContext.ringBehavior == .adaptiveRing || laptopRingModeState.mode == .adaptive
     }
 
-    /// The 1.2 production presentation policy. Laptop Adaptive-after-charging
-    /// remains available in the model for 1.3 development, but is intentionally
-    /// not eligible to change the released MacBook glyph yet.
+    /// The authoritative 1.3 production presentation policy. Desktop systems
+    /// are Adaptive by device policy; MacBooks become Adaptive only when the
+    /// existing laptop controller has transitioned out of Battery mode.
     var usesReleasedAdaptiveRing: Bool {
-        deviceContext.ringBehavior == .adaptiveRing
+        deviceContext.ringBehavior == .adaptiveRing || laptopRingModeState.mode == .adaptive
     }
 
     var usesLaptopAdaptiveRing: Bool {
@@ -168,6 +223,11 @@ final class SystemStatusStore: ObservableObject {
         }
         #endif
         return audioOutputService.setDefaultOutput(uid: uid)
+    }
+
+    @discardableResult
+    func setDefaultInput(uid: String) -> Bool {
+        audioOutputService.setDefaultInput(uid: uid)
     }
 
     private func mutate(_ update: (inout SystemStatus) -> Void) {
@@ -235,6 +295,75 @@ final class SystemStatusStore: ObservableObject {
     func applyDebugBatteryStatus(_ battery: BatteryStatus) {
         debugBatteryOverride = battery
         acceptBatteryStatus(battery)
+    }
+
+    /// Resets the real controller with its synthetic 50% unplugged baseline
+    /// while preserving the battery percentage currently visible in the glyph.
+    func applyDebugAdaptiveBatteryBaseline() {
+        let controllerBattery = BatteryStatus(
+            percentage: DebugBatteryLevel.half.rawValue,
+            isCharging: false,
+            isPluggedIn: false,
+            isFullyCharged: false,
+            isAvailable: true
+        )
+        var visibleBattery = debugVisibleAdaptiveBattery()
+        visibleBattery.isCharging = false
+        visibleBattery.isPluggedIn = false
+        visibleBattery.isFullyCharged = false
+
+        debugBatteryOverride = visibleBattery
+        mutate { $0.battery = visibleBattery }
+        laptopRingModeController.update(with: controllerBattery)
+    }
+
+    /// Prepares the real controller's hidden 50% -> 80% session while only
+    /// publishing Charging semantics at the glyph's current visible percentage.
+    func applyDebugAdaptiveChargingBaseline() {
+        let controllerUnplugged = BatteryStatus(
+            percentage: DebugBatteryLevel.half.rawValue,
+            isCharging: false,
+            isPluggedIn: false,
+            isFullyCharged: false,
+            isAvailable: true
+        )
+        let controllerCharging = BatteryStatus(
+            percentage: DebugBatteryLevel.half.rawValue,
+            isCharging: true,
+            isPluggedIn: true,
+            isFullyCharged: false,
+            isAvailable: true
+        )
+        var visibleCharging = debugVisibleAdaptiveBattery()
+        visibleCharging.isCharging = true
+        visibleCharging.isPluggedIn = true
+        visibleCharging.isFullyCharged = false
+
+        laptopRingModeController.update(with: controllerUnplugged)
+        laptopRingModeController.update(with: controllerCharging)
+        debugBatteryOverride = visibleCharging
+        mutate { $0.battery = visibleCharging }
+    }
+
+    /// Crosses the prepared session target in the real controller while the
+    /// menu-bar glyph keeps its stable Charging baseline until mode changes.
+    func reachDebugAdaptiveTarget() {
+        guard var battery = debugBatteryOverride,
+              battery.isCharging,
+              battery.isPluggedIn,
+              let target = laptopRingModeState.targetPercentage
+        else { return }
+        battery.percentage = target
+        laptopRingModeController.update(with: battery)
+    }
+
+    private func debugVisibleAdaptiveBattery() -> BatteryStatus {
+        var battery = debugBatteryOverride ?? status.battery
+        if !battery.isAvailable || battery.percentage == nil {
+            battery.percentage = DebugBatteryLevel.half.rawValue
+            battery.isAvailable = true
+        }
+        return battery
     }
 
     func applyDebugNetworkState(_ networkState: DebugNetworkState) {
@@ -325,10 +454,16 @@ final class SystemStatusStore: ObservableObject {
             network.isConnected = false
             network.ssid = nil
             network.rssi = nil
+        case "ethernet":
+            network = DebugNetworkState.ethernet.status
         case "bluetoothOff":
             bluetooth.isPoweredOn = false
         case "volumeMuted":
             audio.volume = OutputVolumeStatus(level: 0, isMuted: true, isSettable: true)
+        case "airpodsConnected":
+            let airPods = DebugAudioDeviceState.airPods.status.defaultOutput!
+            audio.connectedBluetoothOutputs = [airPods]
+            audio.availableOutputs = [outputDevice, airPods]
         case "hero", "bluetoothOn":
             break
         default:
@@ -346,6 +481,14 @@ final class SystemStatusStore: ObservableObject {
             $0.network = network
             $0.audio = audio
             $0.bluetooth = bluetooth
+        }
+
+        if identifier == "airpodsConnected" {
+            if let airPods = audio.connectedBluetoothOutputs.first {
+                priorityController.present(
+                    StatusEvent(kind: .audioDeviceConnected(airPods), priority: .informational, duration: 30)
+                )
+            }
         }
     }
     #endif
