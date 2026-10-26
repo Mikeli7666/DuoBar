@@ -1,6 +1,6 @@
 # DuoBar
 
-[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
 
 Компактний індикатор для рядка меню macOS: акумулятор, мережа й гучність в одному значку.
 
