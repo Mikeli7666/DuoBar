@@ -7,6 +7,7 @@ final class SystemStatusStore: ObservableObject {
     @Published private(set) var laptopRingModeState: LaptopRingModeState
     @Published private(set) var wifiPowerControlError: String?
     @Published private(set) var wifiSSIDAuthorization: SSIDAuthorizationState = .notDetermined
+    @Published private(set) var networkSpeed: NetworkSpeed?
 
     let priorityController = StatusPriorityController()
     let deviceContext: DeviceContext
@@ -17,6 +18,7 @@ final class SystemStatusStore: ObservableObject {
     private let networkService: NetworkService
     private let audioOutputService: AudioOutputService
     private let bluetoothService: BluetoothService
+    private let networkSpeedService = NetworkSpeedService()
 
     #if DEBUG
     private var debugBatteryOverride: BatteryStatus?
@@ -76,6 +78,10 @@ final class SystemStatusStore: ObservableObject {
             guard self?.debugNetworkOverride == nil else { return }
             #endif
             self?.mutate { $0.network = value }
+            self?.networkSpeedService.setInterface(value.isConnected ? value.interfaceName : nil)
+        }
+        networkSpeedService.onSpeedChange = { [weak self] speed in
+            self?.networkSpeed = speed
         }
         networkService.onSSIDAuthorizationChange = { [weak self] authorization in
             guard let self else { return }
@@ -114,6 +120,14 @@ final class SystemStatusStore: ObservableObject {
         return .default
         #endif
     }()
+
+    func setNetworkSpeedMonitoring(_ enabled: Bool) {
+        if enabled {
+            networkSpeedService.start()
+        } else {
+            networkSpeedService.stop()
+        }
+    }
 
     func refresh() {
         batteryService.refresh()

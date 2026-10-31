@@ -10,6 +10,7 @@ struct StatusRow: View {
     let symbol: String
     let title: String
     let detail: String
+    let speedText: String?
     let stateText: String
     let tint: Color
     var accessory: Accessory = .none
@@ -21,6 +22,7 @@ struct StatusRow: View {
         symbol: String,
         title: String,
         detail: String,
+        speedText: String? = nil,
         stateText: String,
         tint: Color,
         accessory: Accessory = .none,
@@ -31,6 +33,7 @@ struct StatusRow: View {
         self.symbol = symbol
         self.title = title
         self.detail = detail
+        self.speedText = speedText
         self.stateText = stateText
         self.tint = tint
         self.accessory = accessory
@@ -87,12 +90,24 @@ struct StatusRow: View {
                     .font(.system(size: 12.5, weight: .semibold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.82)
-                Text(detail)
-                    .font(.system(size: 10.5))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-                    .minimumScaleFactor(0.72)
+                HStack(spacing: 6) {
+                    Text(detail)
+                        .font(.system(size: 10.5))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .minimumScaleFactor(0.72)
+                    if let speedText {
+                        Spacer(minLength: 0)
+                        Text(speedText)
+                            .font(.system(size: 10.5, weight: .medium, design: .rounded))
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                            .lineLimit(1)
+                            .fixedSize()
+                            .layoutPriority(2)
+                    }
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .layoutPriority(1)

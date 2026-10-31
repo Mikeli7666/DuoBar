@@ -115,6 +115,7 @@ final class MenuBarController: NSObject {
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         popover.contentViewController?.view.window?.makeKey()
         installOutsideClickMonitors()
+        statusStore.setNetworkSpeedMonitoring(true)
         // Let the accessory app finish activating and the popover become key
         // before asking CoreLocation to present its native authorization UI.
         DispatchQueue.main.async { [weak self] in
@@ -362,6 +363,7 @@ final class MenuBarController: NSObject {
 extension MenuBarController: NSPopoverDelegate {
     func popoverDidClose(_ notification: Notification) {
         removeOutsideClickMonitors()
+        statusStore.setNetworkSpeedMonitoring(false)
         perform(hoverInteraction.popoverClosedExternally())
     }
 }

@@ -31,6 +31,7 @@ struct StatusPopoverView: View {
                 symbol: networkSymbol,
                 title: localized("Network"),
                 detail: networkDetail,
+                speedText: networkSpeedText,
                 stateText: networkState,
                 tint: .primary,
                 accessory: .disclosure,
@@ -216,6 +217,14 @@ struct StatusPopoverView: View {
         case .other: return network.interfaceName ?? localized("Active connection")
         case .none: return localized("Not connected")
         }
+    }
+
+    private var networkSpeedText: String? {
+        guard statusStore.status.network.isConnected,
+              let speed = statusStore.networkSpeed else { return nil }
+        let down = NetworkSpeedFormatter.compact(speed.downloadBytesPerSecond)
+        let up = NetworkSpeedFormatter.compact(speed.uploadBytesPerSecond)
+        return "↓\(down) ↑\(up)"
     }
 
     private var networkState: String {
