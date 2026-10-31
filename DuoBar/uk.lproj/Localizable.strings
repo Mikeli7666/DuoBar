@@ -15,6 +15,8 @@
 "General" = "Загальні";
 "Open on Hover" = "Відкривати при наведенні";
 "Open DuoBar when the pointer moves over the menu bar icon." = "Відкривати DuoBar, коли вказівник наводиться на значок у рядку меню.";
+"Show in Dock" = "Показувати в Dock";
+"Show the DuoBar icon in the Dock. Clicking it opens Settings." = "Показувати значок DuoBar у Dock. Натискання на нього відкриває налаштування.";
 "Launch DuoBar at login" = "Запускати DuoBar під час входу";
 "Approval is required in System Settings → General → Login Items." = "Потрібно дозволити в «Системних параметрах» → «Загальні» → «Об’єкти входу».";
 "Battery Ring" = "Кільце батареї";

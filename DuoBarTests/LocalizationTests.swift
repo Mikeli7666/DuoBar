@@ -24,6 +24,8 @@ final class LocalizationTests: XCTestCase {
         "Icon Size",
         "Open on Hover",
         "Open DuoBar when the pointer moves over the menu bar icon.",
+        "Show in Dock",
+        "Show the DuoBar icon in the Dock. Clicking it opens Settings.",
         "Launch DuoBar at login",
         "Controlled by device",
         "Charging",

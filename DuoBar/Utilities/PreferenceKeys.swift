@@ -6,6 +6,7 @@ enum PreferenceKeys {
     static let adaptiveRingPriority = "adaptiveRingPriority"
     static let adaptiveRingColorCoding = "adaptiveRingColorCoding"
     static let openOnHover = "duoBar.openOnHover"
+    static let showInDock = "duoBar.showInDock"
     static let showBatteryPercentageInMenuBar = "showBatteryPercentageInMenuBar"
 
     #if DEBUG

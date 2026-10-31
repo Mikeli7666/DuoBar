@@ -8,6 +8,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusStore: SystemStatusStore?
     private var menuBarController: MenuBarController?
     private var wakeObserver: NSObjectProtocol?
+    private var dockPreferenceObserver: NSObjectProtocol?
     private var hasPresentedDiskImageInstallHelp = false
 
     #if DEBUG
@@ -23,6 +24,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             PreferenceKeys.menuBarIconScale: MenuBarIconSize.defaultScale,
             PreferenceKeys.batteryColorCoding: false,
             PreferenceKeys.openOnHover: false,
+            PreferenceKeys.showInDock: false,
             PreferenceKeys.showBatteryPercentageInMenuBar: false
         ])
         super.init()
@@ -42,7 +44,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         self.instanceLock = instanceLock
 
-        NSApp.setActivationPolicy(.accessory)
+        applyDockPolicy()
+        dockPreferenceObserver = NotificationCenter.default.addObserver(
+            forName: UserDefaults.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.applyDockPolicy()
+            }
+        }
         let statusStore = SystemStatusStore()
         self.statusStore = statusStore
 
@@ -98,6 +109,38 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    private func applyDockPolicy() {
+        let wantsDock = UserDefaults.standard.bool(forKey: PreferenceKeys.showInDock)
+        let target: NSApplication.ActivationPolicy = wantsDock ? .regular : .accessory
+        guard NSApp.activationPolicy() != target else { return }
+        NSApp.setActivationPolicy(target)
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        guard UserDefaults.standard.bool(forKey: PreferenceKeys.showInDock) else { return true }
+        openSettingsWindow()
+        return false
+    }
+
+    private func openSettingsWindow() {
+        NSApp.activate(ignoringOtherApps: true)
+        guard let item = settingsMenuItem(in: NSApp.mainMenu), let action = item.action else { return }
+        NSApp.sendAction(action, to: item.target, from: item)
+    }
+
+    private func settingsMenuItem(in menu: NSMenu?) -> NSMenuItem? {
+        guard let menu else { return nil }
+        for item in menu.items {
+            if item.keyEquivalent == ",", item.keyEquivalentModifierMask.contains(.command) {
+                return item
+            }
+            if let found = settingsMenuItem(in: item.submenu) {
+                return found
+            }
+        }
+        return nil
+    }
+
     private func presentDiskImageInstallHelpIfNeeded() {
         guard InstallationLocation.shouldOfferApplicationsHelp(
             bundleURL: Bundle.main.bundleURL,
@@ -133,6 +176,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let wakeObserver {
             NSWorkspace.shared.notificationCenter.removeObserver(wakeObserver)
             self.wakeObserver = nil
+        }
+        if let dockPreferenceObserver {
+            NotificationCenter.default.removeObserver(dockPreferenceObserver)
+            self.dockPreferenceObserver = nil
         }
         menuBarController?.invalidate()
         menuBarController = nil

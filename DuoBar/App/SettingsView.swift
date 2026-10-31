@@ -9,6 +9,7 @@ struct SettingsView: View {
     @AppStorage(PreferenceKeys.adaptiveRingPriority) private var adaptiveRingPriorityRaw = PerformancePreference.automatic.rawValue
     @AppStorage(PreferenceKeys.adaptiveRingColorCoding) private var adaptiveRingColorCoding = false
     @AppStorage(PreferenceKeys.openOnHover) private var openOnHover = false
+    @AppStorage(PreferenceKeys.showInDock) private var showInDock = false
     @AppStorage(PreferenceKeys.showBatteryPercentageInMenuBar) private var showBatteryPercentageInMenuBar = false
     @StateObject private var launchAtLogin = LaunchAtLoginService()
     @ObservedObject private var adaptiveRingMonitor = AdaptiveRingMonitor.shared
@@ -60,6 +61,14 @@ struct SettingsView: View {
                     Toggle(localized("Open on Hover"), isOn: $openOnHover)
                         .toggleStyle(.switch)
                     Text(localized("Open DuoBar when the pointer moves over the menu bar icon."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Toggle(localized("Show in Dock"), isOn: $showInDock)
+                        .toggleStyle(.switch)
+                    Text(localized("Show the DuoBar icon in the Dock. Clicking it opens Settings."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

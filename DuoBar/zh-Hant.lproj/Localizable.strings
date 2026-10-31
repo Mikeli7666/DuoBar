@@ -15,6 +15,8 @@
 "General" = "一般";
 "Open on Hover" = "懸停時打開";
 "Open DuoBar when the pointer moves over the menu bar icon." = "將指標移到選單列圖示上時打開 DuoBar。";
+"Show in Dock" = "在 Dock 中顯示";
+"Show the DuoBar icon in the Dock. Clicking it opens Settings." = "在 Dock 中顯示 DuoBar 圖示，點按即可打開設定。";
 "Launch DuoBar at login" = "登入時啟動 DuoBar";
 "Approval is required in System Settings → General → Login Items." = "需要在「系統設定」→「一般」→「登入項目」中核准。";
 "Battery Ring" = "Battery Ring";

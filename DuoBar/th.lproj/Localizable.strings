@@ -9,6 +9,8 @@
 "General" = "ทั่วไป";
 "Open on Hover" = "เปิดเมื่อวางเมาส์ชี้";
 "Open DuoBar when the pointer moves over the menu bar icon." = "เปิด DuoBar เมื่อตัวชี้เมาส์เลื่อนไปอยู่เหนือไอคอนในแถบเมนู";
+"Show in Dock" = "แสดงใน Dock";
+"Show the DuoBar icon in the Dock. Clicking it opens Settings." = "แสดงไอคอน DuoBar ใน Dock คลิกเพื่อเปิดการตั้งค่า";
 "Launch DuoBar at login" = "เปิด DuoBar อัตโนมัติเมื่อเข้าสู่ระบบ";
 "Approval is required in System Settings → General → Login Items." = "ต้องอนุมัติในการตั้งค่าระบบ → ทั่วไป → รายการเปิดเมื่อเข้าสู่ระบบ";
 "Battery Ring" = "วงแหวนแบตเตอรี่";
