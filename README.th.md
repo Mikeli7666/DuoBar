@@ -8,9 +8,9 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
 
-[**ดาวน์โหลด DuoBar 1.3.2**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.2/DuoBar-1.3.2.dmg) · [**รุ่นทั้งหมด**](https://github.com/Mikeli7666/DuoBar/releases) · [**แจ้งข้อบกพร่อง**](https://github.com/Mikeli7666/DuoBar/issues)
+[**ดาวน์โหลด DuoBar 1.4.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.0/DuoBar-1.4.0.dmg) · [**รุ่นทั้งหมด**](https://github.com/Mikeli7666/DuoBar/releases) · [**แจ้งข้อบกพร่อง**](https://github.com/Mikeli7666/DuoBar/issues)
 
-DuoBar 1.3.2 (Build 8) · macOS 13+ · Apple Silicon หรือ Intel · Universal 2 · ฟรีและโอเพนซอร์ส
+DuoBar 1.4.0 (Build 9) · macOS 13+ · Apple Silicon หรือ Intel · Universal 2 · ฟรีและโอเพนซอร์ส
 
 <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Support DuoBar on Ko-fi"></a>
 
@@ -47,7 +47,7 @@ DuoBar นำแนวคิดสถานะสามในหนึ่งส�
 
 ## DuoBar บน macOS
 
-รุ่น 1.3.2 ปัจจุบันรวมพื้นฐานแบตเตอรี่ เครือข่าย และระดับเสียงเข้ากับพฤติกรรมวงแหวนปรับตัวของ MacBook การควบคุมที่ปรับปรุง ขนาดไอคอนที่ปรับได้ และการติดตั้งที่ราบรื่น
+รุ่น 1.4.0 ปัจจุบันมาพร้อมป็อปโอเวอร์แบบ Liquid Glass ความเร็วเครือข่ายแบบเรียลไทม์ รายละเอียดแบตเตอรี่ที่ละเอียดขึ้น และไอคอน Dock ที่เลือกเปิดได้
 
 <p align="center">
 ## คุณสมบัติ
@@ -77,14 +77,14 @@ DuoBar นำแนวคิดสถานะสามในหนึ่งส�
 
 ## การติดตั้ง
 
-1. เปิด [รุ่น DuoBar 1.3.2](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.2) และค้นหา **Assets**
-2. ดาวน์โหลด **DuoBar-1.3.2.dmg** อย่าดาวน์โหลด `Source code (zip)` หรือ `Source code (tar.gz)`
+1. เปิด [รุ่น DuoBar 1.4.0](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.4.0) และค้นหา **Assets**
+2. ดาวน์โหลด **DuoBar-1.4.0.dmg** อย่าดาวน์โหลด `Source code (zip)` หรือ `Source code (tar.gz)`
 3. ดับเบิลคลิก DMG แล้วลาก **DuoBar.app** ไปยัง **Applications**
 4. เปิด Applications แล้วเปิด DuoBar เป็นยูทิลิตี้แถบเมนูและปกติจะไม่ปรากฏใน Dock
 
-DuoBar 1.3.2 ใช้การลงนาม Developer ID, Hardened Runtime และการรับรอง Apple การติดตั้งปกติไม่จำเป็นต้องปิด Gatekeeper/SIP, Terminal, `sudo` หรือ `xattr`
+DuoBar 1.4.0 ใช้การลงนาม Developer ID, Hardened Runtime และการรับรอง Apple การติดตั้งปกติไม่จำเป็นต้องปิด Gatekeeper/SIP, Terminal, `sudo` หรือ `xattr`
 
-SHA-256: `18b878391eeab47a53c4ae0b51d10ae0468a8d7d489b5ae056f6cd5281053bae`
+SHA-256: `07a884f7a0b3a189546f0f39af6dcb13b53b8cb1d167c9f932258e44b6616045`
 
 งานสร้างและความเข้ากันได้/ความน่าเชื่อถือได้รับการตรวจสอบโดยใช้ Xcode 27 และ macOS 27 SDK ในขณะที่ยังคงรองรับ macOS 13+ ต่อไป ซึ่งไม่ได้อ้างถึงการตรวจสอบฮาร์ดแวร์ macOS 27
 

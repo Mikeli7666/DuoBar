@@ -10,9 +10,9 @@
 - 网络
 - 音量
 
-[**下载 DuoBar 1.3.2**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.2/DuoBar-1.3.2.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**下载 DuoBar 1.4.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.0/DuoBar-1.4.0.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
-DuoBar 1.3.2（Build 8）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
+DuoBar 1.4.0（Build 9）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
 
 <p align="center">
   <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="在 Ko-fi 上支持 DuoBar"></a>
@@ -30,9 +30,9 @@ DuoBar 1.3.2（Build 8）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 ### 第一步：下载 DuoBar
 
-点击页面上方的“下载 DuoBar 1.3.2”。浏览器会下载：
+点击页面上方的“下载 DuoBar 1.4.0”。浏览器会下载：
 
-`DuoBar-1.3.2.dmg`
+`DuoBar-1.4.0.dmg`
 
 普通用户只需要这个 DMG 文件。不要下载：
 
@@ -43,13 +43,13 @@ DuoBar 1.3.2（Build 8）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 如果你是从 GitHub Releases 页面开始：
 
-1. 找到最新版本 **DuoBar 1.3.2**。
+1. 找到最新版本 **DuoBar 1.4.0**。
 2. 找到页面下方的 **Assets** 文件列表。
-3. 点击 **DuoBar-1.3.2.dmg**。
+3. 点击 **DuoBar-1.4.0.dmg**。
 
 ### 第二步：安装
 
-1. 双击 `DuoBar-1.3.2.dmg`。
+1. 双击 `DuoBar-1.4.0.dmg`。
 2. Finder 会打开一个磁盘映像窗口。
 3. 将 `DuoBar.app` 拖到 **Applications / 应用程序** 文件夹；窗口中提供了应用程序文件夹入口。
 4. 等待复制完成。
@@ -58,7 +58,7 @@ DuoBar 1.3.2（Build 8）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 ### 第三步：第一次打开
 
-DuoBar 1.3.2 使用 Developer ID 签名并通过 Apple 公证。正常安装不需要关闭 Gatekeeper 或 SIP，也不需要 Terminal、`sudo` 或 `xattr`。
+DuoBar 1.4.0 使用 Developer ID 签名并通过 Apple 公证。正常安装不需要关闭 Gatekeeper 或 SIP，也不需要 Terminal、`sudo` 或 `xattr`。
 
 DuoBar 是菜单栏应用，不会出现在 Dock 中。打开后，请查看屏幕最上方的 macOS 菜单栏，DuoBar 图标会在那里出现。
 
@@ -127,7 +127,7 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 
 ## 安全与隐私
 
-DuoBar 1.3.2 使用 Apple Developer ID 签名并通过 Apple 公证。DuoBar 不通过 Mac App Store 分发。
+DuoBar 1.4.0 使用 Apple Developer ID 签名并通过 Apple 公证。DuoBar 不通过 Mac App Store 分发。
 
 系统状态在本机处理：
 
@@ -154,9 +154,9 @@ DuoBar 是独立项目，与 Apple Inc. 没有隶属、赞助或认可关系。
 
 ## 下载完整性
 
-官方 DuoBar 1.3.2 DMG 的 SHA-256：
+官方 DuoBar 1.4.0 DMG 的 SHA-256：
 
-`18b878391eeab47a53c4ae0b51d10ae0468a8d7d489b5ae056f6cd5281053bae`
+`07a884f7a0b3a189546f0f39af6dcb13b53b8cb1d167c9f932258e44b6616045`
 
 普通用户不需要验证这一项。它主要用于希望确认下载文件完整性的用户。
 

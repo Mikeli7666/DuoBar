@@ -8,9 +8,9 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
 
-[**Download DuoBar 1.3.2**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.3.2/DuoBar-1.3.2.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
+[**Download DuoBar 1.4.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.0/DuoBar-1.4.0.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
 
-DuoBar 1.3.2 (Build 8) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
+DuoBar 1.4.0 (Build 9) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
 
 <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Support DuoBar on Ko-fi"></a>
 
@@ -47,7 +47,7 @@ On MacBooks, the outer Battery Ring shows live battery level, a dynamic charging
 
 ## DuoBar on macOS
 
-The current 1.3.2 release brings the Battery, Network, and Volume foundation together with MacBook Adaptive Ring behavior, refined controls, adjustable icon size, and installation polish.
+The current 1.4.0 release brings the Liquid Glass popover, live network speed, richer battery details, and an optional Dock icon.
 
 <p align="center">
 ## Features
@@ -77,14 +77,14 @@ The current 1.3.2 release brings the Battery, Network, and Volume foundation tog
 
 ## Installation
 
-1. Open the [DuoBar 1.3.2 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.3.2) and find **Assets**.
-2. Download **DuoBar-1.3.2.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
+1. Open the [DuoBar 1.4.0 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.4.0) and find **Assets**.
+2. Download **DuoBar-1.4.0.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
 3. Double-click the DMG and drag **DuoBar.app** to **Applications**.
 4. Open Applications and launch DuoBar. It is a menu-bar utility and normally does not appear in the Dock.
 
-DuoBar 1.3.2 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
+DuoBar 1.4.0 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
 
-SHA-256: `18b878391eeab47a53c4ae0b51d10ae0468a8d7d489b5ae056f6cd5281053bae`
+SHA-256: `07a884f7a0b3a189546f0f39af6dcb13b53b8cb1d167c9f932258e44b6616045`
 
 Build and compatibility/reliability work was checked using Xcode 27 and the macOS 27 SDK while continuing to support macOS 13+. This does not claim macOS 27 hardware validation.
 
