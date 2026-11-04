@@ -8,7 +8,6 @@ final class MenuBarController: NSObject {
     private let statusItem: NSStatusItem
     private var panel: PopoverPanel?
     private var hostingController: NSHostingController<StatusPopoverView>?
-    private var popoverBackdrop: PopoverBackdropView?
     private var isClosing = false
     private var closeWorkItem: DispatchWorkItem?
     private var isPanelVisible: Bool { panel?.isVisible == true && !isClosing }
@@ -88,15 +87,6 @@ final class MenuBarController: NSObject {
         let contentViewController = NSViewController()
         contentViewController.view = trackingView
         contentViewController.addChild(hostingController)
-        let backdrop = PopoverBackdropView()
-        backdrop.translatesAutoresizingMaskIntoConstraints = false
-        trackingView.addSubview(backdrop)
-        NSLayoutConstraint.activate([
-            backdrop.leadingAnchor.constraint(equalTo: trackingView.leadingAnchor, constant: 4),
-            backdrop.trailingAnchor.constraint(equalTo: trackingView.trailingAnchor, constant: -4),
-            backdrop.topAnchor.constraint(equalTo: trackingView.topAnchor, constant: 4),
-            backdrop.bottomAnchor.constraint(equalTo: trackingView.bottomAnchor, constant: -4)
-        ])
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
         trackingView.addSubview(hostingController.view)
         NSLayoutConstraint.activate([
@@ -110,7 +100,6 @@ final class MenuBarController: NSObject {
         panel.onCancel = { [weak self] in self?.handleOutsideClick() }
         self.panel = panel
         self.hostingController = hostingController
-        self.popoverBackdrop = backdrop
         popoverTrackingView = trackingView
     }
 
@@ -133,12 +122,10 @@ final class MenuBarController: NSObject {
         closeWorkItem?.cancel()
         closeWorkItem = nil
         isClosing = false
-        popoverBackdrop?.alphaValue = 0
         panel.present(below: button, size: size)
         // Give SwiftUI one frame to draw the hidden state, then animate in.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
             PopoverPresentationState.shared.show()
-            self?.animateBackdrop(to: 1, duration: 0.26)
         }
         installOutsideClickMonitors()
         statusStore.setPopoverActive(true)
@@ -383,7 +370,6 @@ extension MenuBarController {
         guard isPanelVisible else { return }
         isClosing = true
         PopoverPresentationState.shared.hide()
-        animateBackdrop(to: 0, duration: PopoverMotion.closeDuration)
         removeOutsideClickMonitors()
         statusStore.setPopoverActive(false)
         perform(hoverInteraction.popoverClosedExternally())
@@ -397,15 +383,6 @@ extension MenuBarController {
         }
         closeWorkItem = work
         DispatchQueue.main.asyncAfter(deadline: .now() + PopoverMotion.closeDuration + 0.03, execute: work)
-    }
-
-    func animateBackdrop(to alpha: CGFloat, duration: TimeInterval) {
-        guard let popoverBackdrop else { return }
-        NSAnimationContext.runAnimationGroup { context in
-            context.duration = duration
-            context.timingFunction = CAMediaTimingFunction(name: alpha > 0 ? .easeOut : .linear)
-            popoverBackdrop.animator().alphaValue = alpha
-        }
     }
 
     /// Stands in for `.transient`: closes when key moves to another window of
