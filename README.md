@@ -20,12 +20,6 @@ DuoBar 1.4.0 (Build 9) · macOS 13+ · Apple Silicon or Intel · Universal 2 · 
 
 </div>
 
-
-
-  [![▶ Watch the release video](https://img.shields.io/badge/Watch_the_release_video-0969da?style=for-the-badge)](https://github.com/user-attachments/assets/3af8d3cf-230b-4073-932b-c54c4a1553e6)
-▶ [watch the launch film of the latest version on YouTube](https://youtube.com/shorts/-4Y8rq3SGGg)
-</p>
-
 ## One glyph, three live states
 
 DuoBar adapts the iPhone Duo-style three-in-one status concept for the Mac menu bar. One compact glyph presents the system information normally spread across several indicators:

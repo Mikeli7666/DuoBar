@@ -20,12 +20,6 @@ DuoBar 1.4.0 (Build 9) · macOS 13+ · Apple Silicon หรือ Intel · Unive
 
 </div>
 
-
-
-  [![▶ Watch the release video](https://img.shields.io/badge/Watch_the_release_video-0969da?style=for-the-badge)](https://github.com/user-attachments/assets/3af8d3cf-230b-4073-932b-c54c4a1553e6)
-▶ [watch the launch film of the latest version on YouTube](https://youtube.com/shorts/-4Y8rq3SGGg)
-</p>
-
 ## หนึ่งสัญลักษณ์ สามสถานะสด
 
 DuoBar นำแนวคิดสถานะสามในหนึ่งสไตล์ iPhone Duo มาสู่แถบเมนูของ Mac สัญลักษณ์ขนาดกะทัดรัดเพียงหนึ่งเดียวแสดงข้อมูลระบบที่ปกติจะกระจายอยู่ตามตัวบ่งชี้หลายตัว:
