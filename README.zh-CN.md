@@ -60,7 +60,7 @@ DuoBar 1.4.0（Build 9）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 DuoBar 1.4.0 使用 Developer ID 签名并通过 Apple 公证。正常安装不需要关闭 Gatekeeper 或 SIP，也不需要 Terminal、`sudo` 或 `xattr`。
 
-DuoBar 是菜单栏应用，不会出现在 Dock 中。打开后，请查看屏幕最上方的 macOS 菜单栏，DuoBar 图标会在那里出现。
+DuoBar 是菜单栏应用，默认不会出现在 Dock 中（可在设置中开启可选的 Dock 图标，点击打开设置）。打开后，请查看屏幕最上方的 macOS 菜单栏，DuoBar 图标会在那里出现。
 
 ## 为什么会请求“位置”权限？
 
@@ -81,7 +81,6 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 - **外圈** → 电池 / Adaptive Ring
 - **中间** → Wi-Fi、Ethernet 或其他网络状态
 - **下方四个点** → 音量
-/p>
 
 点击 DuoBar 图标即可打开弹出面板。面板包含：
 
@@ -103,9 +102,11 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 ## 功能
 
 - Battery Ring：显示电池电量、充电状态、动态充电闪电和可选的电池颜色编码
+- 电池详情：弹出面板中显示充电、暂停充电（Charging On Hold）或使用电源适配器的状态，以及充满或可用的剩余时间
 - Adaptive Ring：在没有明显性能活动时保持 Neutral，并在需要时自动显示 CPU、内存或温度压力
 - 圆润的 Wi-Fi 指示器和精致的 Duo 视觉风格
 - 显示当前 Wi-Fi 网络名称（SSID）
+- 网络行实时显示下载和上传速度
 - 直接在 DuoBar 中打开或关闭 Wi-Fi
 - Wi-Fi、Ethernet 和离线网络状态
 - 音量状态、音量滑块、静音控制和切换输出设备（取决于音频设备是否支持）
@@ -114,6 +115,8 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 - Open on Hover（悬停打开）
 - 可调节菜单栏图标大小
 - 改进的 Battery Ring、音量指示点和充电展示
+- Liquid Glass 弹出面板（macOS 26 及以后；更早版本为半透明胶囊样式）
+- 可选的 Dock 图标（默认关闭；在设置中开启，点击打开设置）
 - English、俄语、乌克兰语、简体中文、繁體中文、泰语
 
 ## 系统要求

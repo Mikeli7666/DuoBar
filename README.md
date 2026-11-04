@@ -34,8 +34,7 @@ DuoBar adapts the iPhone Duo-style three-in-one status concept for the Mac menu 
 - **Center** → the active network: Wi-Fi, Ethernet, or an offline/fallback state
 - **Four lower dots** → live output volume
 
-Persistent status stays monochrome and native-looking. When AirPods or another supported Bluetooth audio output becomes active, the center briefly transitions from Network → AirPods/headphones → twork. Disconnecting does not trigger an animation.
-p>
+Persistent status stays monochrome and native-looking. When AirPods or another supported Bluetooth audio output becomes active, the center briefly transitions from Network → AirPods/headphones → Network. Disconnecting does not trigger an animation.
 
 <p align="center">
   <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.jpg" alt="DuoBar 1.3.2 popover" width="480">
@@ -53,10 +52,12 @@ The current 1.4.0 release brings the Liquid Glass popover, live network speed, r
 ## Features
 
 - Battery Ring with live level, dynamic charging bolt, low-battery state, and optional Battery Color Coding
+- Popover battery details: charging, on hold, or running on the adapter, with time remaining until full or empty
 - Adaptive Ring for desktop Macs: Neutral by default, with automatic CPU, memory, and thermal pressure awareness
 - Refined native Duo visual language, rounded Wi-Fi indicator, Battery Ring, volume indicators, and charging presentation
 - Automatic Wi-Fi, Ethernet, and offline network states
 - Wi-Fi network name display and public Wi-Fi power control
+- Live download and upload speed in the popover’s Network row
 - Optional Open on Hover popover behavior
 - Four-dot live volume indicator
 - Compact volume slider, public Core Audio mute, and output-device switching where supported
@@ -64,11 +65,12 @@ The current 1.4.0 release brings the Liquid Glass popover, live network speed, r
 - Adjustable menu-bar Icon Size
 - English, Russian, Ukrainian, Simplified Chinese, Traditional Chinese, and Thai
 - Compact custom popover: Network and Battery open System Settings, Wi-Fi power, Volume, Audio Output selection, Settings, and Quit
+- Liquid Glass popover on macOS 26 and later, with a translucent capsule design on earlier versions
 - Light and Dark Mode
 - Launch at Login
 - Universal 2: Apple Silicon and Intel support on macOS 13+
 - Native Swift, SwiftUI, and AppKit
-- No Dock icon
+- Optional Dock icon (off by default); clicking it opens Settings
 
 ## Requirements
 
