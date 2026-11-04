@@ -59,6 +59,11 @@
 "No internal battery" = "No internal battery";
 "Fully charged" = "Fully charged";
 "Charging" = "Charging";
+"Charging On Hold" = "Charging On Hold";
+"Using Adapter" = "Using Adapter";
+"%@ to full" = "%@ to full";
+"%@ left" = "%@ left";
+"Calculating…" = "Calculating…";
 "Low Power Mode" = "Low Power Mode";
 "Power adapter connected" = "Power adapter connected";
 "Using battery power" = "Using battery power";

@@ -53,7 +53,7 @@ struct VolumeStatusRow: View {
         }
         .padding(.horizontal, 10)
         .frame(height: 54)
-        .background(.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .popoverCardBackground(cornerRadius: 11, fillOpacity: 0.045)
     }
 
     @ViewBuilder

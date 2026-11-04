@@ -23,7 +23,7 @@ struct NearbyWiFiButton: View {
         .buttonStyle(.plain)
         .padding(.horizontal, 10)
         .frame(height: 28)
-        .background(.primary.opacity(0.03), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .popoverCardBackground(cornerRadius: 8, fillOpacity: 0.03)
         .accessibilityHint(localized("Browse nearby Wi-Fi networks"))
         .popover(isPresented: $isPresented, arrowEdge: .trailing) {
             NearbyWiFiPopoverView(

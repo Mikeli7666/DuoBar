@@ -8,6 +8,7 @@ final class SystemStatusStore: ObservableObject {
     @Published private(set) var wifiPowerControlError: String?
     @Published private(set) var wifiSSIDAuthorization: SSIDAuthorizationState = .notDetermined
     @Published private(set) var networkSpeed: NetworkSpeed?
+    @Published private(set) var batteryTimeEstimate: BatteryTimeEstimate = .unavailable
 
     let priorityController = StatusPriorityController()
     let deviceContext: DeviceContext
@@ -19,6 +20,7 @@ final class SystemStatusStore: ObservableObject {
     private let audioOutputService: AudioOutputService
     private let bluetoothService: BluetoothService
     private let networkSpeedService = NetworkSpeedService()
+    private var batteryTimeTimer: Timer?
 
     #if DEBUG
     private var debugBatteryOverride: BatteryStatus?
@@ -72,6 +74,7 @@ final class SystemStatusStore: ObservableObject {
             guard self?.debugBatteryOverride == nil else { return }
             #endif
             self?.acceptBatteryStatus(value)
+            if self?.batteryTimeTimer != nil { self?.updateBatteryTimeEstimate() }
         }
         networkService.onStatusChange = { [weak self] value in
             #if DEBUG
@@ -121,11 +124,38 @@ final class SystemStatusStore: ObservableObject {
         #endif
     }()
 
-    func setNetworkSpeedMonitoring(_ enabled: Bool) {
-        if enabled {
+    /// Live details (network speed, battery time estimate) are only sampled while the popover is open.
+    func setPopoverActive(_ active: Bool) {
+        if active {
             networkSpeedService.start()
+            startBatteryTimeUpdates()
         } else {
             networkSpeedService.stop()
+            stopBatteryTimeUpdates()
+        }
+    }
+
+    private func startBatteryTimeUpdates() {
+        guard batteryTimeTimer == nil else { return }
+        updateBatteryTimeEstimate()
+        let timer = Timer(timeInterval: 5, repeats: true) { [weak self] _ in
+            Task { @MainActor in self?.updateBatteryTimeEstimate() }
+        }
+        timer.tolerance = 1
+        batteryTimeTimer = timer
+        RunLoop.main.add(timer, forMode: .common)
+    }
+
+    private func stopBatteryTimeUpdates() {
+        batteryTimeTimer?.invalidate()
+        batteryTimeTimer = nil
+        batteryTimeEstimate = .unavailable
+    }
+
+    private func updateBatteryTimeEstimate() {
+        let estimate = batteryService.timeEstimate()
+        if estimate != batteryTimeEstimate {
+            batteryTimeEstimate = estimate
         }
     }
 

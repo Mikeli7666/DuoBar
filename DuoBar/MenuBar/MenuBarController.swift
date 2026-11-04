@@ -6,7 +6,12 @@ final class MenuBarController: NSObject {
     private static let hoverCloseDelay: TimeInterval = 0.25
 
     private let statusItem: NSStatusItem
-    private let popover = NSPopover()
+    private var panel: PopoverPanel?
+    private var hostingController: NSHostingController<StatusPopoverView>?
+    private var popoverBackdrop: PopoverBackdropView?
+    private var isClosing = false
+    private var closeWorkItem: DispatchWorkItem?
+    private var isPanelVisible: Bool { panel?.isVisible == true && !isClosing }
     private let statusStore: SystemStatusStore
     private var hostingView: PassthroughHostingView<DuoStatusView>?
     private var popoverTrackingView: HoverTrackingContainerView?
@@ -67,10 +72,6 @@ final class MenuBarController: NSObject {
     }
 
     private func configurePopover() {
-        updatePopoverBehavior()
-        popover.delegate = self
-        popover.animates = true
-        popover.contentSize = NSSize(width: 304, height: 352)
         let hostingController = NSHostingController(
             rootView: StatusPopoverView(statusStore: statusStore) { [weak self] in
                 self?.closePopoverFromContent()
@@ -87,6 +88,15 @@ final class MenuBarController: NSObject {
         let contentViewController = NSViewController()
         contentViewController.view = trackingView
         contentViewController.addChild(hostingController)
+        let backdrop = PopoverBackdropView()
+        backdrop.translatesAutoresizingMaskIntoConstraints = false
+        trackingView.addSubview(backdrop)
+        NSLayoutConstraint.activate([
+            backdrop.leadingAnchor.constraint(equalTo: trackingView.leadingAnchor, constant: 4),
+            backdrop.trailingAnchor.constraint(equalTo: trackingView.trailingAnchor, constant: -4),
+            backdrop.topAnchor.constraint(equalTo: trackingView.topAnchor, constant: 4),
+            backdrop.bottomAnchor.constraint(equalTo: trackingView.bottomAnchor, constant: -4)
+        ])
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
         trackingView.addSubview(hostingController.view)
         NSLayoutConstraint.activate([
@@ -95,27 +105,43 @@ final class MenuBarController: NSObject {
             hostingController.view.topAnchor.constraint(equalTo: trackingView.topAnchor),
             hostingController.view.bottomAnchor.constraint(equalTo: trackingView.bottomAnchor)
         ])
-        popover.contentViewController = contentViewController
+        let panel = PopoverPanel(contentViewController: contentViewController)
+        panel.onResignKey = { [weak self] in self?.panelDidResignKey() }
+        panel.onCancel = { [weak self] in self?.handleOutsideClick() }
+        self.panel = panel
+        self.hostingController = hostingController
+        self.popoverBackdrop = backdrop
         popoverTrackingView = trackingView
     }
 
     @objc private func togglePopover() {
         // Never trust the state machine over what is actually on screen.
-        if popover.isShown {
+        if isPanelVisible {
             hoverInteraction.popoverShownExternally()
         }
         perform(hoverInteraction.statusItemClicked())
     }
 
     private func showPopover() {
-        guard !popover.isShown, let button = statusItem.button else { return }
+        guard !isPanelVisible, let panel, let hostingController, let button = statusItem.button else { return }
 
-        updatePopoverBehavior()
         NSApp.activate(ignoringOtherApps: true)
-        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-        popover.contentViewController?.view.window?.makeKey()
+        hostingController.view.layoutSubtreeIfNeeded()
+        var size = hostingController.view.fittingSize
+        if size.width < 1 || size.height < 1 { size = NSSize(width: 304, height: 352) }
+        PopoverPresentationState.shared.prepareToShow()
+        closeWorkItem?.cancel()
+        closeWorkItem = nil
+        isClosing = false
+        popoverBackdrop?.alphaValue = 0
+        panel.present(below: button, size: size)
+        // Give SwiftUI one frame to draw the hidden state, then animate in.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) { [weak self] in
+            PopoverPresentationState.shared.show()
+            self?.animateBackdrop(to: 1, duration: 0.26)
+        }
         installOutsideClickMonitors()
-        statusStore.setNetworkSpeedMonitoring(true)
+        statusStore.setPopoverActive(true)
         // Let the accessory app finish activating and the popover become key
         // before asking CoreLocation to present its native authorization UI.
         DispatchQueue.main.async { [weak self] in
@@ -124,11 +150,11 @@ final class MenuBarController: NSObject {
     }
 
     private func closePopover() {
-        guard popover.isShown else {
+        guard isPanelVisible else {
             removeOutsideClickMonitors()
             return
         }
-        popover.performClose(nil)
+        dismissPanel()
     }
 
     // MARK: - Outside-click dismissal
@@ -162,19 +188,19 @@ final class MenuBarController: NSObject {
     }
 
     private func handleOutsideClick() {
-        guard !isInvalidated, popover.isShown else { return }
+        guard !isInvalidated, isPanelVisible else { return }
         cancelHoverClose()
         _ = hoverInteraction.clickedOutside()
         // `close()` rather than `performClose(_:)`: an attached sheet or the
         // nested Nearby Networks popover can make `performClose` a no-op, which
         // would leave the popover on screen while the state says it is closed.
-        popover.close()
+        dismissPanel()
     }
 
     /// True while a sheet (Wi-Fi password) or a nested popover (Nearby
     /// Networks) is attached to the popover window.
     private var popoverHasAttachedWindows: Bool {
-        guard let window = popover.contentViewController?.view.window else { return false }
+        guard let window = panel else { return false }
         if window.attachedSheet != nil { return true }
         return window.childWindows?.contains(where: { $0.isVisible }) ?? false
     }
@@ -237,7 +263,6 @@ final class MenuBarController: NSObject {
                 guard let self else { return }
                 let enabled = UserDefaults.standard.bool(forKey: PreferenceKeys.openOnHover)
                 let commands = self.hoverInteraction.setEnabled(enabled)
-                self.updatePopoverBehavior()
                 self.perform(commands)
             }
         }
@@ -256,19 +281,9 @@ final class MenuBarController: NSObject {
         }
     }
 
-    private func updatePopoverBehavior() {
-        #if DEBUG
-        if MarketingCaptureMode.isEnabled {
-            popover.behavior = .applicationDefined
-            return
-        }
-        #endif
-        popover.behavior = hoverInteraction.isEnabled ? .applicationDefined : .transient
-    }
-
     #if DEBUG
     func setPopoverVisibleForMarketingCapture(_ visible: Bool) {
-        guard popover.isShown != visible else { return }
+        guard isPanelVisible != visible else { return }
         if visible {
             showPopover()
         } else {
@@ -326,7 +341,9 @@ final class MenuBarController: NSObject {
         cancelHoverClose()
         lengthAnimationTimer?.invalidate()
         lengthAnimationTimer = nil
-        popover.performClose(nil)
+        panel?.orderOut(nil)
+        panel = nil
+        hostingController = nil
         if let defaultsObserver {
             NotificationCenter.default.removeObserver(defaultsObserver)
             self.defaultsObserver = nil
@@ -360,11 +377,54 @@ final class MenuBarController: NSObject {
     }
 }
 
-extension MenuBarController: NSPopoverDelegate {
-    func popoverDidClose(_ notification: Notification) {
+extension MenuBarController {
+    /// Hides the panel and runs the cleanup the popover delegate used to do.
+    func dismissPanel() {
+        guard isPanelVisible else { return }
+        isClosing = true
+        PopoverPresentationState.shared.hide()
+        animateBackdrop(to: 0, duration: PopoverMotion.closeDuration)
         removeOutsideClickMonitors()
-        statusStore.setNetworkSpeedMonitoring(false)
+        statusStore.setPopoverActive(false)
         perform(hoverInteraction.popoverClosedExternally())
+        // Keep the window up until the fade-out has finished.
+        let work = DispatchWorkItem { [weak self] in
+            Task { @MainActor in
+                guard let self, self.isClosing else { return }
+                self.isClosing = false
+                self.panel?.orderOut(nil)
+            }
+        }
+        closeWorkItem = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + PopoverMotion.closeDuration + 0.03, execute: work)
+    }
+
+    func animateBackdrop(to alpha: CGFloat, duration: TimeInterval) {
+        guard let popoverBackdrop else { return }
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = duration
+            context.timingFunction = CAMediaTimingFunction(name: alpha > 0 ? .easeOut : .linear)
+            popoverBackdrop.animator().alphaValue = alpha
+        }
+    }
+
+    /// Stands in for `.transient`: closes when key moves to another window of
+    /// this app (for example Settings). Clicks in other apps are handled by the
+    /// global outside-click monitor.
+    func panelDidResignKey() {
+        #if DEBUG
+        if MarketingCaptureMode.isEnabled { return }
+        #endif
+        guard !hoverInteraction.isEnabled else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self, self.isPanelVisible, !self.isInvalidated else { return }
+            // A click on the status item is handled by its own action.
+            guard !self.hoverInteraction.isPointerOverStatusItem else { return }
+            guard NSApp.isActive,
+                  self.panel?.isKeyWindow != true,
+                  !self.popoverHasAttachedWindows else { return }
+            self.handleOutsideClick()
+        }
     }
 }
 

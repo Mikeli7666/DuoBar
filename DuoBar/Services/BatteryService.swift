@@ -114,6 +114,28 @@ final class BatteryService {
         )
     }
 
+    /// Reads the system's time-to-full / time-to-empty estimate. Cheap enough to
+    /// call every few seconds while the popover is open.
+    func timeEstimate() -> BatteryTimeEstimate {
+        guard let info = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
+              let sources = IOPSCopyPowerSourcesList(info)?.takeRetainedValue() as? [CFTypeRef]
+        else { return .unavailable }
+
+        let descriptions = sources.compactMap {
+            IOPSGetPowerSourceDescription(info, $0)?.takeUnretainedValue() as? [String: Any]
+        }
+        guard let dictionary = descriptions.first(where: { $0["Type"] as? String == kIOPSInternalBatteryType }) else {
+            return .unavailable
+        }
+        return BatteryTimeEstimate.resolve(
+            isCharging: dictionary[kIOPSIsChargingKey] as? Bool ?? false,
+            isPluggedIn: (dictionary[kIOPSPowerSourceStateKey] as? String) == kIOPSACPowerValue,
+            isFullyCharged: (dictionary[kIOPSIsChargedKey] as? Bool) == true,
+            timeToFull: dictionary[kIOPSTimeToFullChargeKey] as? Int,
+            timeToEmpty: dictionary[kIOPSTimeToEmptyKey] as? Int
+        )
+    }
+
     private func publish(_ status: BatteryStatus, trigger: RefreshTrigger) {
         let previous = lastStatus
         guard status != previous else { return }

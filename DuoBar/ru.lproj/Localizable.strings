@@ -59,6 +59,11 @@
 "No internal battery" = "Нет встроенного аккумулятора";
 "Fully charged" = "Полностью заряжен";
 "Charging" = "Зарядка";
+"Charging On Hold" = "Зарядка приостановлена";
+"Using Adapter" = "От адаптера";
+"%@ to full" = "До полной: %@";
+"%@ left" = "Осталось %@";
+"Calculating…" = "Расчёт…";
 "Low Power Mode" = "Режим энергосбережения";
 "Power adapter connected" = "Подключён адаптер питания";
 "Using battery power" = "Питание от аккумулятора";

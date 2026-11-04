@@ -59,6 +59,11 @@
 "No internal battery" = "Немає вбудованого акумулятора";
 "Fully charged" = "Повністю заряджено";
 "Charging" = "Заряджання";
+"Charging On Hold" = "Заряджання призупинено";
+"Using Adapter" = "Від адаптера";
+"%@ to full" = "До повної: %@";
+"%@ left" = "Залишилось %@";
+"Calculating…" = "Обчислення…";
 "Low Power Mode" = "Режим енергоощадження";
 "Power adapter connected" = "Підключено адаптер живлення";
 "Using battery power" = "Живлення від акумулятора";

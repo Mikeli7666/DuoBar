@@ -10,7 +10,7 @@ final class PopoverRenderTests: XCTestCase {
             showPercentage: true
         )
         XCTAssertEqual(plugged.trailingValue, localized("%d%%", 96))
-        XCTAssertEqual(plugged.detail, localized("Power adapter connected"))
+        XCTAssertEqual(plugged.detail, localized("Charging On Hold"))
 
         let unplugged = BatteryStatusRow(
             battery: BatteryStatus(percentage: 96, isCharging: false, isPluggedIn: false, isFullyCharged: false, isAvailable: true),

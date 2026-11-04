@@ -3,6 +3,7 @@ import SwiftUI
 
 struct StatusPopoverView: View {
     @ObservedObject private var statusStore: SystemStatusStore
+    @ObservedObject private var presentation = PopoverPresentationState.shared
     @AppStorage(PreferenceKeys.showBatteryPercentage) private var showBatteryPercentage = true
     @AppStorage(PreferenceKeys.batteryColorCoding) private var batteryColorCoding = false
     private let onClose: () -> Void
@@ -13,20 +14,17 @@ struct StatusPopoverView: View {
     }
 
     var body: some View {
-        VStack(spacing: 8) {
-            HStack {
-                Text("DuoBar")
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-                Spacer()
-                DuoGlyphView(
-                    status: statusStore.status,
-                    metrics: DuoGlyphMetrics.standard.sized(20),
-                    animationsEnabled: false,
-                    batteryColorCodingEnabled: batteryColorCoding
-                )
-            }
-            .padding(.horizontal, 2)
+        PopoverGlassContainer {
+            panelContent
+        }
+        .opacity(presentation.isShown ? 1 : 0)
+        .animation(presentation.isShown ? PopoverMotion.openOpacity : PopoverMotion.close, value: presentation.isShown)
+        .blur(radius: presentation.isShown ? 0 : presentation.hiddenBlur)
+        .animation(presentation.isShown ? PopoverMotion.openBlur : PopoverMotion.close, value: presentation.isShown)
+    }
 
+    private var panelContent: some View {
+        VStack(spacing: 8) {
             StatusRow(
                 symbol: networkSymbol,
                 title: localized("Network"),
@@ -57,7 +55,8 @@ struct StatusPopoverView: View {
                 BatteryStatusRow(
                     battery: statusStore.status.battery,
                     showPercentage: showBatteryPercentage,
-                    showsDisclosure: true
+                    showsDisclosure: true,
+                    timeEstimate: statusStore.batteryTimeEstimate
                 )
             }
             .buttonStyle(.plain)
@@ -98,8 +97,6 @@ struct StatusPopoverView: View {
 
             // Development diagnostics belong in the dedicated DEBUG diagnostics
             // surface, never in the production status-card hierarchy.
-            Divider()
-
             HStack(spacing: 6) {
                 settingsAction
 
@@ -112,7 +109,9 @@ struct StatusPopoverView: View {
                 .foregroundStyle(.secondary)
             }
             .font(.system(size: 11.5, weight: .medium))
-            .padding(.horizontal, 3)
+            .padding(.horizontal, 10)
+            .frame(height: 34)
+            .popoverCardBackground(cornerRadius: 17, fillOpacity: 0.045)
         }
         .padding(12)
         .frame(width: 304)
@@ -310,6 +309,7 @@ struct BatteryStatusRow: View {
     let battery: BatteryStatus
     let showPercentage: Bool
     var showsDisclosure = false
+    var timeEstimate: BatteryTimeEstimate = .unavailable
 
     var body: some View {
         HStack(spacing: 11) {
@@ -331,11 +331,22 @@ struct BatteryStatusRow: View {
                             .monospacedDigit()
                     }
                 }
-                Text(detail)
-                    .font(.system(size: 10.5))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.72)
+                HStack(spacing: 6) {
+                    Text(detail)
+                        .font(.system(size: 10.5))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.72)
+                    if let secondaryDetail {
+                        Spacer(minLength: 0)
+                        Text(secondaryDetail)
+                            .font(.system(size: 10.5, weight: .medium, design: .rounded))
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.72)
+                    }
+                }
             }
 
             if showsDisclosure {
@@ -346,7 +357,7 @@ struct BatteryStatusRow: View {
         }
         .padding(.horizontal, 10)
         .frame(height: 48)
-        .background(.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .popoverCardBackground(cornerRadius: 11, fillOpacity: 0.045)
     }
 
     var trailingValue: String? {
@@ -358,9 +369,24 @@ struct BatteryStatusRow: View {
         guard battery.isAvailable else { return localized("No internal battery") }
         if battery.isFullyCharged { return localized("Fully charged") }
         if battery.isCharging { return localized("Charging") }
+        if battery.isPluggedIn { return localized("Charging On Hold") }
         if battery.isLowPowerModeEnabled { return localized("Low Power Mode") }
-        if battery.isPluggedIn { return localized("Power adapter connected") }
         return localized("Using battery power")
+    }
+
+    var secondaryDetail: String? {
+        guard battery.isAvailable else { return nil }
+        switch timeEstimate {
+        case .toFull(let minutes):
+            return localized("%@ to full", BatteryTimeFormatter.duration(minutes: minutes))
+        case .toEmpty(let minutes):
+            return localized("%@ left", BatteryTimeFormatter.duration(minutes: minutes))
+        case .calculating:
+            return localized("Calculating…")
+        case .unavailable:
+            break
+        }
+        return battery.isPluggedIn ? localized("Using Adapter") : nil
     }
 
     var symbol: String {

@@ -53,6 +53,11 @@
 "No internal battery" = "ไม่มีแบตเตอรี่ในตัว";
 "Fully charged" = "ชาร์จเต็มแล้ว";
 "Charging" = "กำลังชาร์จ";
+"Charging On Hold" = "หยุดชาร์จชั่วคราว";
+"Using Adapter" = "ใช้อะแดปเตอร์";
+"%@ to full" = "อีก %@ จะเต็ม";
+"%@ left" = "เหลือ %@";
+"Calculating…" = "กำลังคำนวณ…";
 "Low Power Mode" = "โหมดประหยัดพลังงาน";
 "Power adapter connected" = "เชื่อมต่ออะแดปเตอร์ไฟฟ้าแล้ว";
 "Using battery power" = "ใช้พลังงานจากแบตเตอรี่";

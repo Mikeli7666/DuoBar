@@ -58,6 +58,8 @@ struct AudioOutputRow: View {
         .menuStyle(.borderlessButton)
         .menuIndicator(.hidden)
         .frame(maxWidth: .infinity)
+        .frame(height: 36)
+        .popoverCardBackground(cornerRadius: 18, fillOpacity: 0.045)
         .accessibilityLabel(title)
         .accessibilityValue(detail)
         .accessibilityHint(hint)

@@ -59,6 +59,11 @@
 "No internal battery" = "沒有內建電池";
 "Fully charged" = "已充飽";
 "Charging" = "充電中";
+"Charging On Hold" = "充電已暫停";
+"Using Adapter" = "使用電源轉接器";
+"%@ to full" = "%@後充滿";
+"%@ left" = "剩餘 %@";
+"Calculating…" = "正在計算…";
 "Low Power Mode" = "低耗電模式";
 "Power adapter connected" = "電源轉接器已連接";
 "Using battery power" = "使用電池供電";
