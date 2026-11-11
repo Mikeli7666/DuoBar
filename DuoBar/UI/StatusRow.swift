@@ -83,7 +83,7 @@ struct StatusRow: View {
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(tint)
                 .frame(width: 28, height: 28)
-                .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .background(tint.opacity(0.15), in: Circle())
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(title)

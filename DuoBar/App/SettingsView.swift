@@ -10,7 +10,13 @@ struct SettingsView: View {
     @AppStorage(PreferenceKeys.adaptiveRingColorCoding) private var adaptiveRingColorCoding = false
     @AppStorage(PreferenceKeys.openOnHover) private var openOnHover = false
     @AppStorage(PreferenceKeys.showInDock) private var showInDock = false
+    @AppStorage(PreferenceKeys.showDesktopWidget) private var showDesktopWidget = false
+    @AppStorage(PreferenceKeys.desktopWidgetCustomDots) private var desktopWidgetCustomDots = DesktopWidgetDotsSource.volume.rawValue
+    @AppStorage(PreferenceKeys.desktopWidgetCustomCenter) private var desktopWidgetCustomCenter = DesktopWidgetCenterSource.network.rawValue
+    @AppStorage(PreferenceKeys.desktopWidgetCustomRing) private var desktopWidgetCustomRing = DesktopWidgetRingSource.battery.rawValue
+    @AppStorage(PreferenceKeys.desktopWidgetSize) private var desktopWidgetSize = DesktopWidgetSize.medium.rawValue
     @AppStorage(PreferenceKeys.showBatteryPercentageInMenuBar) private var showBatteryPercentageInMenuBar = false
+    @AppStorage(PreferenceKeys.appLanguage) private var appLanguage = ""
     @StateObject private var launchAtLogin = LaunchAtLoginService()
     @ObservedObject private var adaptiveRingMonitor = AdaptiveRingMonitor.shared
     private let deviceContextService = DeviceContextService()
@@ -73,6 +79,42 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
 
+                VStack(alignment: .leading, spacing: 4) {
+                    Toggle(localized("Desktop Widget"), isOn: $showDesktopWidget)
+                        .toggleStyle(.switch)
+                    Text(localized("Show DuoBar on the desktop. Drag it to move it."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                if showDesktopWidget {
+                    if DesktopWidgetMode.releasedModes.contains(.custom) {
+                    Picker(localized("Custom Mode Dots"), selection: $desktopWidgetCustomDots) {
+                        ForEach(DesktopWidgetDotsSource.allCases, id: \.self) { source in
+                            Text(source.title).tag(source.rawValue)
+                        }
+                    }
+
+                    Picker(localized("Custom Mode Center"), selection: $desktopWidgetCustomCenter) {
+                        ForEach(DesktopWidgetCenterSource.allCases, id: \.self) { source in
+                            Text(source.title).tag(source.rawValue)
+                        }
+                    }
+
+                    Picker(localized("Custom Mode Ring"), selection: $desktopWidgetCustomRing) {
+                        ForEach(DesktopWidgetRingSource.allCases, id: \.self) { source in
+                            Text(source.title).tag(source.rawValue)
+                        }
+                    }
+                    }
+
+                    Picker(localized("Widget Size"), selection: $desktopWidgetSize) {
+                        ForEach(DesktopWidgetSize.allCases, id: \.self) { size in
+                            Text(size.title).tag(size.rawValue)
+                        }
+                    }
+                }
+
                 Toggle(
                     localized("Launch DuoBar at login"),
                     isOn: Binding(
@@ -92,6 +134,12 @@ struct SettingsView: View {
                         .font(.caption)
                         .foregroundStyle(.red)
                         .textSelection(.enabled)
+                }
+
+                Picker(localized("Language"), selection: $appLanguage) {
+                    ForEach(AppLanguage.allCases, id: \.self) { language in
+                        Text(language.displayName).tag(language.rawValue)
+                    }
                 }
             }
 
@@ -124,7 +172,8 @@ struct SettingsView: View {
         }
         .formStyle(.grouped)
         .scenePadding()
-        .frame(width: 420, height: settingsHeight)
+        .frame(minWidth: 420, idealWidth: 420, maxWidth: .infinity, minHeight: 340, idealHeight: settingsHeight, maxHeight: .infinity)
+        .background(SettingsWindowConfigurator())
         .navigationTitle(localized("DuoBar Settings"))
         .onAppear {
             NSApp.activate(ignoringOtherApps: true)

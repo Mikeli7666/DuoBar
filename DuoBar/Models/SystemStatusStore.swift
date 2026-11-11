@@ -27,6 +27,7 @@ final class SystemStatusStore: ObservableObject {
     private var debugNetworkOverride: NetworkStatus?
     private var debugAudioOverride: AudioStatus?
     private var debugBluetoothOverride: BluetoothStatus?
+    private var debugNetworkSpeedOverride: NetworkSpeed?
     #endif
 
     init(
@@ -84,6 +85,12 @@ final class SystemStatusStore: ObservableObject {
             self?.networkSpeedService.setInterface(value.isConnected ? value.interfaceName : nil)
         }
         networkSpeedService.onSpeedChange = { [weak self] speed in
+            #if DEBUG
+            if let filmSpeed = self?.debugNetworkSpeedOverride {
+                self?.networkSpeed = filmSpeed
+                return
+            }
+            #endif
             self?.networkSpeed = speed
         }
         networkService.onSSIDAuthorizationChange = { [weak self] authorization in
@@ -447,6 +454,7 @@ final class SystemStatusStore: ObservableObject {
         debugNetworkOverride = nil
         debugAudioOverride = nil
         debugBluetoothOverride = nil
+        debugNetworkSpeedOverride = nil
         priorityController.returnToNormal()
         refresh()
     }
@@ -533,6 +541,30 @@ final class SystemStatusStore: ObservableObject {
                     StatusEvent(kind: .audioDeviceConnected(airPods), priority: .informational, duration: 30)
                 )
             }
+        }
+    }
+
+    /// Film-timeline companion to `applyDebugBatteryStatus`: publishes a fully
+    /// custom network status (realistic SSIDs for capture) instead of one of
+    /// the `DebugNetworkState` presets.
+    func applyDebugNetworkStatus(_ networkStatus: NetworkStatus) {
+        debugNetworkOverride = networkStatus
+        mutate { $0.network = networkStatus }
+    }
+
+    /// Film-timeline companion: publishes a fully custom audio status so a
+    /// capture timeline can also script the input device list.
+    func applyDebugAudioStatus(_ audioStatus: AudioStatus) {
+        debugAudioOverride = audioStatus
+        mutate { $0.audio = audioStatus }
+    }
+
+    /// While set, the popover's network-speed readout shows this scripted rate
+    /// instead of the live measurement.
+    func applyDebugNetworkSpeed(_ speed: NetworkSpeed?) {
+        debugNetworkSpeedOverride = speed
+        if let speed {
+            networkSpeed = speed
         }
     }
     #endif

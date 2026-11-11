@@ -92,7 +92,9 @@ struct StatusPopoverView: View {
             )
 
             #if DEBUG
-            DebugStatusSimulatorView(statusStore: statusStore)
+            if !FilmTimelinePlayer.captureConfigured {
+                DebugStatusSimulatorView(statusStore: statusStore)
+            }
             #endif
 
             // Development diagnostics belong in the dedicated DEBUG diagnostics
@@ -120,48 +122,23 @@ struct StatusPopoverView: View {
         }
     }
 
-    @ViewBuilder
     private var settingsAction: some View {
-        if #available(macOS 14.0, *) {
-            SettingsLink {
-                settingsLabel
-            }
-            .buttonStyle(.plain)
-            .simultaneousGesture(TapGesture().onEnded {
-                NSApp.activate(ignoringOtherApps: true)
-                onClose()
-            })
-        } else {
-            Button(action: openSettingsFromApplicationMenu) {
-                settingsLabel
-            }
-            .buttonStyle(.plain)
+        // Deliberately not SettingsLink: the Settings scene's window
+        // cannot stay resizable (the scene strips the flag), so settings
+        // open in the app's own window via SettingsPresenter.
+        Button(action: openSettings) {
+            settingsLabel
         }
+        .buttonStyle(.plain)
     }
 
     private var settingsLabel: some View {
         Label(localized("Settings"), systemImage: "gearshape")
     }
 
-    private func openSettingsFromApplicationMenu() {
-        NSApp.activate(ignoringOtherApps: true)
-        if let settingsItem = findSettingsMenuItem(in: NSApp.mainMenu), let action = settingsItem.action {
-            NSApp.sendAction(action, to: settingsItem.target, from: settingsItem)
-        }
+    private func openSettings() {
+        SettingsPresenter.show()
         onClose()
-    }
-
-    private func findSettingsMenuItem(in menu: NSMenu?) -> NSMenuItem? {
-        guard let menu else { return nil }
-        for item in menu.items {
-            if item.keyEquivalent == ",", item.keyEquivalentModifierMask.contains(.command) {
-                return item
-            }
-            if let settingsItem = findSettingsMenuItem(in: item.submenu) {
-                return settingsItem
-            }
-        }
-        return nil
     }
 
     private var networkSettingsHint: String {
@@ -171,7 +148,14 @@ struct StatusPopoverView: View {
     }
 
     private func openNetworkSettings() {
-        _ = SystemSettingsOpener.open(SystemSettingsOpener.pane(for: statusStore.status.network))
+        // Mirrors Apple's own Wi-Fi icon (#17): holding Option while
+        // activating the row opens the general Network settings instead of
+        // the transport-specific pane.
+        if NSEvent.modifierFlags.contains(.option) {
+            _ = SystemSettingsOpener.open(.network)
+        } else {
+            _ = SystemSettingsOpener.open(SystemSettingsOpener.pane(for: statusStore.status.network))
+        }
         onClose()
     }
 
@@ -317,7 +301,7 @@ struct BatteryStatusRow: View {
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(.primary)
                 .frame(width: 28, height: 28)
-                .background(.primary.opacity(0.12), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .background(.primary.opacity(0.12), in: Circle())
 
             VStack(alignment: .leading, spacing: 1) {
                 HStack(spacing: 8) {

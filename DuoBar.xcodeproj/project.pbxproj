@@ -25,7 +25,22 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		043A8910309D4F5D00BABA2B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		043A88FB309D4F5C00BABA2B /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		043A88FD309D4F5C00BABA2B /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		A10000000000000000000012 /* DuoBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DuoBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000014 /* DuoBarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DuoBarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000031 /* CoreWLAN.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreWLAN.framework; path = System/Library/Frameworks/CoreWLAN.framework; sourceTree = SDKROOT; };
@@ -37,6 +52,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		043A88FF309D4F5C00BABA2B /* DuoBarWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DuoBarWidget;
+			sourceTree = "<group>";
+		};
 		A10000000000000000000006 /* DuoBar */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = DuoBar;
@@ -78,6 +98,7 @@
 			children = (
 				A10000000000000000000006 /* DuoBar */,
 				A10000000000000000000007 /* DuoBarTests */,
+				043A88FF309D4F5C00BABA2B /* DuoBarWidget */,
 				A10000000000000000000004 /* Frameworks */,
 				A10000000000000000000003 /* Products */,
 			);
@@ -101,6 +122,8 @@
 				A10000000000000000000034 /* ServiceManagement.framework */,
 				A10000000000000000000035 /* XCTest.framework */,
 				A10000000000000000000036 /* CoreLocation.framework */,
+				043A88FB309D4F5C00BABA2B /* WidgetKit.framework */,
+				043A88FD309D4F5C00BABA2B /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -115,6 +138,7 @@
 				A10000000000000000000053 /* Sources */,
 				A10000000000000000000051 /* Frameworks */,
 				A10000000000000000000054 /* Resources */,
+				043A8910309D4F5D00BABA2B /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -158,7 +182,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2660;
+				LastSwiftUpdateCheck = 2720;
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
 					A10000000000000000000011 = {
@@ -283,7 +307,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = M42BR3TVW4;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -292,7 +316,7 @@
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "DuoBar uses Bluetooth availability with public audio metadata to recognize supported Bluetooth audio connections.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "DuoBar uses location access only to display the name of the Wi-Fi network you are connected to.";
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mikeli.duobar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -310,7 +334,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = M42BR3TVW4;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -319,7 +343,7 @@
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "DuoBar uses Bluetooth availability with public audio metadata to recognize supported Bluetooth audio connections.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "DuoBar uses location access only to display the name of the Wi-Fi network you are connected to.";
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mikeli.duobar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

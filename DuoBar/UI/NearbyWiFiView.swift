@@ -12,18 +12,18 @@ struct NearbyWiFiButton: View {
         } label: {
             HStack(spacing: 8) {
                 Label(localized("Nearby Networks"), systemImage: "wifi")
-                    .font(.system(size: 10.5, weight: .medium))
+                    .font(.system(size: 12, weight: .medium))
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 8.5, weight: .semibold))
+                    .font(.system(size: 9, weight: .semibold))
                     .foregroundStyle(.tertiary)
             }
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .padding(.horizontal, 10)
-        .frame(height: 28)
-        .popoverCardBackground(cornerRadius: 8, fillOpacity: 0.03)
+        .frame(height: 36)
+        .popoverCardBackground(cornerRadius: 18, fillOpacity: 0.045)
         .accessibilityHint(localized("Browse nearby Wi-Fi networks"))
         .popover(isPresented: $isPresented, arrowEdge: .trailing) {
             NearbyWiFiPopoverView(

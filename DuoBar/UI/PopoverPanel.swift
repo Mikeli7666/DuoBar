@@ -47,6 +47,9 @@ final class PopoverPanel: NSPanel {
         x = min(max(x, visible.minX + 8), visible.maxX - size.width - 8)
         let y = buttonFrame.minY - size.height - 6
         setFrameOrigin(NSPoint(x: x, y: y))
+        // The native Control Center always draws its glass in the dark
+        // appearance; the variant decides whether to force it.
+        appearance = PopoverGlassVariant.current.forcedAppearance
         makeKeyAndOrderFront(nil)
     }
 }

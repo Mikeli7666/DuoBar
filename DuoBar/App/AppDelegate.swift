@@ -6,9 +6,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let isRunningTests: Bool
     private var instanceLock: ApplicationInstanceLock?
     private var statusStore: SystemStatusStore?
+    private var desktopWidgetController: DesktopWidgetController?
     private var menuBarController: MenuBarController?
     private var wakeObserver: NSObjectProtocol?
     private var dockPreferenceObserver: NSObjectProtocol?
+    private var windowPolicyObserver: NSObjectProtocol?
+    private var windowResizeObserver: NSObjectProtocol?
     private var hasPresentedDiskImageInstallHelp = false
 
     #if DEBUG
@@ -52,10 +55,47 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         ) { [weak self] _ in
             Task { @MainActor in
                 self?.applyDockPolicy()
+                self?.applyDesktopWidgetPolicy()
+            }
+        }
+        // The SwiftUI Settings scene creates its window outside our control
+        // and leaves it non-resizable; re-apply the window policy every time
+        // a regular (non-panel) window becomes key, in case the scene's own
+        // layout pass strips the flags again.
+        windowPolicyObserver = NotificationCenter.default.addObserver(
+            forName: NSWindow.didBecomeKeyNotification,
+            object: nil,
+            queue: .main
+        ) { notification in
+            Task { @MainActor in
+                guard let window = notification.object as? NSWindow,
+                      !(window is NSPanel) else { return }
+                SettingsWindowPolicy.configure(window)
+            }
+        }
+        // The Settings scene re-asserts its fixed content size once a live
+        // resize ends (the window resizes once, then locks again), so
+        // re-apply the policy after every live resize — immediately and
+        // once more on the next runloop turn, after the scene's own
+        // layout pass has run.
+        windowResizeObserver = NotificationCenter.default.addObserver(
+            forName: NSWindow.didEndLiveResizeNotification,
+            object: nil,
+            queue: .main
+        ) { notification in
+            Task { @MainActor in
+                guard let window = notification.object as? NSWindow,
+                      !(window is NSPanel) else { return }
+                SettingsWindowPolicy.configure(window)
+                DispatchQueue.main.async {
+                    SettingsWindowPolicy.configure(window)
+                }
             }
         }
         let statusStore = SystemStatusStore()
         self.statusStore = statusStore
+        desktopWidgetController = DesktopWidgetController(statusStore: statusStore)
+        applyDesktopWidgetPolicy()
 
         #if DEBUG
         if MarketingCaptureMode.isEnabled {
@@ -75,6 +115,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         let menuBarController = MenuBarController(statusStore: statusStore)
         self.menuBarController = menuBarController
+
+        #if DEBUG
+        FilmTimelinePlayer.shared.startIfConfigured(store: statusStore, menuBarController: menuBarController)
+        #endif
 
         presentDiskImageInstallHelpIfNeeded()
 
@@ -109,6 +153,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    private func applyDesktopWidgetPolicy() {
+        let visible = UserDefaults.standard.bool(forKey: PreferenceKeys.showDesktopWidget)
+        desktopWidgetController?.setVisible(visible)
+    }
+
     private func applyDockPolicy() {
         let wantsDock = UserDefaults.standard.bool(forKey: PreferenceKeys.showInDock)
         let target: NSApplication.ActivationPolicy = wantsDock ? .regular : .accessory
@@ -123,22 +172,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func openSettingsWindow() {
-        NSApp.activate(ignoringOtherApps: true)
-        guard let item = settingsMenuItem(in: NSApp.mainMenu), let action = item.action else { return }
-        NSApp.sendAction(action, to: item.target, from: item)
-    }
-
-    private func settingsMenuItem(in menu: NSMenu?) -> NSMenuItem? {
-        guard let menu else { return nil }
-        for item in menu.items {
-            if item.keyEquivalent == ",", item.keyEquivalentModifierMask.contains(.command) {
-                return item
-            }
-            if let found = settingsMenuItem(in: item.submenu) {
-                return found
-            }
-        }
-        return nil
+        SettingsPresenter.show()
     }
 
     private func presentDiskImageInstallHelpIfNeeded() {

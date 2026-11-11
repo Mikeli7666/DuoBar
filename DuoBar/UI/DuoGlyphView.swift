@@ -152,7 +152,8 @@ struct DuoGlyphView: View {
                                 size: chargingBoltSize,
                                 offset: chargingBoltOffset,
                                 dilation: metrics.ringDiameter * BatteryChargingAnimationProfile.boltGapDilationRatio,
-                                numberGapVisible: showBatteryPercentage && glyphState.ringPresentation.mode != .adaptive && status.battery.percentage != nil
+                                numberGapVisible: showBatteryPercentage && glyphState.ringPresentation.mode != .adaptive && status.battery.percentage != nil,
+                                designScale: filmDesignScale
                             )
                             // The arc frame spans only the path diameter, but the centered
                             // stroke extends half a stroke width beyond it on every side.
@@ -200,9 +201,9 @@ struct DuoGlyphView: View {
                glyphState.ringPresentation.mode != .adaptive,
                let pct = status.battery.percentage {
                 Text(verbatim: "\(pct)")
-                    .font(.system(size: 8, weight: .bold))
+                    .font(.system(size: 8 * filmDesignScale, weight: .bold))
                     .foregroundStyle(.primary)
-                    .offset(y: -11)
+                    .offset(y: -11 * filmDesignScale)
             }
         }
         .frame(width: DuoGlyphMetrics.canvasSize, height: DuoGlyphMetrics.canvasSize)
@@ -334,6 +335,19 @@ struct DuoGlyphView: View {
 
     private var chargingBoltSize: CGFloat {
         metrics.ringDiameter * BatteryChargingAnimationProfile.boltFontSizeRatio
+    }
+
+    /// Ratio between the current glyph metrics and the standard menu-bar
+    /// metrics. Every caller that enlarges the glyph scales the design
+    /// fields (menu-bar icon size via scaled(by:), the film stage, the
+    /// desktop widget), and the few hard-coded design-space values
+    /// (percentage label, number-gap mask) must follow that scale or they
+    /// render at standard size inside an enlarged glyph. At Extra Large
+    /// icon size the un-scaled number gap no longer reaches the enlarged
+    /// arc, leaving a stray arc segment above the percentage digits
+    /// (Threads report by @lnobre, 2026-11-07).
+    private var filmDesignScale: CGFloat {
+        metrics.ringDiameter / DuoGlyphMetrics.standard.ringDiameter
     }
 
     private var chargingBoltOpacity: Double {
@@ -977,6 +991,7 @@ private struct DuoChargingGapMask: View {
     let offset: CGSize
     let dilation: CGFloat
     var numberGapVisible: Bool = false
+    var designScale: CGFloat = 1
 
 
     private static let sampleCount = 16
@@ -999,9 +1014,9 @@ private struct DuoChargingGapMask: View {
             .blendMode(.destinationOut)
 
             if numberGapVisible {
-                RoundedRectangle(cornerRadius: 3)
-                    .frame(width: 16, height: 7)
-                    .offset(y: -10.5)
+                RoundedRectangle(cornerRadius: 3 * designScale)
+                    .frame(width: 16 * designScale, height: 7 * designScale)
+                    .offset(y: -10.5 * designScale)
                     .blendMode(.destinationOut)
             }
         }

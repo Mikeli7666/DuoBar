@@ -118,14 +118,22 @@ final class MenuBarController: NSObject {
         hostingController.view.layoutSubtreeIfNeeded()
         var size = hostingController.view.fittingSize
         if size.width < 1 || size.height < 1 { size = NSSize(width: 304, height: 352) }
-        PopoverPresentationState.shared.prepareToShow()
         closeWorkItem?.cancel()
         closeWorkItem = nil
         isClosing = false
+        // A panel that is still fading out keeps its current look and fades
+        // back in; a fresh open starts from the hidden (blurred, clear) state.
+        let reopeningDuringClose = panel.isVisible
+        if !reopeningDuringClose {
+            PopoverPresentationState.shared.prepareToShow()
+        }
         panel.present(below: button, size: size)
-        // Give SwiftUI one frame to draw the hidden state, then animate in.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
-            PopoverPresentationState.shared.show()
+        // One runloop turn later so SwiftUI has rendered the hidden state and
+        // the change below animates instead of snapping.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) {
+            Task { @MainActor in
+                PopoverPresentationState.shared.show()
+            }
         }
         installOutsideClickMonitors()
         statusStore.setPopoverActive(true)
@@ -368,21 +376,24 @@ extension MenuBarController {
     /// Hides the panel and runs the cleanup the popover delegate used to do.
     func dismissPanel() {
         guard isPanelVisible else { return }
+        closeWorkItem?.cancel()
+        // Set before anything else so re-entrant close requests (for example
+        // from `perform` below) see the panel as already closing.
         isClosing = true
-        PopoverPresentationState.shared.hide()
         removeOutsideClickMonitors()
         statusStore.setPopoverActive(false)
         perform(hoverInteraction.popoverClosedExternally())
-        // Keep the window up until the fade-out has finished.
-        let work = DispatchWorkItem { [weak self] in
+        PopoverPresentationState.shared.hide()
+        let workItem = DispatchWorkItem { [weak self] in
             Task { @MainActor in
-                guard let self, self.isClosing else { return }
+                guard let self else { return }
                 self.isClosing = false
+                self.closeWorkItem = nil
                 self.panel?.orderOut(nil)
             }
         }
-        closeWorkItem = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + PopoverMotion.closeDuration + 0.03, execute: work)
+        closeWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + PopoverMotion.closeDuration, execute: workItem)
     }
 
     /// Stands in for `.transient`: closes when key moves to another window of

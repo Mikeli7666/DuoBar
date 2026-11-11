@@ -34,11 +34,13 @@ struct DuoStatusView: View {
     #endif
 
     private let onWidthChange: (CGFloat) -> Void
+    private let filmScale: Double?
 
-    init(statusStore: SystemStatusStore, onWidthChange: @escaping (CGFloat) -> Void = { _ in }) {
+    init(statusStore: SystemStatusStore, onWidthChange: @escaping (CGFloat) -> Void = { _ in }, filmScale: Double? = nil) {
         self.statusStore = statusStore
         self.priorityController = statusStore.priorityController
         self.onWidthChange = onWidthChange
+        self.filmScale = filmScale
         _lastLaptopRingMode = State(initialValue: statusStore.laptopRingModeState.mode)
         _adaptiveEntryCenterOverride = State(initialValue: nil)
     }
@@ -216,6 +218,26 @@ struct DuoStatusView: View {
         #else
         baseMetrics = .standard
         #endif
+        if let filmScale {
+            // Scale the design-space geometry and leave overallSize at the
+            // menu-bar value. The glyph view draws its design space natively
+            // and then applies scaleEffect(overallSize / canvasSize) at its
+            // root: growing the design fields makes it draw natively at film
+            // size and scale DOWN (sharp), while growing overallSize would
+            // upscale the small native render (blurry). scaled(by:) is
+            // unusable here — it clamps through MenuBarIconSize.resolve.
+            let factor = CGFloat(filmScale)
+            var copy = baseMetrics
+            copy.ringDiameter *= factor
+            copy.ringLineWidth *= factor
+            copy.wifiSymbolSize *= factor
+            copy.wifiYOffset *= factor
+            copy.dotDiameter *= factor
+            copy.dotSpacing *= factor
+            copy.dotYOffset *= factor
+            copy.ringYOffset *= factor
+            return copy
+        }
         return baseMetrics.scaled(by: menuBarIconScale)
     }
 

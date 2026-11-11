@@ -10,49 +10,56 @@ struct VolumeStatusRow: View {
     @State private var feedbackInteraction = VolumeFeedbackInteraction()
 
     var body: some View {
-        HStack(spacing: 11) {
-            muteControl
-                .frame(width: 28, height: 28)
-                .background(.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+        // Layout follows the native Control Center Sound tile: title on top,
+        // below it a thin track between a low and a high speaker glyph.
+        // The low-volume glyph doubles as the mute button.
+        VStack(alignment: .leading, spacing: 7) {
+            HStack {
+                Text(localized("Volume"))
+                    .font(.system(size: 13, weight: .semibold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
+                Spacer()
+                Text(stateText)
+                    .font(.system(size: 10.5, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
+            }
 
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text(localized("Volume"))
-                        .font(.system(size: 12.5, weight: .semibold))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.82)
-                    Spacer()
-                    Text(stateText)
-                        .font(.system(size: 10.5, weight: .medium, design: .rounded))
-                        .foregroundStyle(.secondary)
-                        .monospacedDigit()
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.72)
-                }
+            HStack(spacing: 8) {
+                muteControl
+                    .frame(width: 14, height: 14)
 
                 if volume.isSettable, let level = volume.level {
-                    Slider(
-                        value: Binding(
-                            get: { level },
-                            set: handleUserVolumeChange
-                        ),
-                        in: 0...1,
+                    NativeVolumeSlider(
+                        level: level,
+                        isMuted: volume.isMuted,
+                        onChange: handleUserVolumeChange,
                         onEditingChanged: handleSliderEditingChanged
                     )
-                    .controlSize(.mini)
                     .accessibilityLabel(localized("Output volume"))
                     .accessibilityValue(stateText)
+
+                    Image(systemName: "speaker.wave.3.fill")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: 18, height: 14)
                 } else {
                     Text(hasOutputDevice ? localized("Controlled by device") : localized("Volume unavailable"))
                         .font(.system(size: 10.5))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.72)
+                    Spacer(minLength: 0)
                 }
             }
+            .frame(height: 14)
         }
         .padding(.horizontal, 10)
-        .frame(height: 54)
+        .padding(.top, 9)
+        .frame(height: 62, alignment: .top)
         .popoverCardBackground(cornerRadius: 11, fillOpacity: 0.045)
     }
 
@@ -62,28 +69,23 @@ struct VolumeStatusRow: View {
             Button {
                 handleUserMuteChange()
             } label: {
-                Image(systemName: volumeSymbol)
-                    .font(.system(size: 13, weight: .semibold))
-                    .frame(width: 28, height: 28)
+                lowVolumeImage
+                    .frame(width: 18, height: 18)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .help(volume.isMuted ? localized("Unmute") : localized("Mute"))
             .accessibilityLabel(volume.isMuted ? localized("Unmute output") : localized("Mute output"))
         } else {
-            Image(systemName: volumeSymbol)
-                .font(.system(size: 13, weight: .semibold))
+            lowVolumeImage
         }
     }
 
-    private var volumeSymbol: String {
-        guard let percentage = volume.percentage else { return "speaker" }
-        if volume.isMuted || percentage == 0 { return "speaker.slash.fill" }
-        switch percentage {
-        case 1...33: return "speaker.wave.1"
-        case 34...66: return "speaker.wave.2"
-        default: return "speaker.wave.3"
-        }
+    private var lowVolumeImage: some View {
+        let silent = volume.isMuted || volume.percentage == 0
+        return Image(systemName: silent ? "speaker.slash.fill" : "speaker.fill")
+            .font(.system(size: 12, weight: .semibold))
+            .foregroundStyle(.white)
     }
 
     private var stateText: String {
@@ -148,5 +150,68 @@ struct VolumeStatusRow: View {
         $feedbackInteraction.wrappedValue = interaction
 
         VolumeFeedbackSound.play(on: playbackDeviceIdentifier)
+    }
+}
+
+/// Slider in the style of Control Center's Display / Sound rows, measured from
+/// the native recording: a thin fully rounded track, solid white up to the
+/// knob and a faint white remainder, and a small white rounded-rectangle knob.
+private struct NativeVolumeSlider: View {
+    let level: Double
+    let isMuted: Bool
+    let onChange: (Double) -> Void
+    let onEditingChanged: (Bool) -> Void
+
+    @State private var isDragging = false
+
+    private let trackHeight: CGFloat = 4.5
+    private let knobSize = CGSize(width: 18, height: 14)
+    private let hitHeight: CGFloat = 24
+
+    var body: some View {
+        GeometryReader { proxy in
+            let width = proxy.size.width
+            let travel = max(width - knobSize.width, 1)
+            let clamped = CGFloat(min(max(level, 0), 1))
+            let knobCenter = knobSize.width / 2 + clamped * travel
+            ZStack(alignment: .leading) {
+                Capsule(style: .continuous)
+                    .fill(.white.opacity(0.28))
+                    .frame(height: trackHeight)
+                Capsule(style: .continuous)
+                    .fill(.white.opacity(isMuted ? 0.35 : 1))
+                    .frame(width: knobCenter, height: trackHeight)
+                RoundedRectangle(cornerRadius: 6.5, style: .continuous)
+                    .fill(.white.opacity(isMuted ? 0.55 : 1))
+                    .frame(width: knobSize.width, height: knobSize.height)
+                    .offset(x: knobCenter - knobSize.width / 2)
+            }
+            .frame(maxHeight: .infinity)
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        if !isDragging {
+                            isDragging = true
+                            onEditingChanged(true)
+                        }
+                        let raw = (value.location.x - knobSize.width / 2) / travel
+                        onChange(Double(min(max(raw, 0), 1)))
+                    }
+                    .onEnded { _ in
+                        isDragging = false
+                        onEditingChanged(false)
+                    }
+            )
+        }
+        .frame(height: hitHeight)
+        .accessibilityElement(children: .ignore)
+        .accessibilityAdjustableAction { direction in
+            switch direction {
+            case .increment: onChange(min(level + 0.1, 1))
+            case .decrement: onChange(max(level - 0.1, 0))
+            @unknown default: break
+            }
+        }
     }
 }
