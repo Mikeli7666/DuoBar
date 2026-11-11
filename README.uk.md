@@ -4,9 +4,9 @@
 
 Компактний індикатор для рядка меню macOS: акумулятор, мережа й гучність в одному значку.
 
-[Завантажити DuoBar 1.4.0](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.0/DuoBar-1.4.0.dmg) · [Усі версії](https://github.com/Mikeli7666/DuoBar/releases) · [Повідомити про помилку](https://github.com/Mikeli7666/DuoBar/issues)
+[Завантажити DuoBar 1.4.1](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.1/DuoBar-1.4.1.dmg) · [Усі версії](https://github.com/Mikeli7666/DuoBar/releases) · [Повідомити про помилку](https://github.com/Mikeli7666/DuoBar/issues)
 
-DuoBar 1.4.0 (збірка 9) · macOS 13+ · Apple Silicon та Intel · Universal 2 · Безкоштовний проєкт із відкритим кодом
+DuoBar 1.4.1 (збірка 10) · macOS 13+ · Apple Silicon та Intel · Universal 2 · Безкоштовний проєкт із відкритим кодом
 
 <p align="center">
   <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Підтримати DuoBar на Ko-fi"></a>
@@ -18,12 +18,12 @@ DuoBar 1.4.0 (збірка 9) · macOS 13+ · Apple Silicon та Intel · Univer
 
 ## 📥 Встановлення для початківців
 
-1. Відкрийте [реліз DuoBar 1.4.0](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.4.0).
-2. У розділі **Assets** завантажте **DuoBar-1.4.0.dmg**. Не завантажуйте `Source code (zip)` або `Source code (tar.gz)` — це вихідний код.
-3. Двічі клацніть файл **DuoBar-1.4.0.dmg** і перетягніть **DuoBar.app** до **Applications / Програми**.
+1. Відкрийте [реліз DuoBar 1.4.1](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.4.1).
+2. У розділі **Assets** завантажте **DuoBar-1.4.1.dmg**. Не завантажуйте `Source code (zip)` або `Source code (tar.gz)` — це вихідний код.
+3. Двічі клацніть файл **DuoBar-1.4.1.dmg** і перетягніть **DuoBar.app** до **Applications / Програми**.
 4. Відкрийте «Програми» та запустіть DuoBar. Це утиліта рядка меню, тому зазвичай вона не з’являється в Dock.
 
-DuoBar 1.4.0 підписано Developer ID та нотаризовано Apple. Не потрібно вимикати Gatekeeper або SIP, використовувати Terminal, `sudo` чи `xattr`.
+DuoBar 1.4.1 підписано Developer ID та нотаризовано Apple. Не потрібно вимикати Gatekeeper або SIP, використовувати Terminal, `sudo` чи `xattr`.
 
 ## Дозвіл геолокації та Wi‑Fi
 
@@ -37,6 +37,7 @@ DuoBar 1.4.0 підписано Developer ID та нотаризовано Apple
 - Network: Wi‑Fi, Ethernet, офлайн-стан, SSID, публічний перемикач Wi‑Fi та поточна швидкість завантаження й відвантаження на панелі.
 - Гучність: чотири крапки, повзунок, вимкнення/увімкнення звуку та вибір аудіовиходу.
 - Тимчасове відображення AirPods/навушників, Open on Hover і регулювання розміру значка.
+- Віджет робочого столу: той самий значок 3-в-1 на робочому столі, перетягуваний, у 3 розмірах.
 - Швидкі переходи до налаштувань Network, Battery і Sound.
 - Панель Liquid Glass у macOS 26 і новіших (у раніших версіях — напівпрозорий дизайн).
 - Необов’язковий значок у Dock (вимкнено за замовчуванням); клацання відкриває налаштування.
@@ -60,8 +61,8 @@ DuoBar 1.4.0 підписано Developer ID та нотаризовано Apple
 
 Системний стан обробляється локально: немає аналітики, відстеження, бекенду, телеметрії чи сторонніх мережевих запитів. DuoBar не сканує найближчі Wi‑Fi мережі, не підключається до них і не створює пару з Bluetooth-пристроями. Деякі зовнішні аудіопристрої не підтримують програмне керування гучністю.
 
-SHA-256 офіційного DMG DuoBar 1.4.0:
+SHA-256 офіційного DMG DuoBar 1.4.1:
 
-`07a884f7a0b3a189546f0f39af6dcb13b53b8cb1d167c9f932258e44b6616045`
+`cb463c7647bbc13d25243e4e12e4f050adc9565219a8251609a8f2ca356d1925`
 
 DuoBar поширюється за [MIT License](LICENSE).

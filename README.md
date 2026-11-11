@@ -8,9 +8,9 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
 
-[**Download DuoBar 1.4.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.0/DuoBar-1.4.0.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
+[**Download DuoBar 1.4.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.1/DuoBar-1.4.1.dmg) · [**All Releases**](https://github.com/Mikeli7666/DuoBar/releases) · [**Report a Bug**](https://github.com/Mikeli7666/DuoBar/issues)
 
-DuoBar 1.4.0 (Build 9) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
+DuoBar 1.4.1 (Build 10) · macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
 
 <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Support DuoBar on Ko-fi"></a>
 
@@ -40,7 +40,7 @@ On MacBooks, the outer Battery Ring shows live battery level, a dynamic charging
 
 ## DuoBar on macOS
 
-The current 1.4.0 release brings the Liquid Glass popover, live network speed, richer battery details, and an optional Dock icon.
+The current 1.4.1 release adds a desktop widget, in-app language switching, a Control Center-style glass popover, and a resizable Settings window.
 
 <p align="center">
 ## Features
@@ -54,6 +54,7 @@ The current 1.4.0 release brings the Liquid Glass popover, live network speed, r
 - Live download and upload speed in the popover’s Network row
 - Optional Open on Hover popover behavior
 - Four-dot live volume indicator
+- Desktop Widget: the same 3-in-1 glyph on your desktop, draggable anywhere, in 3 sizes (turn it on in Settings)
 - Compact volume slider, public Core Audio mute, and output-device switching where supported
 - Temporary AirPods/headphones connection presentation
 - Adjustable menu-bar Icon Size
@@ -73,14 +74,14 @@ The current 1.4.0 release brings the Liquid Glass popover, live network speed, r
 
 ## Installation
 
-1. Open the [DuoBar 1.4.0 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.4.0) and find **Assets**.
-2. Download **DuoBar-1.4.0.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
+1. Open the [DuoBar 1.4.1 release](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.4.1) and find **Assets**.
+2. Download **DuoBar-1.4.1.dmg**. Do not download `Source code (zip)` or `Source code (tar.gz)`.
 3. Double-click the DMG and drag **DuoBar.app** to **Applications**.
 4. Open Applications and launch DuoBar. It is a menu-bar utility and normally does not appear in the Dock.
 
-DuoBar 1.4.0 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
+DuoBar 1.4.1 uses Developer ID signing, Hardened Runtime, and Apple notarization. Normal installation does not require disabling Gatekeeper/SIP, Terminal, `sudo`, or `xattr`.
 
-SHA-256: `07a884f7a0b3a189546f0f39af6dcb13b53b8cb1d167c9f932258e44b6616045`
+SHA-256: `cb463c7647bbc13d25243e4e12e4f050adc9565219a8251609a8f2ca356d1925`
 
 Build and compatibility/reliability work was checked using Xcode 27 and the macOS 27 SDK while continuing to support macOS 13+. This does not claim macOS 27 hardware validation.
 

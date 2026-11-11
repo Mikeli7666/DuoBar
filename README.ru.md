@@ -4,9 +4,9 @@
 
 Индикатор в стиле iPhone Duo для строки меню macOS: батарея, сеть и громкость в одном значке.
 
-[**Скачать DuoBar 1.4.0**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.0/DuoBar-1.4.0.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**Скачать DuoBar 1.4.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.1/DuoBar-1.4.1.dmg) · [Все версии](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
-DuoBar 1.4.0 (сборка 9) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
+DuoBar 1.4.1 (сборка 10) · macOS 13 Ventura или новее · Apple Silicon и Intel · Universal 2
 
 <p align="center">
   <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Поддержать DuoBar на Ko-fi"></a>
@@ -20,9 +20,9 @@ DuoBar 1.4.0 (сборка 9) · macOS 13 Ventura или новее · Apple Sil
 
 ### Шаг 1. Скачать DuoBar
 
-Нажмите «Скачать DuoBar 1.4.0» выше. Браузер загрузит файл:
+Нажмите «Скачать DuoBar 1.4.1» выше. Браузер загрузит файл:
 
-`DuoBar-1.4.0.dmg`
+`DuoBar-1.4.1.dmg`
 
 Обычному пользователю нужен только этот DMG. Не скачивайте:
 
@@ -33,13 +33,13 @@ DuoBar 1.4.0 (сборка 9) · macOS 13 Ventura или новее · Apple Sil
 
 Если вы открыли страницу [Releases](https://github.com/Mikeli7666/DuoBar/releases):
 
-1. Найдите последнюю версию **DuoBar 1.4.0**.
+1. Найдите последнюю версию **DuoBar 1.4.1**.
 2. Внизу страницы откройте список **Assets**.
-3. Скачайте **DuoBar-1.4.0.dmg**.
+3. Скачайте **DuoBar-1.4.1.dmg**.
 
 ### Шаг 2. Установить
 
-1. Дважды щёлкните `DuoBar-1.4.0.dmg`.
+1. Дважды щёлкните `DuoBar-1.4.1.dmg`.
 2. Finder откроет окно образа диска.
 3. Перетащите `DuoBar.app` в папку **Программы / Applications**.
 4. Дождитесь окончания копирования.
@@ -48,7 +48,7 @@ DuoBar 1.4.0 (сборка 9) · macOS 13 Ventura или новее · Apple Sil
 
 ### Шаг 3. Первый запуск
 
-DuoBar 1.4.0 подписан Developer ID и прошёл нотариальную проверку Apple. Для обычной установки не нужно отключать Gatekeeper или SIP, использовать Terminal, `sudo` или `xattr`.
+DuoBar 1.4.1 подписан Developer ID и прошёл нотариальную проверку Apple. Для обычной установки не нужно отключать Gatekeeper или SIP, использовать Terminal, `sudo` или `xattr`.
 
 DuoBar живёт в строке меню и **по умолчанию не появляется в Dock** (необязательный значок Dock включается в настройках; щелчок по нему открывает настройки). После запуска смотрите на верхний край экрана — значок DuoBar будет там.
 
@@ -105,6 +105,7 @@ DuoBar постоянно в строке меню. Три части значк
 - Сведения об аудиовыходе
 - Краткое отображение AirPods / наушников при подключении
 - Панель Liquid Glass в macOS 26 и новее (в более ранних версиях — полупрозрачный дизайн)
+- Виджет рабочего стола: тот же значок 3-в-1 на рабочем столе, перетаскиваемый, в 3 размерах
 - Необязательный значок в Dock (по умолчанию выключен)
 - Open on Hover (открывать при наведении)
 - Настраиваемый размер значка в строке меню
@@ -119,7 +120,7 @@ DuoBar постоянно в строке меню. Три части значк
 
 ## Безопасность и приватность
 
-DuoBar 1.4.0 подписан Apple Developer ID и прошёл нотариальную проверку Apple. Приложение не распространяется через Mac App Store.
+DuoBar 1.4.1 подписан Apple Developer ID и прошёл нотариальную проверку Apple. Приложение не распространяется через Mac App Store.
 
 Состояние системы обрабатывается локально:
 
@@ -146,9 +147,9 @@ DuoBar — независимый проект и не связан с Apple Inc
 
 ## Целостность загрузки
 
-SHA-256 официального DMG DuoBar 1.4.0:
+SHA-256 официального DMG DuoBar 1.4.1:
 
-`07a884f7a0b3a189546f0f39af6dcb13b53b8cb1d167c9f932258e44b6616045`
+`cb463c7647bbc13d25243e4e12e4f050adc9565219a8251609a8f2ca356d1925`
 
 Обычному пользователю это проверять не нужно. Строка для тех, кто хочет убедиться, что файл не подменили.
 

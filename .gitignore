@@ -14,3 +14,8 @@ release/**/*.dmg
 # Final marketing assets are published with the repository. Raw captures and
 # local generation tooling remain local-only.
 marketing/source/*
+
+# Archives and source backups stay local; they are not source.
+*.zip
+*.film-backup
+*.pre-*-backup
