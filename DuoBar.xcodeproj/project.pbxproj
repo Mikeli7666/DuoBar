@@ -7,15 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0423738130B120E8003EBED5 /* com.mikeli.duobar.helper in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0423728430B00FC4003EBED5 /* com.mikeli.duobar.helper */; };
+		04F81C4E30AFFFB5006C1056 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 04F81C4D30AFFFB5006C1056 /* Sparkle */; };
 		A10000000000000000000021 /* CoreWLAN.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000000000000000000031 /* CoreWLAN.framework */; };
 		A10000000000000000000022 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000000000000000000032 /* IOKit.framework */; };
 		A10000000000000000000023 /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000000000000000000033 /* IOBluetooth.framework */; };
 		A10000000000000000000024 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000000000000000000034 /* ServiceManagement.framework */; };
 		A10000000000000000000025 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000000000000000000035 /* XCTest.framework */; };
 		A10000000000000000000026 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000000000000000000036 /* CoreLocation.framework */; };
+		75C3FF3037EC33249463FDAD /* com.mikeli.duobar.helper.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = C959D327BCBFBDD43850A6B8 /* com.mikeli.duobar.helper.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0423737E30B1207C003EBED5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0423728330B00FC4003EBED5;
+			remoteInfo = DuoBarHelper;
+		};
 		A10000000000000000000041 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A10000000000000000000001 /* Project object */;
@@ -26,6 +36,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		0423728230B00FC4003EBED5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		0423738030B12084003EBED5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchServices;
+			dstSubfolderSpec = 1;
+			files = (
+				0423738130B120E8003EBED5 /* com.mikeli.duobar.helper in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		043A8910309D4F5D00BABA2B /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -36,9 +65,29 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		04F81C4B30AFFF12006C1056 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D7992D73F05B244111DD17C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchDaemons;
+			dstSubfolderSpec = 1;
+			files = (
+				75C3FF3037EC33249463FDAD /* com.mikeli.duobar.helper.plist in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0423728430B00FC4003EBED5 /* com.mikeli.duobar.helper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = com.mikeli.duobar.helper; sourceTree = BUILT_PRODUCTS_DIR; };
 		043A88FB309D4F5C00BABA2B /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		043A88FD309D4F5C00BABA2B /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		A10000000000000000000012 /* DuoBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DuoBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -49,9 +98,25 @@
 		A10000000000000000000034 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		A10000000000000000000035 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
 		A10000000000000000000036 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		C959D327BCBFBDD43850A6B8 /* com.mikeli.duobar.helper.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = com.mikeli.duobar.helper.plist; path = LaunchDaemons/com.mikeli.duobar.helper.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0423737D30B11D02003EBED5 /* Exceptions for "DuoBar" folder in "DuoBarHelper" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Services/PrivilegedHelperProtocol.swift,
+			);
+			target = 0423728330B00FC4003EBED5 /* DuoBarHelper */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		0423728530B00FC4003EBED5 /* DuoBarHelper */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DuoBarHelper;
+			sourceTree = "<group>";
+		};
 		043A88FF309D4F5C00BABA2B /* DuoBarWidget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = DuoBarWidget;
@@ -59,6 +124,9 @@
 		};
 		A10000000000000000000006 /* DuoBar */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0423737D30B11D02003EBED5 /* Exceptions for "DuoBar" folder in "DuoBarHelper" target */,
+			);
 			path = DuoBar;
 			sourceTree = "<group>";
 		};
@@ -70,6 +138,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0423728130B00FC4003EBED5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A10000000000000000000051 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -77,6 +152,7 @@
 				A10000000000000000000021 /* CoreWLAN.framework in Frameworks */,
 				A10000000000000000000022 /* IOKit.framework in Frameworks */,
 				A10000000000000000000023 /* IOBluetooth.framework in Frameworks */,
+				04F81C4E30AFFFB5006C1056 /* Sparkle in Frameworks */,
 				A10000000000000000000024 /* ServiceManagement.framework in Frameworks */,
 				A10000000000000000000026 /* CoreLocation.framework in Frameworks */,
 			);
@@ -99,8 +175,10 @@
 				A10000000000000000000006 /* DuoBar */,
 				A10000000000000000000007 /* DuoBarTests */,
 				043A88FF309D4F5C00BABA2B /* DuoBarWidget */,
+				0423728530B00FC4003EBED5 /* DuoBarHelper */,
 				A10000000000000000000004 /* Frameworks */,
 				A10000000000000000000003 /* Products */,
+				C959D327BCBFBDD43850A6B8 /* com.mikeli.duobar.helper.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,6 +187,7 @@
 			children = (
 				A10000000000000000000012 /* DuoBar.app */,
 				A10000000000000000000014 /* DuoBarTests.xctest */,
+				0423728430B00FC4003EBED5 /* com.mikeli.duobar.helper */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -131,6 +210,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0423728330B00FC4003EBED5 /* DuoBarHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0423728A30B00FC4003EBED5 /* Build configuration list for PBXNativeTarget "DuoBarHelper" */;
+			buildPhases = (
+				0423728030B00FC4003EBED5 /* Sources */,
+				0423728130B00FC4003EBED5 /* Frameworks */,
+				0423728230B00FC4003EBED5 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0423728530B00FC4003EBED5 /* DuoBarHelper */,
+			);
+			name = DuoBarHelper;
+			packageProductDependencies = (
+			);
+			productName = DuoBarHelper;
+			productReference = 0423728430B00FC4003EBED5 /* com.mikeli.duobar.helper */;
+			productType = "com.apple.product-type.tool";
+		};
 		A10000000000000000000011 /* DuoBar */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A10000000000000000000061 /* Build configuration list for PBXNativeTarget "DuoBar" */;
@@ -139,16 +240,21 @@
 				A10000000000000000000051 /* Frameworks */,
 				A10000000000000000000054 /* Resources */,
 				043A8910309D4F5D00BABA2B /* Embed Foundation Extensions */,
+				04F81C4B30AFFF12006C1056 /* CopyFiles */,
+				0423738030B12084003EBED5 /* CopyFiles */,
+				8D7992D73F05B244111DD17C /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				0423737F30B1207C003EBED5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A10000000000000000000006 /* DuoBar */,
 			);
 			name = DuoBar;
 			packageProductDependencies = (
+				04F81C4D30AFFFB5006C1056 /* Sparkle */,
 			);
 			productName = DuoBar;
 			productReference = A10000000000000000000012 /* DuoBar.app */;
@@ -185,6 +291,9 @@
 				LastSwiftUpdateCheck = 2720;
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
+					0423728330B00FC4003EBED5 = {
+						CreatedOnToolsVersion = 27.2;
+					};
 					A10000000000000000000011 = {
 						CreatedOnToolsVersion = 26.6;
 					};
@@ -199,6 +308,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				fr,
 				"zh-Hans",
 				"zh-Hant",
 				ru,
@@ -207,6 +317,9 @@
 				th,
 			);
 			mainGroup = A10000000000000000000002;
+			packageReferences = (
+				04F81C4C30AFFFAC006C1056 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A10000000000000000000003 /* Products */;
 			projectDirPath = "";
@@ -214,6 +327,7 @@
 			targets = (
 				A10000000000000000000011 /* DuoBar */,
 				A10000000000000000000013 /* DuoBarTests */,
+				0423728330B00FC4003EBED5 /* DuoBarHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -236,6 +350,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0423728030B00FC4003EBED5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A10000000000000000000053 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -253,6 +374,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0423737F30B1207C003EBED5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0423728330B00FC4003EBED5 /* DuoBarHelper */;
+			targetProxy = 0423737E30B1207C003EBED5 /* PBXContainerItemProxy */;
+		};
 		A10000000000000000000042 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A10000000000000000000011 /* DuoBar */;
@@ -261,6 +387,124 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		0423728830B00FC4003EBED5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M42BR3TVW4;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"INFOPLIST_FILE[sdk=*]" = DuoBarHelper/Info.plist;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=*]" = com.mikeli.duobar.helper;
+				PRODUCT_NAME = com.mikeli.duobar.helper;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		0423728930B00FC4003EBED5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+								"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application: Shengwei li (M42BR3TVW4)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = M42BR3TVW4;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"INFOPLIST_FILE[sdk=*]" = DuoBarHelper/Info.plist;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=*]" = com.mikeli.duobar.helper;
+				PRODUCT_NAME = com.mikeli.duobar.helper;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		A10000000000000000000071 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -307,16 +551,26 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = M42BR3TVW4;
 				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = DuoBar;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "DuoBar uses Bluetooth availability with public audio metadata to recognize supported Bluetooth audio connections.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "DuoBar uses location access only to display the name of the Wi-Fi network you are connected to.";
-				MARKETING_VERSION = 1.4.1;
+				INFOPLIST_KEY_SUFeedURL = "https://raw.githubusercontent.com/Mikeli7666/DuoBar/main/appcast.xml";
+				INFOPLIST_KEY_SUPublicEDKey = "JJNby3VXKuXw1svo8GGpmey3pztzvgdoIX2ior1pyrU=";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					/usr/lib/swift,
+				);
+				MARKETING_VERSION = 1.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mikeli.duobar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -334,16 +588,26 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = M42BR3TVW4;
 				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = DuoBar;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "DuoBar uses Bluetooth availability with public audio metadata to recognize supported Bluetooth audio connections.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "DuoBar uses location access only to display the name of the Wi-Fi network you are connected to.";
-				MARKETING_VERSION = 1.4.1;
+				INFOPLIST_KEY_SUFeedURL = "https://raw.githubusercontent.com/Mikeli7666/DuoBar/main/appcast.xml";
+				INFOPLIST_KEY_SUPublicEDKey = "JJNby3VXKuXw1svo8GGpmey3pztzvgdoIX2ior1pyrU=";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					/usr/lib/swift,
+				);
+				MARKETING_VERSION = 1.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mikeli.duobar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -389,6 +653,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0423728A30B00FC4003EBED5 /* Build configuration list for PBXNativeTarget "DuoBarHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0423728830B00FC4003EBED5 /* Debug */,
+				0423728930B00FC4003EBED5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A10000000000000000000060 /* Build configuration list for PBXProject "DuoBar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -417,6 +690,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		04F81C4C30AFFFAC006C1056 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		04F81C4D30AFFFB5006C1056 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04F81C4C30AFFFAC006C1056 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A10000000000000000000001 /* Project object */;
 }
