@@ -17,6 +17,8 @@ struct SettingsView: View {
     @AppStorage(PreferenceKeys.desktopWidgetSize) private var desktopWidgetSize = DesktopWidgetSize.medium.rawValue
     @AppStorage(PreferenceKeys.showBatteryPercentageInMenuBar) private var showBatteryPercentageInMenuBar = false
     @AppStorage(PreferenceKeys.appLanguage) private var appLanguage = ""
+    @ObservedObject private var updateController = UpdateController.shared
+    @AppStorage(PreferenceKeys.liquidGlassEnabled) private var liquidGlassEnabled = true
     @StateObject private var launchAtLogin = LaunchAtLoginService()
     @ObservedObject private var adaptiveRingMonitor = AdaptiveRingMonitor.shared
     private let deviceContextService = DeviceContextService()
@@ -82,7 +84,15 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Toggle(localized("Desktop Widget"), isOn: $showDesktopWidget)
                         .toggleStyle(.switch)
-                    Text(localized("Show DuoBar on the desktop. Drag it to move it."))
+                    Text(localized("Show DuoBar on the desktop. Click it to switch modes, drag it to move it."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Toggle(localized("Liquid Glass"), isOn: $liquidGlassEnabled)
+                        .toggleStyle(.switch)
+                    Text(localized("Use the Liquid Glass look for the popover. Turn off for the classic translucent look."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -141,6 +151,13 @@ struct SettingsView: View {
                         Text(language.displayName).tag(language.rawValue)
                     }
                 }
+
+                Toggle(localized("Automatically check for updates"), isOn: automaticUpdatesBinding)
+
+                Button(localized("Check for Updates…")) {
+                    updateController.checkForUpdates()
+                }
+                .disabled(!updateController.canCheckForUpdates)
             }
 
             if showsBatteryRingSettings {
@@ -195,6 +212,13 @@ struct SettingsView: View {
         #else
         360
         #endif
+    }
+
+    private var automaticUpdatesBinding: Binding<Bool> {
+        Binding(
+            get: { updateController.automaticallyChecksForUpdates },
+            set: { updateController.automaticallyChecksForUpdates = $0 }
+        )
     }
 
     private var adaptiveRingPriority: Binding<PerformancePreference> {
