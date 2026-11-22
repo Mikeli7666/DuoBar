@@ -1,6 +1,6 @@
 # DuoBar
 
-[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
+[English](README.md) | [Français](README.fr.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
 
 把 iPhone Duo 风格的三合一状态指示器带到 Mac 菜单栏。
 
@@ -10,16 +10,18 @@
 - 网络
 - 音量
 
-[**下载 DuoBar 1.4.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.1/DuoBar-1.4.1.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
+[**下载 DuoBar 1.4.2**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.2/DuoBar-1.4.2.dmg) · [查看所有版本](https://github.com/Mikeli7666/DuoBar/releases) · [English](README.md)
 
-DuoBar 1.4.1（Build 10）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
+DuoBar 1.4.2（Build 11）· macOS 13 Ventura 或更高版本 · Apple Silicon 与 Intel Mac · Universal 2
+
+> **注意：** 这是 Mikeli7666 开发的免费开源 DuoBar，仅在 GitHub 发布。Mac App Store 上有一个同名应用，那是另一位开发者的独立闭源应用，与本项目无关。
 
 <p align="center">
   <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="在 Ko-fi 上支持 DuoBar"></a>
 </p>
 
 <p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.jpg" alt="DuoBar 1.3.2 菜单栏" width="1340">
+  <img src="marketing/1.4.2/readme/duobar-1.4.2-menubar.jpg" alt="DuoBar 菜单栏" width="1340">
 
 </p>
 
@@ -27,9 +29,9 @@ DuoBar 1.4.1（Build 10）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 ### 第一步：下载 DuoBar
 
-点击页面上方的“下载 DuoBar 1.4.1”。浏览器会下载：
+点击页面上方的“下载 DuoBar 1.4.2”。浏览器会下载：
 
-`DuoBar-1.4.1.dmg`
+`DuoBar-1.4.2.dmg`
 
 普通用户只需要这个 DMG 文件。不要下载：
 
@@ -40,13 +42,13 @@ DuoBar 1.4.1（Build 10）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 如果你是从 GitHub Releases 页面开始：
 
-1. 找到最新版本 **DuoBar 1.4.1**。
+1. 找到最新版本 **DuoBar 1.4.2**。
 2. 找到页面下方的 **Assets** 文件列表。
-3. 点击 **DuoBar-1.4.1.dmg**。
+3. 点击 **DuoBar-1.4.2.dmg**。
 
 ### 第二步：安装
 
-1. 双击 `DuoBar-1.4.1.dmg`。
+1. 双击 `DuoBar-1.4.2.dmg`。
 2. Finder 会打开一个磁盘映像窗口。
 3. 将 `DuoBar.app` 拖到 **Applications / 应用程序** 文件夹；窗口中提供了应用程序文件夹入口。
 4. 等待复制完成。
@@ -55,7 +57,7 @@ DuoBar 1.4.1（Build 10）· macOS 13 Ventura 或更高版本 · Apple Silicon �
 
 ### 第三步：第一次打开
 
-DuoBar 1.4.1 使用 Developer ID 签名并通过 Apple 公证。正常安装不需要关闭 Gatekeeper 或 SIP，也不需要 Terminal、`sudo` 或 `xattr`。
+DuoBar 1.4.2 使用 Developer ID 签名并通过 Apple 公证。正常安装不需要关闭 Gatekeeper 或 SIP，也不需要 Terminal、`sudo` 或 `xattr`。
 
 DuoBar 是菜单栏应用，默认不会出现在 Dock 中（可在设置中开启可选的 Dock 图标，点击打开设置）。打开后，请查看屏幕最上方的 macOS 菜单栏，DuoBar 图标会在那里出现。
 
@@ -93,7 +95,8 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 设置中还可以选择开启 **Open on Hover（悬停打开）**。
 
 <p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.jpg" alt="DuoBar 1.3.2 弹出面板" width="480">
+  <img src="marketing/1.4.2/readme/duobar-1.4.2-popover-classic.png" alt="DuoBar 1.4.2 弹出面板，经典样式" width="360">
+  <img src="marketing/1.4.2/readme/duobar-1.4.2-popover-glass.png" alt="DuoBar 1.4.2 弹出面板，Liquid Glass 样式" width="360">
 </p>
 
 ## 功能
@@ -113,9 +116,9 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 - 桌面小组件：与菜单栏相同的三合一图标，可自由拖动，三种尺寸（在设置中开启）
 - 可调节菜单栏图标大小
 - 改进的 Battery Ring、音量指示点和充电展示
-- Liquid Glass 弹出面板（macOS 26 及以后；更早版本为半透明胶囊样式）
+- Liquid Glass 弹出面板（macOS 26 及以后；可在设置中关闭，恢复经典样式）
 - 可选的 Dock 图标（默认关闭；在设置中开启，点击打开设置）
-- English、俄语、乌克兰语、简体中文、繁體中文、泰语
+- English、法语、俄语、乌克兰语、简体中文、繁體中文、泰语
 
 ## 系统要求
 
@@ -128,7 +131,7 @@ DuoBar 常驻在菜单栏。图标中的三个部分分别表示：
 
 ## 安全与隐私
 
-DuoBar 1.4.1 使用 Apple Developer ID 签名并通过 Apple 公证。DuoBar 不通过 Mac App Store 分发。
+DuoBar 1.4.2 使用 Apple Developer ID 签名并通过 Apple 公证。DuoBar 不通过 Mac App Store 分发。
 
 系统状态在本机处理：
 
@@ -155,9 +158,9 @@ DuoBar 是独立项目，与 Apple Inc. 没有隶属、赞助或认可关系。
 
 ## 下载完整性
 
-官方 DuoBar 1.4.1 DMG 的 SHA-256：
+官方 DuoBar 1.4.2 DMG 的 SHA-256：
 
-`cb463c7647bbc13d25243e4e12e4f050adc9565219a8251609a8f2ca356d1925`
+`97c1e565f07944ca94884ebefc30a93afaa6b6a6e1fb28d70e2d01081a7cbfef`
 
 普通用户不需要验证这一项。它主要用于希望确认下载文件完整性的用户。
 

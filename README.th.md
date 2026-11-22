@@ -6,17 +6,19 @@
 
 **สามสถานะสด หนึ่งสัญลักษณ์ แถบเมนูไม่รกอีกต่อไป**
 
-[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
+[English](README.md) | [Français](README.fr.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
 
-[**ดาวน์โหลด DuoBar 1.4.1**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.1/DuoBar-1.4.1.dmg) · [**รุ่นทั้งหมด**](https://github.com/Mikeli7666/DuoBar/releases) · [**แจ้งข้อบกพร่อง**](https://github.com/Mikeli7666/DuoBar/issues)
+[**ดาวน์โหลด DuoBar 1.4.2**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.2/DuoBar-1.4.2.dmg) · [**รุ่นทั้งหมด**](https://github.com/Mikeli7666/DuoBar/releases) · [**แจ้งข้อบกพร่อง**](https://github.com/Mikeli7666/DuoBar/issues)
 
-DuoBar 1.4.1 (Build 10) · macOS 13+ · Apple Silicon หรือ Intel · Universal 2 · ฟรีและโอเพนซอร์ส
+DuoBar 1.4.2 (Build 11) · macOS 13+ · Apple Silicon หรือ Intel · Universal 2 · ฟรีและโอเพนซอร์ส
+
+> **หมายเหตุ:** นี่คือ DuoBar ฟรีแบบโอเพนซอร์สโดย Mikeli7666 มีให้เฉพาะบน GitHub เท่านั้น แอปอื่นที่มีชื่อเดียวกันจำหน่ายบน Mac App Store ซึ่งเป็นแอปแยกต่างหากแบบปิดซอร์สโดยนักพัฒนาอีกราย และไม่เกี่ยวข้องกับโปรเจกต์นี้
 
 <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Support DuoBar on Ko-fi"></a>
 
 <br>
 
-<img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.jpg" alt="DuoBar 1.3.2 in the macOS menu bar" width="1340">
+<img src="marketing/1.4.2/readme/duobar-1.4.2-menubar.jpg" alt="DuoBar in the macOS menu bar" width="1340">
 
 </div>
 
@@ -32,7 +34,8 @@ DuoBar นำแนวคิดสถานะสามในหนึ่งส�
 </p>
 
 <p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.jpg" alt="DuoBar 1.3.2 popover" width="480">
+  <img src="marketing/1.4.2/readme/duobar-1.4.2-popover-classic.png" alt="DuoBar 1.4.2 popover, classic style" width="360">
+  <img src="marketing/1.4.2/readme/duobar-1.4.2-popover-glass.png" alt="DuoBar 1.4.2 popover, Liquid Glass style" width="360">
 </p>
 
 ## วงแหวนปรับตัวและวงแหวนแบตเตอรี่
@@ -41,7 +44,7 @@ DuoBar นำแนวคิดสถานะสามในหนึ่งส�
 
 ## DuoBar บน macOS
 
-รุ่น 1.4.1 ปัจจุบันเพิ่มวิดเจ็ตเดสก์ท็อป การสลับภาษาในแอป ป็อปโอเวอร์กระจกสไตล์ Control Center และหน้าต่างการตั้งค่าที่ปรับขนาดได้
+รุ่น 1.4.2 ปัจจุบันเพิ่มภาษาฝรั่งเศสและสวิตช์เปิด/ปิด Liquid Glass พร้อมวิดเจ็ตเดสก์ท็อป การสลับภาษาในแอป และหน้าต่างการตั้งค่าที่ปรับขนาดได้
 
 <p align="center">
 ## คุณสมบัติ
@@ -59,9 +62,9 @@ DuoBar นำแนวคิดสถานะสามในหนึ่งส�
 - การนำเสนอการเชื่อมต่อ AirPods/หูฟังชั่วคราว
 - ขนาดไอคอนแถบเมนูที่ปรับได้
 - วิดเจ็ตเดสก์ท็อป: สัญลักษณ์ 3-in-1 เดียวกันบนเดสก์ท็อป ลากได้ 3 ขนาด
-- ภาษาอังกฤษ รัสเซีย ยูเครน จีนตัวย่อ จีนตัวเต็ม และภาษาไทย
+- ภาษาอังกฤษ ภาษาฝรั่งเศส รัสเซีย ยูเครน จีนตัวย่อ จีนตัวเต็ม และภาษาไทย
 - ป๊อปอัปแบบกำหนดเองขนาดกะทัดรัด: เครือข่ายและแบตเตอรี่เปิดการตั้งค่าระบบ พลังงาน Wi-Fi ระดับเสียง การเลือกเอาต์พุตเสียง การตั้งค่า และออก
-- ป็อปโอเวอร์แบบ Liquid Glass บน macOS 26 ขึ้นไป (ดีไซน์แคปซูลโปร่งแสงในเวอร์ชันก่อนหน้า)
+- ป็อปโอเวอร์แบบ Liquid Glass บน macOS 26 ขึ้นไป (ปิดได้ในการตั้งค่าเพื่อกลับไปใช้แบบคลาสสิก)
 - โหมดสว่างและโหมดมืด
 - เปิดเมื่อเข้าสู่ระบบ
 - Universal 2: รองรับ Apple Silicon และ Intel บน macOS 13+
@@ -75,14 +78,14 @@ DuoBar นำแนวคิดสถานะสามในหนึ่งส�
 
 ## การติดตั้ง
 
-1. เปิด [รุ่น DuoBar 1.4.1](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.4.1) และค้นหา **Assets**
-2. ดาวน์โหลด **DuoBar-1.4.1.dmg** อย่าดาวน์โหลด `Source code (zip)` หรือ `Source code (tar.gz)`
+1. เปิด [รุ่น DuoBar 1.4.2](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.4.2) และค้นหา **Assets**
+2. ดาวน์โหลด **DuoBar-1.4.2.dmg** อย่าดาวน์โหลด `Source code (zip)` หรือ `Source code (tar.gz)`
 3. ดับเบิลคลิก DMG แล้วลาก **DuoBar.app** ไปยัง **Applications**
 4. เปิด Applications แล้วเปิด DuoBar เป็นยูทิลิตี้แถบเมนูและปกติจะไม่ปรากฏใน Dock
 
-DuoBar 1.4.1 ใช้การลงนาม Developer ID, Hardened Runtime และการรับรอง Apple การติดตั้งปกติไม่จำเป็นต้องปิด Gatekeeper/SIP, Terminal, `sudo` หรือ `xattr`
+DuoBar 1.4.2 ใช้การลงนาม Developer ID, Hardened Runtime และการรับรอง Apple การติดตั้งปกติไม่จำเป็นต้องปิด Gatekeeper/SIP, Terminal, `sudo` หรือ `xattr`
 
-SHA-256: `cb463c7647bbc13d25243e4e12e4f050adc9565219a8251609a8f2ca356d1925`
+SHA-256: `97c1e565f07944ca94884ebefc30a93afaa6b6a6e1fb28d70e2d01081a7cbfef`
 
 งานสร้างและความเข้ากันได้/ความน่าเชื่อถือได้รับการตรวจสอบโดยใช้ Xcode 27 และ macOS 27 SDK ในขณะที่ยังคงรองรับ macOS 13+ ต่อไป ซึ่งไม่ได้อ้างถึงการตรวจสอบฮาร์ดแวร์ macOS 27
 

@@ -1,29 +1,31 @@
 # DuoBar
 
-[English](README.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
+[English](README.md) | [Français](README.fr.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [ไทย](README.th.md)
 
 Компактний індикатор для рядка меню macOS: акумулятор, мережа й гучність в одному значку.
 
-[Завантажити DuoBar 1.4.1](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.1/DuoBar-1.4.1.dmg) · [Усі версії](https://github.com/Mikeli7666/DuoBar/releases) · [Повідомити про помилку](https://github.com/Mikeli7666/DuoBar/issues)
+[Завантажити DuoBar 1.4.2](https://github.com/Mikeli7666/DuoBar/releases/download/v1.4.2/DuoBar-1.4.2.dmg) · [Усі версії](https://github.com/Mikeli7666/DuoBar/releases) · [Повідомити про помилку](https://github.com/Mikeli7666/DuoBar/issues)
 
-DuoBar 1.4.1 (збірка 10) · macOS 13+ · Apple Silicon та Intel · Universal 2 · Безкоштовний проєкт із відкритим кодом
+DuoBar 1.4.2 (збірка 11) · macOS 13+ · Apple Silicon та Intel · Universal 2 · Безкоштовний проєкт із відкритим кодом
+
+> **Примітка:** Це безкоштовний DuoBar з відкритим вихідним кодом від Mikeli7666, доступний лише на GitHub. Інший застосунок із такою самою назвою продається в Mac App Store — це окремий застосунок із закритим вихідним кодом від іншого розробника, не пов'язаний із цим проєктом.
 
 <p align="center">
   <a href="https://ko-fi.com/duobar"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Підтримати DuoBar на Ko-fi"></a>
 </p>
 
 <p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-menubar.jpg" alt="DuoBar 1.3.2 у рядку меню macOS" width="1340">
+  <img src="marketing/1.4.2/readme/duobar-1.4.2-menubar.jpg" alt="DuoBar у рядку меню macOS" width="1340">
 </p>
 
 ## 📥 Встановлення для початківців
 
-1. Відкрийте [реліз DuoBar 1.4.1](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.4.1).
-2. У розділі **Assets** завантажте **DuoBar-1.4.1.dmg**. Не завантажуйте `Source code (zip)` або `Source code (tar.gz)` — це вихідний код.
-3. Двічі клацніть файл **DuoBar-1.4.1.dmg** і перетягніть **DuoBar.app** до **Applications / Програми**.
+1. Відкрийте [реліз DuoBar 1.4.2](https://github.com/Mikeli7666/DuoBar/releases/tag/v1.4.2).
+2. У розділі **Assets** завантажте **DuoBar-1.4.2.dmg**. Не завантажуйте `Source code (zip)` або `Source code (tar.gz)` — це вихідний код.
+3. Двічі клацніть файл **DuoBar-1.4.2.dmg** і перетягніть **DuoBar.app** до **Applications / Програми**.
 4. Відкрийте «Програми» та запустіть DuoBar. Це утиліта рядка меню, тому зазвичай вона не з’являється в Dock.
 
-DuoBar 1.4.1 підписано Developer ID та нотаризовано Apple. Не потрібно вимикати Gatekeeper або SIP, використовувати Terminal, `sudo` чи `xattr`.
+DuoBar 1.4.2 підписано Developer ID та нотаризовано Apple. Не потрібно вимикати Gatekeeper або SIP, використовувати Terminal, `sudo` чи `xattr`.
 
 ## Дозвіл геолокації та Wi‑Fi
 
@@ -39,16 +41,13 @@ DuoBar 1.4.1 підписано Developer ID та нотаризовано Apple
 - Тимчасове відображення AirPods/навушників, Open on Hover і регулювання розміру значка.
 - Віджет робочого столу: той самий значок 3-в-1 на робочому столі, перетягуваний, у 3 розмірах.
 - Швидкі переходи до налаштувань Network, Battery і Sound.
-- Панель Liquid Glass у macOS 26 і новіших (у раніших версіях — напівпрозорий дизайн).
+- Панель Liquid Glass у macOS 26 і новіших (можна вимкнути в налаштуваннях і повернути класичний вигляд).
 - Необов’язковий значок у Dock (вимкнено за замовчуванням); клацання відкриває налаштування.
-- English, 简体中文, 繁體中文, русский, українська та тайська.
+- English, французька, 简体中文, 繁體中文, русский, українська та тайська.
 
 <p align="center">
-  <img src="marketing/1.2.1/readme/duobar-1.2.1-states.png" alt="Стани DuoBar 1.3.2" width="800">
-</p>
-
-<p align="center">
-  <img src="marketing/1.3.2/readme/duobar-1.3.2-popover.jpg" alt="Спливаюча панель DuoBar 1.3.2" width="480">
+  <img src="marketing/1.4.2/readme/duobar-1.4.2-popover-classic.png" alt="Спливаюча панель DuoBar 1.4.2, класичний вигляд" width="360">
+  <img src="marketing/1.4.2/readme/duobar-1.4.2-popover-glass.png" alt="Спливаюча панель DuoBar 1.4.2, Liquid Glass" width="360">
 </p>
 
 ## Системні вимоги та сумісність
@@ -61,8 +60,8 @@ DuoBar 1.4.1 підписано Developer ID та нотаризовано Apple
 
 Системний стан обробляється локально: немає аналітики, відстеження, бекенду, телеметрії чи сторонніх мережевих запитів. DuoBar не сканує найближчі Wi‑Fi мережі, не підключається до них і не створює пару з Bluetooth-пристроями. Деякі зовнішні аудіопристрої не підтримують програмне керування гучністю.
 
-SHA-256 офіційного DMG DuoBar 1.4.1:
+SHA-256 офіційного DMG DuoBar 1.4.2:
 
-`cb463c7647bbc13d25243e4e12e4f050adc9565219a8251609a8f2ca356d1925`
+`97c1e565f07944ca94884ebefc30a93afaa6b6a6e1fb28d70e2d01081a7cbfef`
 
 DuoBar поширюється за [MIT License](LICENSE).
