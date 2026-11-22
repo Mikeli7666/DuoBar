@@ -47,7 +47,7 @@ xcodebuild -project "$PROJECT" -scheme DuoBar -configuration Release -derivedDat
 # Explicit timestamped Developer ID signature before any notarization submission.
 # Sign the bare helper binary FIRST: codesign --deep skips it (not a bundle),
 # so give it a timestamped signature before the main seal below covers it.
-codesign --force --timestamp --options runtime --entitlements "$ROOT/DuoBarHelper/DuoBarHelper.entitlements" --sign "$IDENTITY" "$APP/Contents/Library/LaunchServices/com.mikeli.duobar.helper"
+codesign --force --timestamp --options runtime --entitlements "$ROOT/DuoBarHelper/DuoBarHelper.entitlements" --sign "$IDENTITY" "$APP/Contents/Library/LaunchDaemons/com.mikeli.duobar.helper"
 codesign --force --deep --timestamp --options runtime --entitlements "$ROOT/DuoBar/DuoBar.entitlements" --sign "$IDENTITY" "$APP"
 codesign --verify --deep --strict --verbose=2 "$APP"
 codesign -dv --verbose=4 "$APP" 2> "$WORK/codesign.txt"

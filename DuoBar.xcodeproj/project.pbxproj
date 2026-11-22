@@ -48,7 +48,7 @@
 		0423738030B12084003EBED5 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = Contents/Library/LaunchServices;
+			dstPath = Contents/Library/LaunchDaemons;
 			dstSubfolderSpec = 1;
 			files = (
 				0423738130B120E8003EBED5 /* com.mikeli.duobar.helper in CopyFiles */,
