@@ -13,9 +13,9 @@ enum DesktopWidgetMode: Int, CaseIterable {
     /// Name flashed briefly on the widget face when the mode is entered.
     var title: String {
         switch self {
-        case .standard: return "Standard"
-        case .adaptive: return "Adaptive Ring"
-        case .custom: return "Custom"
+        case .standard: return localized("Standard")
+        case .adaptive: return localized("Adaptive Ring")
+        case .custom: return localized("Custom")
         }
     }
 
@@ -41,12 +41,12 @@ enum DesktopWidgetRingSource: Int, CaseIterable {
     /// Settings-picker label.
     var title: String {
         switch self {
-        case .battery: return "Battery"
-        case .cpu: return "CPU"
-        case .memory: return "Memory"
-        case .thermal: return "Thermal"
-        case .brightness: return "Brightness"
-        case .wifi: return "Wi-Fi Signal"
+        case .battery: return localized("Battery")
+        case .cpu: return localized("CPU")
+        case .memory: return localized("Memory")
+        case .thermal: return localized("Thermal")
+        case .brightness: return localized("Brightness")
+        case .wifi: return localized("Wi-Fi Signal")
         }
     }
 }
@@ -69,9 +69,9 @@ enum DesktopWidgetSize: Int, CaseIterable {
     /// Settings-picker label.
     var title: String {
         switch self {
-        case .small: return "Small"
-        case .medium: return "Medium"
-        case .large: return "Large"
+        case .small: return localized("Small")
+        case .medium: return localized("Medium")
+        case .large: return localized("Large")
         }
     }
 }
@@ -89,12 +89,12 @@ enum DesktopWidgetDotsSource: Int, CaseIterable {
     /// Settings-picker and caption label.
     var title: String {
         switch self {
-        case .volume: return "Volume"
-        case .battery: return "Battery"
-        case .cpu: return "CPU"
-        case .memory: return "Memory"
-        case .thermal: return "Thermal"
-        case .wifi: return "Wi-Fi Signal"
+        case .volume: return localized("Volume")
+        case .battery: return localized("Battery")
+        case .cpu: return localized("CPU")
+        case .memory: return localized("Memory")
+        case .thermal: return localized("Thermal")
+        case .wifi: return localized("Wi-Fi Signal")
         }
     }
 }
@@ -112,11 +112,11 @@ enum DesktopWidgetCenterSource: Int, CaseIterable {
     /// Settings-picker label.
     var title: String {
         switch self {
-        case .network: return "Network"
-        case .cpu: return "CPU"
-        case .memory: return "Memory"
-        case .thermal: return "Thermal"
-        case .brightness: return "Brightness"
+        case .network: return localized("Network")
+        case .cpu: return localized("CPU")
+        case .memory: return localized("Memory")
+        case .thermal: return localized("Thermal")
+        case .brightness: return localized("Brightness")
         }
     }
 }
