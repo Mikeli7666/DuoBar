@@ -26,6 +26,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             PreferenceKeys.animationsEnabled: true,
             PreferenceKeys.menuBarIconScale: MenuBarIconSize.defaultScale,
             PreferenceKeys.batteryColorCoding: false,
+            PreferenceKeys.outerRingChoice: OuterRingChoice.automatic.rawValue,
+            PreferenceKeys.adaptiveRingEnabled: true,
             PreferenceKeys.openOnHover: false,
             PreferenceKeys.showInDock: false,
             PreferenceKeys.showBatteryPercentageInMenuBar: false

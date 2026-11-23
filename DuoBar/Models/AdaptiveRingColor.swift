@@ -55,12 +55,32 @@ enum AdaptiveRingColorResolver {
         return AdaptiveRingColorPresentation(role: role, intensity: intensity(for: decision.severity))
     }
 
+    /// Color names the metric. Arc length names the amount, so the hue stays solid.
+    static func resolve(reading: OuterRingReading, colorCodingEnabled: Bool) -> AdaptiveRingColorPresentation {
+        let state = reading.adaptiveState
+        let decision: PerformanceDecision
+        if case .performance(let metric, let value) = state, metric != .idle {
+            decision = PerformanceDecision(
+                activeMetric: metric,
+                severity: .elevated,
+                normalizedRingValue: value,
+                reason: .baseline,
+                candidate: PerformanceCandidate(
+                    metric: metric,
+                    severity: .elevated,
+                    normalizedValue: value,
+                    reason: .baseline
+                )
+            )
+        } else {
+            decision = .idle
+        }
+        return resolve(state: state, decision: decision, colorCodingEnabled: colorCodingEnabled)
+    }
+
     static func intensity(for severity: PerformanceSeverity) -> Double {
         switch severity {
-        case .idle, .normal: 0.60
-        case .elevated: 0.68
-        case .serious: 0.82
-        case .critical: 1.0
+        case .idle, .normal, .elevated, .serious, .critical: 1
         }
     }
 }
